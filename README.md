@@ -1,7 +1,7 @@
 Better Sprinting
 ================
 
-## Source code license
+## Project license
 
 The project is under the All Rights Reserved license, which means that redistribution is forbidden. However, I do not want to be as restrictive, so here are some general rules, and some specific cases for what you may want to do with the source.
 
