@@ -13,14 +13,13 @@ public class ServerNetwork implements INetworkHandler{
 	 * * byte 5 - new protocol, if you updated your handling code then ignore people who send this one and wait for BSM
 	 * 
 	 * Payload packet on "BSM" channel
-	 * * byte 0, byte X - new protocol, X is the protocol version (currently 10)
-	 *                  - you are free to use new functionality
+	 * * byte 0, byte X - new protocol, X is the protocol version that can be used to determine the useable functionality
 	 * 
 	 * OUTCOMING PACKETS
 	 * =================
 	 * Payload packet on "BSM" channel
-	 * * byte 0, boolean enableSurvivalFlyBoost, boolean enableAllDirs - custom settings, both are false by default
-	 * * byte 1 - disables the mod on client-side
+	 * * byte 0, boolean enableSurvivalFlyBoost, boolean enableAllDirs - custom settings, both are false by default [since 10]
+	 * * byte 1 - disables the mod on client-side [since 10]
 	 */
 	
 	@Override
