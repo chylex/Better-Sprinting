@@ -10,6 +10,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{
@@ -17,7 +18,7 @@ public class GuiSprint extends GuiScreen{
 	private int buttonId = -1;
 	private GuiButton btnDoubleTap,btnFlyBoost,btnAllDirs,btnDisableMod,btnUpdateNotifications;
 	protected KeyBinding[] sprintBindings = new KeyBinding[]{
-		ClientModManager.keyBindSprint, ClientModManager.keyBindSprintToggle, ClientModManager.keyBindSneakToggle, ClientModManager.keyBindSprintMenu
+		ClientModManager.keyBindSprintHold, ClientModManager.keyBindSprintToggle, ClientModManager.keyBindSneakToggle, ClientModManager.keyBindSprintMenu
 	};
 	
 	public GuiSprint(GuiScreen parentScreen){
@@ -35,12 +36,12 @@ public class GuiSprint extends GuiScreen{
 			ypos=height/6+24*(a>>1);
 			GuiOptionButton btn=new GuiOptionButton(a,left+a%2*160,ypos,70,20,getKeyCodeString(a));
 			buttonList.add(btn);
-			if ((a==1||a==2)&&ClientModManager.disableModFunctionality)btn.enabled=false;
+			if ((a==1||a==2)&&ClientSettings.disableMod)btn.enabled=false;
 		}
 	    
 	    ypos+=48;
 	    btnDoubleTap=new GuiButton(199,left,ypos,70,20,""); buttonList.add(btnDoubleTap);
-	    if (ClientModManager.disableModFunctionality)btnDoubleTap.enabled=false;
+	    if (ClientSettings.disableMod)btnDoubleTap.enabled=false;
 	    
 	    btnAllDirs=new GuiButton(198,left+160,ypos,70,20,""); buttonList.add(btnAllDirs);
 	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled=false;
@@ -61,10 +62,10 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	private void updateButtons(){
-		btnDoubleTap.displayString=ClientModManager.disableModFunctionality?"Unavailable":(ClientModManager.allowDoubleTap?"Enabled":"Disabled");
+		btnDoubleTap.displayString=ClientSettings.disableMod?"Unavailable":(ClientModManager.allowDoubleTap?"Enabled":"Disabled");
 		btnFlyBoost.displayString=ClientModManager.canBoostFlying(mc)?(ClientModManager.flyingBoost==0?"Disabled":(ClientModManager.flyingBoost+1)+"x"):"Unavailable";
 		btnAllDirs.displayString=ClientModManager.canRunInAllDirs(mc)?(ClientModManager.allowAllDirs?"Enabled":"Disabled"):"Unavailable";
-		btnDisableMod.displayString=ClientModManager.disableModFunctionality?"Yes":"No";
+		btnDisableMod.displayString=ClientSettings.disableMod?"Yes":"No";
 		btnUpdateNotifications.displayString=ClientModManager.enableUpdateNotifications?"Yes":"No";
 	}
 	
@@ -86,7 +87,7 @@ public class GuiSprint extends GuiScreen{
 				
 			case 196:
 				if (mc.thePlayer==null&&mc.theWorld==null){
-					ClientModManager.disableModFunctionality=!ClientModManager.disableModFunctionality;
+					ClientSettings.disableMod=!ClientSettings.disableMod;
 					initGui();
 				}
 				break;
@@ -100,7 +101,7 @@ public class GuiSprint extends GuiScreen{
 				break;
 				
 			case 199:
-				if (!ClientModManager.disableModFunctionality)ClientModManager.allowDoubleTap=!ClientModManager.allowDoubleTap;
+				if (!ClientSettings.disableMod)ClientModManager.allowDoubleTap=!ClientModManager.allowDoubleTap;
 				break;
 				
 			case 200:

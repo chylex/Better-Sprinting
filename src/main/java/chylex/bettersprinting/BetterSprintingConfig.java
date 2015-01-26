@@ -3,6 +3,7 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BetterSprintingConfig{
@@ -10,6 +11,7 @@ public class BetterSprintingConfig{
 	private String currentCategory = "unknown";
 	
 	BetterSprintingConfig(File file){
+		FMLCommonHandler.instance().bus().register(this);
 		config = new Configuration(file);
 		reload();
 	}
@@ -38,5 +40,13 @@ public class BetterSprintingConfig{
 	
 	public Property getInt(String name, int defValue, String comment){
 		return config.get(currentCategory,name,defValue,comment);
+	}
+	
+	public void setBool(String name, boolean value){
+		config.get(currentCategory,name,value).set(value);
+	}
+	
+	public void setInt(String name, int value){
+		config.get(currentCategory,name,value).set(value);
 	}
 }

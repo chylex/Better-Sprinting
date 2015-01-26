@@ -1,5 +1,4 @@
 package chylex.bettersprinting.client.compatibility;
-
 import java.io.File;
 import java.io.FileInputStream;
 import net.minecraft.client.Minecraft;
@@ -16,7 +15,7 @@ public class OldClientConfig{
     	try{
     		NBTTagCompound tag = CompressedStreamTools.readCompressed(new FileInputStream(file)).getCompoundTag("Data");
     		
-    		ClientSettings.keyCodeSprintMenu = tag.getInteger("keyMenu");
+    		ClientSettings.keyCodeOptionsMenu = tag.getInteger("keyMenu");
     		ClientSettings.keyCodeSprintHold = tag.getInteger("keySprint");
     		ClientSettings.keyCodeSprintToggle = tag.getInteger("keySprintToggle");
     		ClientSettings.keyCodeSneakToggle = tag.getInteger("keySneakToggle");

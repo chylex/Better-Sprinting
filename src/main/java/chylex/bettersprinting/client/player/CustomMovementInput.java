@@ -3,6 +3,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInputFromOptions;
 import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 
 public class CustomMovementInput{
 	public boolean sprint, sprintToggle, sneakToggle, hasToggledSprint, hasToggledSneak;
@@ -21,10 +22,10 @@ public class CustomMovementInput{
 		options.jump = settings.keyBindJump.isKeyDown();
 		options.sneak = settings.keyBindSneak.isKeyDown();
 		
-		sprint = ClientModManager.keyBindSprint.isKeyDown();
+		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		
 		if (!sprint){
-			if (!ClientModManager.disableModFunctionality && ClientModManager.keyBindSprintToggle.isKeyDown()){
+			if (!ClientSettings.disableMod && ClientModManager.keyBindSprintToggle.isKeyDown()){
 				if (!hasToggledSprint){
 					sprintToggle = !sprintToggle;
 					hasToggledSprint = true;
@@ -40,7 +41,7 @@ public class CustomMovementInput{
 		options.sneak = settings.keyBindSneak.isKeyDown();
 		
 		if (!options.sneak){
-			if (!ClientModManager.disableModFunctionality && ClientModManager.keyBindSneakToggle.isKeyDown()){
+			if (!ClientSettings.disableMod && ClientModManager.keyBindSneakToggle.isKeyDown()){
 				if (!hasToggledSneak){
 					sneakToggle = !sneakToggle;
 					hasToggledSneak = true;

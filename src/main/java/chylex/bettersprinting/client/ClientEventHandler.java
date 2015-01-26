@@ -1,13 +1,17 @@
 package chylex.bettersprinting.client;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.compatibility.OldNotificationPacket;
 import chylex.bettersprinting.client.gui.GuiControlsCustom;
 import chylex.bettersprinting.client.update.UpdateThread;
+import chylex.bettersprinting.system.PacketPipeline;
 
 public final class ClientEventHandler{
 	public static void register(){
@@ -28,6 +32,20 @@ public final class ClientEventHandler{
 				new UpdateThread(BetterSprintingMod.modVersion).start();
 			}
 		}
+		
+		Minecraft mc = Minecraft.getMinecraft();
+		
+		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod){
+			ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = false;
+			PacketPipeline.sendToServer(ClientNetwork.writeModNotification());
+			OldNotificationPacket.sendServerNotification();
+		}
+		else ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = true;
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
+		ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = false;
 	}
 	
 	@SubscribeEvent

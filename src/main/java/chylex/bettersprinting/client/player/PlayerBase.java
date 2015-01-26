@@ -1,32 +1,29 @@
 package chylex.bettersprinting.client.player;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiGameOver;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.ResourceLocation;
 import api.player.client.ClientPlayerAPI;
 import api.player.client.ClientPlayerBase;
+import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
 
 public class PlayerBase extends ClientPlayerBase{
 	private static boolean shouldRestoreSneakToggle = false;
-	private static String connectedServer = "";
-	private static byte behaviorCheckTimer = 10;
 	
 	private Minecraft mc;
 	private CustomMovementInput customMovementInput;
 	
 	public PlayerBase(ClientPlayerAPI api){
 		super(api);
-		mc=Minecraft.getMinecraft();
-		customMovementInput=new CustomMovementInput();
+		mc = Minecraft.getMinecraft();
+		customMovementInput = new CustomMovementInput();
 	}
 	
 	@Override
@@ -34,7 +31,7 @@ public class PlayerBase extends ClientPlayerBase{
 		if (player.sprintingTicksLeft > 0 && --player.sprintingTicksLeft == 0)player.setSprinting(false);
 		if (player.sprintToggleTimer > 0)--player.sprintToggleTimer;
 		
-		player.prevTimeInPortal=player.timeInPortal;
+		player.prevTimeInPortal = player.timeInPortal;
 		
 		if (player.inPortal){
 			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame())mc.displayGuiScreen(null);
@@ -79,13 +76,13 @@ public class PlayerBase extends ClientPlayerBase{
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		
 		// CHANGE
-		if (ClientModManager.disableModFunctionality){
+		if (ClientSettings.disableMod){
 			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= minSpeed && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness)){
-				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprint.isKeyDown())player.sprintToggleTimer = 7;
+				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown())player.sprintToggleTimer = 7;
 				else player.setSprinting(true);
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= minSpeed && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness) && ClientModManager.keyBindSprint.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.moveForward >= minSpeed && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -93,7 +90,7 @@ public class PlayerBase extends ClientPlayerBase{
 			updateBehavior();
 			boolean lastheld = ClientModManager.held;
 			boolean state = customMovementInput.sprint;
-			boolean doubletap = ClientModManager.allowDoubleTap || ClientModManager.disableModFunctionality;
+			boolean doubletap = ClientSettings.enableDoubleTap || ClientSettings.disableMod;
 
 			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak)state = false;
 			
@@ -121,15 +118,15 @@ public class PlayerBase extends ClientPlayerBase{
 				}
 			}
 
-			if (ClientModManager.flyingBoost > 0){
+			if (ClientSettings.flySpeedBoost > 0){
 				if (state && player.capabilities.isFlying && ClientModManager.canBoostFlying(mc)){
-					player.capabilities.setFlySpeed(0.05F*(1+ClientModManager.flyingBoost));
+					player.capabilities.setFlySpeed(0.05F*(1+ClientSettings.flySpeedBoost));
 					if (player.movementInput.sneak){
-						player.motionY -= 0.15D*ClientModManager.flyingBoost;
+						player.motionY -= 0.15D*ClientSettings.flySpeedBoost;
 					}
 
 					if (player.movementInput.jump){
-						player.motionY += 0.15D*ClientModManager.flyingBoost;
+						player.motionY += 0.15D*ClientSettings.flySpeedBoost;
 					}
 				}
 				else player.capabilities.setFlySpeed(0.05F);
@@ -142,7 +139,7 @@ public class PlayerBase extends ClientPlayerBase{
 		// END
 
 		if (player.isSprinting() && (player.movementInput.moveForward < minSpeed || player.isCollidedHorizontally || !enoughHunger)){
-			if ((ClientModManager.canRunInAllDirs(mc) && ClientModManager.allowAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F))player.setSprinting(false); // CHANGED LINE
+			if ((ClientModManager.canRunInAllDirs(mc) && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F))player.setSprinting(false); // CHANGED LINE
 		}
 		
 		if (player.capabilities.allowFlying){
@@ -207,12 +204,12 @@ public class PlayerBase extends ClientPlayerBase{
 	private void updateBehavior(){
 		if (mc.currentScreen != null && player != null && player.isSneaking()){
 			if (customMovementInput.sneakToggle && !(mc.currentScreen instanceof GuiGameOver)){
-				if (!ClientModManager.showedToggleSneakWarning){
+				if (!ClientSettings.showedSneakWarning){
 					player.addChatMessage(new ChatComponentText("First-time warning: You can open inventories and menus while sneaking, however you will not be sneaking for the time it is open. Once you close the menu, sneaking will be restored."));
 					mc.displayGuiScreen(null);
 					mc.setIngameFocus();
-					ClientModManager.showedToggleSneakWarning = true;
-					ClientModManager.saveSprint(mc);
+					ClientSettings.showedSneakWarning = true;
+					ClientSettings.refresh(BetterSprintingMod.config);
 				}
 				else{
 					shouldRestoreSneakToggle = true;
@@ -224,33 +221,6 @@ public class PlayerBase extends ClientPlayerBase{
 		if (shouldRestoreSneakToggle && mc.currentScreen == null){
 			customMovementInput.sneakToggle = true;
 			shouldRestoreSneakToggle = false;
-		}
-
-		if (behaviorCheckTimer > 0){
-			--behaviorCheckTimer;
-			return;
-		}
-		
-		behaviorCheckTimer = 10;
-		
-		if (mc.thePlayer == null){
-			connectedServer = "";
-			ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = false;
-		}
-		else if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientModManager.disableModFunctionality){
-			String serverIP = mc.getCurrentServerData().serverIP;
-			
-			if (!connectedServer.equals(serverIP)){
-				ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = false;
-				connectedServer = new String(serverIP);
-				
-				if ((connectedServer.startsWith("127.0.0.1") || connectedServer.equals("localhost")) == false){
-					PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-					buffer.writeByte(4);
-					mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("BSprint",buffer));
-				}
-				else ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = true;
-			}
 		}
 	}
 }

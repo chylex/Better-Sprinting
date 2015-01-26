@@ -9,16 +9,18 @@ import api.player.client.ClientPlayerAPI;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.client.player.PlayerBase;
+import chylex.bettersprinting.system.PacketPipeline;
 
 public class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void loadSidedConfig(BetterSprintingConfig config){
-		ClientSettings.load(config);
+		ClientSettings.refresh(config);
 	}
 	
 	@Override
 	public void onPreInit(FMLPreInitializationEvent e){
 		ClientEventHandler.register();
+		PacketPipeline.initialize(new ClientNetwork());
 	}
 	
 	@Override

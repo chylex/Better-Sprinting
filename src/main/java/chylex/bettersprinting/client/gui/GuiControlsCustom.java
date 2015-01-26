@@ -37,7 +37,7 @@ public class GuiControlsCustom extends GuiControls{
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException{
-		if (button.id==205)mc.displayGuiScreen(new GuiSprint(this));
+		if (button.id == 205)mc.displayGuiScreen(new GuiSprint(this));
 		else super.actionPerformed(button);
 	}
 }
