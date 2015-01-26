@@ -18,7 +18,7 @@ buildscript {
 apply plugin: 'forge'
 
 version = ""
-group = "chylex.bs.BetterSprinting"
+group = "chylex.bettersprinting.BetterSprintingMod"
 archivesBaseName = "BetterSprinting  MC-1.8  v1."
 
 sourceCompatibility = 1.6
@@ -41,5 +41,11 @@ processResources {
     
     from(sourceSets.main.resources.srcDirs){
         exclude 'mcmod.info'
+    }
+}
+
+jar {
+    manifest {
+        attributes 'FMLAT': 'bs_at.cfg'
     }
 }

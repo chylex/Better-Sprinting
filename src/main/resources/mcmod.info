@@ -1,0 +1,17 @@
+[
+{
+  "modid": "BetterSprinting",
+  "name": "Better Sprinting",
+  "version": "1.1",
+  "mcversion": "",
+  "description": "...\n\n§nFind me on Twitter:§r https://twitter.com/chylexMC",
+  "url": "http://bsprint.chylex.com",
+  "updateUrl": "",
+  "authorList": [ "chylex" ],
+  "parent": "",
+  "screenshots": [],
+  "dependencies": [
+    "PlayerAPI"
+  ]
+}
+]
