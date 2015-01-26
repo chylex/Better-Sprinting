@@ -1,7 +1,9 @@
 package chylex.bettersprinting.server;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
+import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
 public class ServerNetwork implements INetworkHandler{
@@ -22,9 +24,25 @@ public class ServerNetwork implements INetworkHandler{
 	 * * byte 1 - disables the mod on client-side [since 10]
 	 */
 	
+	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
+		PacketBuffer buffer = PacketPipeline.buf();
+		buffer.writeByte(0).writeBoolean(enableSurvivalFlyBoost).writeBoolean(enableAllDirs);
+		return buffer;
+	}
+	
+	public static PacketBuffer writeDisableMod(){
+		PacketBuffer buffer = PacketPipeline.buf();
+		buffer.writeByte(1);
+		return buffer;
+	}
+	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
 		byte type = data.readByte();
-		// TODO
+		
+		if (type == 0){
+			int protocol = data.readByte();
+			// TODO send server-side settings
+		}
 	}
 }

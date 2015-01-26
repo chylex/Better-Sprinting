@@ -36,21 +36,20 @@ public final class ClientEventHandler{
 		Minecraft mc = Minecraft.getMinecraft();
 		
 		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod){
-			ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = false;
-			PacketPipeline.sendToServer(ClientNetwork.writeModNotification());
+			ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
+			PacketPipeline.sendToServer(ClientNetwork.writeModNotification(10));
 			OldNotificationPacket.sendServerNotification();
 		}
-		else ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = true;
 	}
 	
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
-		ClientModManager.svFlyingBoost = ClientModManager.svRunInAllDirs = false;
+		ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
 	}
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent e){
-		if (e.gui instanceof GuiControls && !ClientModManager.fromBs)e.gui = new GuiControlsCustom((GuiControls)e.gui);
+		if (e.gui.getClass() == GuiControls.class)e.gui = new GuiControlsCustom((GuiControls)e.gui);
 	}
 	
 	private ClientEventHandler(){}

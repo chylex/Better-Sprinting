@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import api.player.client.ClientPlayerAPI;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
-import chylex.bettersprinting.client.player.PlayerBase;
+import chylex.bettersprinting.client.player.impl.PlayerBase;
 import chylex.bettersprinting.system.PacketPipeline;
 
 public class ClientProxy extends BetterSprintingProxy{

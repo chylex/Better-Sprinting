@@ -9,171 +9,161 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{
-	private GuiScreen parentScreen;
+	private final GuiScreen parentScreen;
 	private int buttonId = -1;
-	private GuiButton btnDoubleTap,btnFlyBoost,btnAllDirs,btnDisableMod,btnUpdateNotifications;
-	protected KeyBinding[] sprintBindings = new KeyBinding[]{
-		ClientModManager.keyBindSprintHold, ClientModManager.keyBindSprintToggle, ClientModManager.keyBindSneakToggle, ClientModManager.keyBindSprintMenu
+	
+	private KeyBinding[] sprintBindings = new KeyBinding[]{
+		ClientModManager.keyBindSprintHold,
+		ClientModManager.keyBindSprintToggle,
+		ClientModManager.keyBindSneakToggle,
+		ClientModManager.keyBindSprintMenu
 	};
 	
+	private GuiButton btnDoubleTap, btnFlyBoost, btnAllDirs, btnDisableMod;
+	
 	public GuiSprint(GuiScreen parentScreen){
-		this.parentScreen=parentScreen;
+		this.parentScreen = parentScreen;
 	}
 	
 	@Override
 	public void initGui(){
 		buttonList.clear();
 		
-		ClientModManager.fromBs = false;
-	    int left=getLeftColumnX(), ypos=0;
+	    int left = getLeftColumnX(), top = height/6;
 	
-	    for(int a=0; a<sprintBindings.length; ++a){
-			ypos=height/6+24*(a>>1);
-			GuiOptionButton btn=new GuiOptionButton(a,left+a%2*160,ypos,70,20,getKeyCodeString(a));
+	    for(int a = 0; a < sprintBindings.length; a++){
+			GuiOptionButton btn = new GuiOptionButton(a,left+a%2*160,top+24*(a>>1),70,20,getKeyCodeString(a));
 			buttonList.add(btn);
-			if ((a == 1||a == 2)&&ClientSettings.disableMod)btn.enabled=false;
+			if ((a == 1 || a == 2) && ClientModManager.isModDisabled())btn.enabled = false;
 		}
 	    
-	    ypos+=48;
-	    btnDoubleTap=new GuiButton(199,left,ypos,70,20,""); buttonList.add(btnDoubleTap);
-	    if (ClientSettings.disableMod)btnDoubleTap.enabled=false;
+	    buttonList.add(btnDoubleTap = new GuiButton(199,left,top+72,70,20,""));
+	    buttonList.add(btnAllDirs = new GuiButton(198,left+160,top+72,70,20,""));
+	    buttonList.add(btnFlyBoost = new GuiButton(197,left,top+96,70,20,""));
+	    buttonList.add(btnDisableMod = new GuiButton(196,left+160,top+96,70,20,""));
 	    
-	    btnAllDirs=new GuiButton(198,left+160,ypos,70,20,""); buttonList.add(btnAllDirs);
-	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled=false;
+	    if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
+	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled = false;
+	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled = false;
+	    if (!(mc.thePlayer == null && mc.theWorld == null))btnDisableMod.enabled = false;
 	    
-	    ypos+=24;
-	    btnFlyBoost=new GuiButton(197,left,ypos,70,20,""); buttonList.add(btnFlyBoost);
-	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled=false;
-	    
-	    btnDisableMod=new GuiButton(196,left+160,ypos,70,20,""); buttonList.add(btnDisableMod);
-	    if (!(mc.thePlayer == null&&mc.theWorld == null))btnDisableMod.enabled=false;
-	    
-	    ypos+=24;
-	    btnUpdateNotifications=new GuiButton(195,left,ypos,70,20,""); buttonList.add(btnUpdateNotifications);
-	    
-	    buttonList.add(new GuiButton(200,width/2-100,height/6+168,parentScreen == null?98:200,20,I18n.format("gui.done")));
-	    if (parentScreen == null)buttonList.add(new GuiButton(190,width/2+2,height/6+168,98,20,I18n.format("options.controls")));
+	    buttonList.add(new GuiButton(200,width/2-100,top+168,parentScreen == null ? 98 : 200,20,I18n.format("gui.done")));
+	    if (parentScreen == null)buttonList.add(new GuiButton(190,width/2+2,top+168,98,20,I18n.format("options.controls")));
 	    updateButtons();
 	}
 	
 	private void updateButtons(){
-		btnDoubleTap.displayString=ClientSettings.disableMod?"Unavailable":(ClientModManager.allowDoubleTap?"Enabled":"Disabled");
-		btnFlyBoost.displayString=ClientModManager.canBoostFlying(mc)?(ClientModManager.flyingBoost == 0?"Disabled":(ClientModManager.flyingBoost+1)+"x"):"Unavailable";
-		btnAllDirs.displayString=ClientModManager.canRunInAllDirs(mc)?(ClientModManager.allowAllDirs?"Enabled":"Disabled"):"Unavailable";
-		btnDisableMod.displayString=ClientSettings.disableMod?"Yes":"No";
-		btnUpdateNotifications.displayString=ClientModManager.enableUpdateNotifications?"Yes":"No";
+		btnDoubleTap.displayString = ClientModManager.isModDisabled() ? "Unavailable" : (ClientSettings.enableDoubleTap ? "Enabled" : "Disabled");
+		btnFlyBoost.displayString = ClientModManager.canBoostFlying(mc) ? (ClientSettings.flySpeedBoost == 0 ? "Disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "Unavailable";
+		btnAllDirs.displayString = ClientModManager.canRunInAllDirs(mc) ? (ClientSettings.enableAllDirs ? "Enabled" : "Disabled") : "Unavailable";
+		btnDisableMod.displayString = ClientModManager.isModDisabled() ? "Yes" : "No";
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton btn){
-		for(int var2=0; var2<sprintBindings.length; ++var2){
-			((GuiButton)buttonList.get(var2)).displayString=getKeyCodeString(var2);
-		}
+		for(int a = 0; a < sprintBindings.length; a++)((GuiButton)buttonList.get(a)).displayString = getKeyCodeString(a);
 	
 		switch(btn.id){
 			case 190:
-				ClientModManager.fromBs=true;
 				mc.displayGuiScreen(new GuiControls(this,mc.gameSettings));
-				break;
-			
-			case 195:
-				ClientModManager.enableUpdateNotifications=!ClientModManager.enableUpdateNotifications;
 				break;
 				
 			case 196:
-				if (mc.thePlayer  ==  null&&mc.theWorld  ==  null){
-					ClientSettings.disableMod=!ClientSettings.disableMod;
+				if (ClientModManager.inMenu(mc)){
+					ClientSettings.disableMod = !ClientSettings.disableMod;
 					initGui();
 				}
+				
 				break;
 				
 			case 197:
-				if (ClientModManager.canBoostFlying(mc)&&++ClientModManager.flyingBoost  ==  8)ClientModManager.flyingBoost=0;
+				if (ClientModManager.canBoostFlying(mc) && ++ClientSettings.flySpeedBoost == 8)ClientSettings.flySpeedBoost = 0;
 				break;
 				
 			case 198:
-				if (ClientModManager.canRunInAllDirs(mc))ClientModManager.allowAllDirs=!ClientModManager.allowAllDirs;
+				if (ClientModManager.canRunInAllDirs(mc))ClientSettings.enableAllDirs = !ClientSettings.enableAllDirs;
 				break;
 				
 			case 199:
-				if (!ClientSettings.disableMod)ClientModManager.allowDoubleTap=!ClientModManager.allowDoubleTap;
+				if (!ClientSettings.disableMod)ClientSettings.enableDoubleTap = !ClientSettings.enableDoubleTap;
 				break;
 				
 			case 200:
-				if (parentScreen  ==  null){
-					mc.displayGuiScreen((GuiScreen)null);
-	                mc.setIngameFocus();
-				}
+				if (parentScreen == null)mc.setIngameFocus();
 				else mc.displayGuiScreen(parentScreen);
+				
 				break;
 				
 			default:
-				buttonId=btn.id;
-				btn.displayString="> "+GameSettings.getKeyDisplayString(mc.gameSettings.keyBindings[btn.id].getKeyCode())+" <";
+				buttonId = btn.id;
+				btn.displayString = "> "+GameSettings.getKeyDisplayString(mc.gameSettings.keyBindings[btn.id].getKeyCode())+" <";
 		}
 		
-		ClientModManager.saveSprint(mc);
+		ClientSettings.refresh(BetterSprintingMod.config);
 		updateButtons();
 	}
 	
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) throws IOException{
-		if (!handleInput(-100+par3))super.mouseClicked(par1,par2,par3);
+	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
+		if (!handleInput(button-100))super.mouseClicked(mouseX,mouseY,button);
 	}
 	
 	@Override
-	protected void keyTyped(char par1, int par2) throws IOException{
-		if (!handleInput(par2))super.keyTyped(par1,par2);
+	protected void keyTyped(char keyChar, int keyCode) throws IOException{
+		if (!handleInput(keyCode))super.keyTyped(keyChar,keyCode);
 	}
 	
 	private boolean handleInput(int keyId){
-		if (buttonId>=0&&buttonId<180){
+		if (buttonId >= 0 && buttonId < 180){
 			sprintBindings[buttonId].setKeyCode(keyId);
-			((GuiButton)buttonList.get(buttonId)).displayString=getKeyCodeString(buttonId);
-			buttonId=-1;
+			((GuiButton)buttonList.get(buttonId)).displayString = getKeyCodeString(buttonId);
+			buttonId = -1;
 			KeyBinding.resetKeyBindingArrayAndHash();
 			return true;
 		}
-		return false;
+		else return false;
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float par3){
+	public void drawScreen(int mouseX, int mouseY, float partialTickTime){
 		drawDefaultBackground();
 		drawCenteredString(fontRendererObj,"Better Sprinting",width/2,20,16777215);
 	
-		int left=getLeftColumnX(),a=0;
-		while(a<sprintBindings.length){
-			boolean alreadyUsed=false;
-			int b=0;
+		int left = getLeftColumnX(), top = height/6;
+		
+		for(int a = 0; a < sprintBindings.length;){
+			boolean alreadyUsed = false;
+			int b = 0;
 	
 			while(true){
-				if (b<sprintBindings.length){
-					if (b  ==  a||sprintBindings[a].getKeyCode() != sprintBindings[b].getKeyCode()){
+				if (b < sprintBindings.length){
+					if (b == a || sprintBindings[a].getKeyCode() != sprintBindings[b].getKeyCode()){
 						++b;
 						continue;
 					}
-					alreadyUsed=true;
+					
+					alreadyUsed = true;
 				}
 				
-				for(int i=0; i<mc.gameSettings.keyBindings.length; i++){
-					if (sprintBindings[a].getKeyCode() == mc.gameSettings.keyBindings[i].getKeyCode()){
-						alreadyUsed=true;
+				for(KeyBinding binding:mc.gameSettings.keyBindings){
+					if (sprintBindings[a].getKeyCode() == binding.getKeyCode()){
+						alreadyUsed = true;
 						break;
 					}
 				}
 	
-				if (buttonId == a)((GuiButton)buttonList.get(a)).displayString="\u00a7f> \u00a7e??? \u00a7f<";
-				else if (alreadyUsed)((GuiButton)buttonList.get(a)).displayString="\u00a7c"+getKeyCodeString(a);
-				else ((GuiButton)buttonList.get(a)).displayString=getKeyCodeString(a);
+				if (buttonId == a)((GuiButton)buttonList.get(a)).displayString = "\u00a7f> \u00a7e??? \u00a7f<";
+				else if (alreadyUsed)((GuiButton)buttonList.get(a)).displayString = "\u00a7c"+getKeyCodeString(a);
+				else ((GuiButton)buttonList.get(a)).displayString = getKeyCodeString(a);
 	
-				drawString(fontRendererObj,sprintBindings[a].getKeyDescription(),left+a%2*160+70+6,height/6+24*(a>>1)+7,-1);
-				++a;
+				drawString(fontRendererObj,sprintBindings[a].getKeyDescription(),left+a%2*160+70+6,top+24*(a>>1)+7,-1);
+				a++;
 				break;
 			}
 		}
@@ -182,15 +172,14 @@ public class GuiSprint extends GuiScreen{
 		drawButtonTitle("Run in all directions",btnAllDirs);
 		drawButtonTitle("Flying boost",btnFlyBoost);
 		drawButtonTitle("Disable mod functionality",btnDisableMod);
-		drawButtonTitle("Update notifications",btnUpdateNotifications);
 		
-		for(int i=0; i<buttonList.size(); i++){
-			GuiButton btn=(GuiButton)buttonList.get(i);
-			if (mouseX>=btn.xPosition&&mouseX<=btn.xPosition+btn.getButtonWidth()&&
-				mouseY>=btn.yPosition&&mouseY<=btn.yPosition+20){
+		for(int a = 0; a < buttonList.size(); a++){
+			GuiButton btn = (GuiButton)buttonList.get(a);
+			
+			if (mouseX >= btn.xPosition && mouseX <= btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY <= btn.yPosition+20){
 				String info="";
 				
-				switch(i){
+				switch(a){
 					case 0: info="Hold to sprint."; break;
 					case 1: info="Press once to start or stop sprinting."; break;
 					case 2: info="Press once to start or stop sneaking.#You cannot open menus whilst sneaking."; break;
@@ -202,14 +191,13 @@ public class GuiSprint extends GuiScreen{
 					case 8: info="Toggles update notifications."; break;
 				}
 				
-				String[] spl=info.split("#");
-				drawCenteredString(fontRendererObj,spl[0],width/2,height/6+146,-1);
-				if (spl.length == 2)drawCenteredString(fontRendererObj,spl[1],width/2,height/6+156,-1);
+				String[] spl = info.split("#");
+				for(int line = 0; line < spl.length; line++)drawCenteredString(fontRendererObj,spl[line],width/2,top+146+10*line,-1);
 				break;
 			}
 		}
 		
-		super.drawScreen(mouseX,mouseY,par3);
+		super.drawScreen(mouseX,mouseY,partialTickTime);
 	}
 	
 	private int getLeftColumnX(){

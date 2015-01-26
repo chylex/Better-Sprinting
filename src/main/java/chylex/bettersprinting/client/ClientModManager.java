@@ -8,16 +8,21 @@ public final class ClientModManager{
     public static KeyBinding keyBindSneakToggle = new KeyBinding("Sneak (toggle)",21,"key.categories.movement");
     public static KeyBinding keyBindSprintMenu = new KeyBinding("Sprint menu",24,"key.categories.movement");
     
-	public static boolean svFlyingBoost = false, svRunInAllDirs = false;
-	public static boolean fromBs = false;
-	public static boolean held = false;
-    public static int stoptime = 0;
+	public static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
+    
+    public static boolean inMenu(Minecraft mc){
+    	return mc.thePlayer == null || mc.theWorld == null;
+    }
     
     public static boolean canRunInAllDirs(Minecraft mc){
-    	return ClientSettings.disableMod ? false : (mc.thePlayer == null && mc.theWorld == null) || (mc.isSingleplayer() || svRunInAllDirs);
+    	return !ClientSettings.disableMod && (inMenu(mc) || mc.isSingleplayer() || svRunInAllDirs);
     }
     
     public static boolean canBoostFlying(Minecraft mc){
-    	return ClientSettings.disableMod ? false : (mc.thePlayer==null && mc.theWorld == null) || (mc.isSingleplayer() || mc.thePlayer.capabilities.isCreativeMode || svFlyingBoost);
+    	return !ClientSettings.disableMod && (inMenu(mc) || mc.isSingleplayer() || mc.thePlayer.capabilities.isCreativeMode || svSurvivalFlyingBoost);
+    }
+    
+    public static boolean isModDisabled(){
+    	return ClientSettings.disableMod || svDisableMod;
     }
 }
