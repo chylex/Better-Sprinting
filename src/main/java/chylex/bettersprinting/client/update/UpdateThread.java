@@ -12,6 +12,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.system.Log;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -91,7 +92,7 @@ public class UpdateThread extends Thread{
 				
 				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(s));
 			}
-			else if (counter > 0 && UpdateNotificationManager.enableNotifications){
+			else if (counter > 0 && ClientSettings.enableUpdateNotifications){
 				StringBuilder message = new StringBuilder()
 					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
 					.append("\n Found a new version ").append(EnumChatFormatting.GREEN).append(newestVersionForCurrentMC.modVersionName).append(EnumChatFormatting.RESET)
@@ -107,7 +108,7 @@ public class UpdateThread extends Thread{
 				
 				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(s));
 			}
-			else if (newestVersion != newestVersionForCurrentMC && UpdateNotificationManager.enableNotifications){
+			else if (newestVersion != newestVersionForCurrentMC && ClientSettings.enableUpdateNotifications){
 				StringBuilder message = new StringBuilder()
 					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
 					.append("\n Found a new version ").append(EnumChatFormatting.GREEN).append(newestVersion.modVersion).append(EnumChatFormatting.RESET)

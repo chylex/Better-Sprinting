@@ -16,7 +16,7 @@ public class GuiSprint extends GuiScreen{
 	private GuiScreen parentScreen;
 	private int buttonId = -1;
 	private GuiButton btnDoubleTap,btnFlyBoost,btnAllDirs,btnDisableMod,btnUpdateNotifications;
-	protected KeyBinding[] sprintBindings=new KeyBinding[]{
+	protected KeyBinding[] sprintBindings = new KeyBinding[]{
 		ClientModManager.keyBindSprint, ClientModManager.keyBindSprintToggle, ClientModManager.keyBindSneakToggle, ClientModManager.keyBindSprintMenu
 	};
 	

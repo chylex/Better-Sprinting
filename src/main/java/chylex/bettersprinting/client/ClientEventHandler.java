@@ -20,7 +20,7 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onPlayerJoinWorld(PlayerLoggedInEvent e){
-		if (ClientModManager.enableUpdateNotifications){
+		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
 			long time = System.currentTimeMillis();
 			
 			if (lastNotificationTime == -1 || time-lastNotificationTime > 1200000){

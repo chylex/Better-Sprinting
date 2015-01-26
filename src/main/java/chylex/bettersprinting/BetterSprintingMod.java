@@ -14,12 +14,15 @@ public class BetterSprintingMod{
 	@SidedProxy(clientSide="chylex.bettersprinting.client.ClientProxy", serverSide="chylex.bettersprinting.server.ServerProxy")
 	public static BetterSprintingProxy proxy;
 	
+	public static BetterSprintingConfig config;
+	
 	public static final String buildId = "";
 	public static String modVersion;
 	
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent e){
 		modVersion = e.getModMetadata().version;
+		config = new BetterSprintingConfig(e.getSuggestedConfigurationFile());
 		proxy.onPreInit(e);
 	}
 	
