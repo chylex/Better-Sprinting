@@ -36,7 +36,7 @@ public class GuiSprint extends GuiScreen{
 			ypos=height/6+24*(a>>1);
 			GuiOptionButton btn=new GuiOptionButton(a,left+a%2*160,ypos,70,20,getKeyCodeString(a));
 			buttonList.add(btn);
-			if ((a==1||a==2)&&ClientSettings.disableMod)btn.enabled=false;
+			if ((a == 1||a == 2)&&ClientSettings.disableMod)btn.enabled=false;
 		}
 	    
 	    ypos+=48;
@@ -51,19 +51,19 @@ public class GuiSprint extends GuiScreen{
 	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled=false;
 	    
 	    btnDisableMod=new GuiButton(196,left+160,ypos,70,20,""); buttonList.add(btnDisableMod);
-	    if (!(mc.thePlayer==null&&mc.theWorld==null))btnDisableMod.enabled=false;
+	    if (!(mc.thePlayer == null&&mc.theWorld == null))btnDisableMod.enabled=false;
 	    
 	    ypos+=24;
 	    btnUpdateNotifications=new GuiButton(195,left,ypos,70,20,""); buttonList.add(btnUpdateNotifications);
 	    
-	    buttonList.add(new GuiButton(200,width/2-100,height/6+168,parentScreen==null?98:200,20,I18n.format("gui.done")));
-	    if (parentScreen==null)buttonList.add(new GuiButton(190,width/2+2,height/6+168,98,20,I18n.format("options.controls")));
+	    buttonList.add(new GuiButton(200,width/2-100,height/6+168,parentScreen == null?98:200,20,I18n.format("gui.done")));
+	    if (parentScreen == null)buttonList.add(new GuiButton(190,width/2+2,height/6+168,98,20,I18n.format("options.controls")));
 	    updateButtons();
 	}
 	
 	private void updateButtons(){
 		btnDoubleTap.displayString=ClientSettings.disableMod?"Unavailable":(ClientModManager.allowDoubleTap?"Enabled":"Disabled");
-		btnFlyBoost.displayString=ClientModManager.canBoostFlying(mc)?(ClientModManager.flyingBoost==0?"Disabled":(ClientModManager.flyingBoost+1)+"x"):"Unavailable";
+		btnFlyBoost.displayString=ClientModManager.canBoostFlying(mc)?(ClientModManager.flyingBoost == 0?"Disabled":(ClientModManager.flyingBoost+1)+"x"):"Unavailable";
 		btnAllDirs.displayString=ClientModManager.canRunInAllDirs(mc)?(ClientModManager.allowAllDirs?"Enabled":"Disabled"):"Unavailable";
 		btnDisableMod.displayString=ClientSettings.disableMod?"Yes":"No";
 		btnUpdateNotifications.displayString=ClientModManager.enableUpdateNotifications?"Yes":"No";
@@ -86,14 +86,14 @@ public class GuiSprint extends GuiScreen{
 				break;
 				
 			case 196:
-				if (mc.thePlayer==null&&mc.theWorld==null){
+				if (mc.thePlayer  ==  null&&mc.theWorld  ==  null){
 					ClientSettings.disableMod=!ClientSettings.disableMod;
 					initGui();
 				}
 				break;
 				
 			case 197:
-				if (ClientModManager.canBoostFlying(mc)&&++ClientModManager.flyingBoost==8)ClientModManager.flyingBoost=0;
+				if (ClientModManager.canBoostFlying(mc)&&++ClientModManager.flyingBoost  ==  8)ClientModManager.flyingBoost=0;
 				break;
 				
 			case 198:
@@ -105,7 +105,7 @@ public class GuiSprint extends GuiScreen{
 				break;
 				
 			case 200:
-				if (parentScreen==null){
+				if (parentScreen  ==  null){
 					mc.displayGuiScreen((GuiScreen)null);
 	                mc.setIngameFocus();
 				}
@@ -154,7 +154,7 @@ public class GuiSprint extends GuiScreen{
 	
 			while(true){
 				if (b<sprintBindings.length){
-					if (b==a||sprintBindings[a].getKeyCode()!=sprintBindings[b].getKeyCode()){
+					if (b  ==  a||sprintBindings[a].getKeyCode() != sprintBindings[b].getKeyCode()){
 						++b;
 						continue;
 					}
@@ -162,13 +162,13 @@ public class GuiSprint extends GuiScreen{
 				}
 				
 				for(int i=0; i<mc.gameSettings.keyBindings.length; i++){
-					if (sprintBindings[a].getKeyCode()==mc.gameSettings.keyBindings[i].getKeyCode()){
+					if (sprintBindings[a].getKeyCode() == mc.gameSettings.keyBindings[i].getKeyCode()){
 						alreadyUsed=true;
 						break;
 					}
 				}
 	
-				if (buttonId==a)((GuiButton)buttonList.get(a)).displayString="\u00a7f> \u00a7e??? \u00a7f<";
+				if (buttonId == a)((GuiButton)buttonList.get(a)).displayString="\u00a7f> \u00a7e??? \u00a7f<";
 				else if (alreadyUsed)((GuiButton)buttonList.get(a)).displayString="\u00a7c"+getKeyCodeString(a);
 				else ((GuiButton)buttonList.get(a)).displayString=getKeyCodeString(a);
 	
@@ -204,7 +204,7 @@ public class GuiSprint extends GuiScreen{
 				
 				String[] spl=info.split("#");
 				drawCenteredString(fontRendererObj,spl[0],width/2,height/6+146,-1);
-				if (spl.length==2)drawCenteredString(fontRendererObj,spl[1],width/2,height/6+156,-1);
+				if (spl.length == 2)drawCenteredString(fontRendererObj,spl[1],width/2,height/6+156,-1);
 				break;
 			}
 		}

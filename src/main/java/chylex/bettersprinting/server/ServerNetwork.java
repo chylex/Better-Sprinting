@@ -10,10 +10,10 @@ public class ServerNetwork implements INetworkHandler{
 	 * ================
 	 * Payload packet on "BSprint" channel
 	 * * byte 4 - old protocol, no custom functionality
-	 * * byte 5 - new protocol, if you updated your handling code then ignore people who send this one and wait for BSM
+	 * * byte 5 - new old protocol, if you updated your handling code then ignore people who send this one and wait for BSM
 	 * 
 	 * Payload packet on "BSM" channel
-	 * * byte 0, byte X - new protocol, X is the protocol version that can be used to determine the useable functionality
+	 * * byte 0, byte X - new protocol, X is the protocol version that can be used to determine the useable functionality (latest is 10)
 	 * 
 	 * OUTCOMING PACKETS
 	 * =================
