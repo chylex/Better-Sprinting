@@ -95,7 +95,7 @@ public class PlayerLogicHandler{
 			else if (player.capabilities.getFlySpeed() > 0.05F)player.capabilities.setFlySpeed(0.05F);
 		}
 
-		if (ClientModManager.keyBindSprintMenu.isKeyDown())mc.displayGuiScreen(new GuiSprint(null));
+		if (ClientModManager.keyBindOptionsMenu.isKeyDown())mc.displayGuiScreen(new GuiSprint(null));
 		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying)player.setSprinting(false);
 
 		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
@@ -110,7 +110,7 @@ public class PlayerLogicHandler{
 					player.addChatMessage(new ChatComponentText("First-time warning: You can open inventories and menus while sneaking, however you will not be sneaking for the time it is open. Once you close the menu, sneaking will be restored."));
 					mc.setIngameFocus();
 					ClientSettings.showedSneakWarning = true;
-					ClientSettings.refresh(BetterSprintingMod.config);
+					ClientSettings.reload(BetterSprintingMod.config);
 				}
 				else{
 					shouldRestoreSneakToggle = true;

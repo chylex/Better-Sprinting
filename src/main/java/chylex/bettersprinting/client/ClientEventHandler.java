@@ -52,7 +52,7 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent e){
-		if (e.gui.getClass() == GuiControls.class)e.gui = new GuiControlsCustom((GuiControls)e.gui);
+		if (e.gui != null && e.gui.getClass() == GuiControls.class)e.gui = new GuiControlsCustom((GuiControls)e.gui);
 	}
 	
 	private ClientEventHandler(){}

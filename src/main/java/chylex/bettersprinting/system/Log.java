@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Properties;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,7 @@ public final class Log{
 	static{
 		isDeobfEnvironment = ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
 		
-		if (isDeobfEnvironment && MinecraftServer.getServer() instanceof DedicatedServer){
+		if (isDeobfEnvironment && MinecraftServer.getServer().getClass().getSimpleName().equals("DedicatedServer")){
 			FileOutputStream fos = null;
 			
 			try{

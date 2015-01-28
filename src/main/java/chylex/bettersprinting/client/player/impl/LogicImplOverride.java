@@ -5,15 +5,13 @@ import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.stats.StatFileWriter;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,20 +27,33 @@ public final class LogicImplOverride{
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent e){
-		if (e.gui.getClass() == GuiDownloadTerrain.class){
+		if (e.gui != null && e.gui.getClass() == GuiDownloadTerrain.class){
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.playerController = new PlayerControllerMPOverride(mc,(NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
+			
+			EntityPlayerSP prevPlayer = mc.thePlayer;
+			mc.theWorld.removeEntity(prevPlayer);
+			
+			mc.thePlayer = mc.playerController.func_178892_a(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
+			mc.playerController.flipPlayer(mc.thePlayer);
+			mc.thePlayer.preparePlayerToSpawn();
+			mc.theWorld.spawnEntityInWorld(mc.thePlayer);
+            mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
+            mc.playerController.setPlayerCapabilities(mc.thePlayer);
+            mc.setRenderViewEntity(mc.thePlayer);
+			mc.thePlayer.dimension = prevPlayer.dimension;
 		}
 	}
 	
-	@SubscribeEvent
+	// TODO client tick
+	/*@SubscribeEvent
 	public void onPlayerJoinWorld(PlayerLoggedInEvent e){
 		Class<?> controllerClass = Minecraft.getMinecraft().playerController.getClass();
 		
 		if (controllerClass != PlayerControllerMPOverride.class){
 			e.player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: "+controllerClass.getName()));
 		}
-	}
+	}*/
 	
 	@SideOnly(Side.CLIENT)
 	public static final class PlayerControllerMPOverride extends PlayerControllerMP{
@@ -57,6 +68,7 @@ public final class LogicImplOverride{
 		
 		@Override
 		public EntityPlayerSP func_178892_a(World world, StatFileWriter statWriter){
+			System.out.println("SPAWN");
 			return new PlayerOverride(mc,world,netHandler,statWriter);
 		}
 	}

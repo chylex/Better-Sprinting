@@ -9,7 +9,7 @@ public final class ClientModManager{
 	public static KeyBinding keyBindSprintHold = new KeyBinding("Sprint (hold)",29,"key.categories.movement");
     public static KeyBinding keyBindSprintToggle = new KeyBinding("Sprint (toggle)",34,"key.categories.movement");
     public static KeyBinding keyBindSneakToggle = new KeyBinding("Sneak (toggle)",21,"key.categories.movement");
-    public static KeyBinding keyBindSprintMenu = new KeyBinding("Sprint menu",24,"key.categories.movement");
+    public static KeyBinding keyBindOptionsMenu = new KeyBinding("Sprint menu",24,"key.categories.movement");
     
 	public static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
     

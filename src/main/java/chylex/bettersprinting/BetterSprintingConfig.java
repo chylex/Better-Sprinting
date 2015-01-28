@@ -28,11 +28,11 @@ public class BetterSprintingConfig{
 	
 	private void reload(){
 		BetterSprintingMod.proxy.loadSidedConfig(this);
-		if (config.hasChanged())config.save();
+		update();
 	}
 	
-	public void forceSave(){
-		config.save();
+	public void update(){
+		if (config.hasChanged())config.save();
 	}
 	
 	@SideOnly(Side.CLIENT)

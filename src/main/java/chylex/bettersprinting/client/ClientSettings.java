@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingConfig;
@@ -20,7 +21,7 @@ public class ClientSettings{
 	public static boolean enableBuildCheck = true;
 	public static boolean showedSneakWarning = false;
 	
-	public static void refresh(BetterSprintingConfig config){
+	public static void reload(BetterSprintingConfig config){
 		config.setCategory("client");
 		OldClientConfig.loadAndDeleteOldConfig();
 		
@@ -41,8 +42,32 @@ public class ClientSettings{
 		ClientModManager.keyBindSprintHold.setKeyCode(keyCodeSprintHold);
 		ClientModManager.keyBindSprintToggle.setKeyCode(keyCodeSprintToggle);
 		ClientModManager.keyBindSneakToggle.setKeyCode(keyCodeSneakToggle);
-		ClientModManager.keyBindSprintMenu.setKeyCode(keyCodeOptionsMenu);
+		ClientModManager.keyBindOptionsMenu.setKeyCode(keyCodeOptionsMenu);
 		
-		config.forceSave();
+		config.update();
+		
+		Minecraft.getMinecraft().gameSettings.keyBindSprint.setKeyCode(ClientSettings.keyCodeSprintHold);
+	}
+	
+	public static void update(BetterSprintingConfig config){
+		config.setCategory("client");
+		
+		config.setInt("keySprintHold",keyCodeSprintHold);
+		config.setInt("keySprintToggle",keyCodeSprintToggle);
+		config.setInt("keySneakToggle",keyCodeSneakToggle);
+		config.setInt("keyOptionsMenu",keyCodeOptionsMenu);
+		
+		config.setInt("flySpeedBoost",flySpeedBoost);
+		config.setBool("enableDoubleTap",enableDoubleTap);
+		config.setBool("enableAllDirs",enableAllDirs);
+		config.setBool("disableMod",disableMod);
+		
+		config.setBool("enableUpdateNotifications",enableUpdateNotifications);
+		config.setBool("enableBuildCheck",enableBuildCheck);
+		config.setBool("showedSneakWarning",showedSneakWarning);
+		
+		config.update();
+		
+		Minecraft.getMinecraft().gameSettings.keyBindSprint.setKeyCode(ClientSettings.keyCodeSprintHold);
 	}
 }

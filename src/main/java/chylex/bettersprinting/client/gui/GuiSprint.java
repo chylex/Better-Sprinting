@@ -22,7 +22,7 @@ public class GuiSprint extends GuiScreen{
 		ClientModManager.keyBindSprintHold,
 		ClientModManager.keyBindSprintToggle,
 		ClientModManager.keyBindSneakToggle,
-		ClientModManager.keyBindSprintMenu
+		ClientModManager.keyBindOptionsMenu
 	};
 	
 	private GuiButton btnDoubleTap, btnFlyBoost, btnAllDirs, btnDisableMod;
@@ -104,8 +104,8 @@ public class GuiSprint extends GuiScreen{
 				buttonId = btn.id;
 				btn.displayString = "> "+GameSettings.getKeyDisplayString(mc.gameSettings.keyBindings[btn.id].getKeyCode())+" <";
 		}
-		
-		ClientSettings.refresh(BetterSprintingMod.config);
+
+		ClientSettings.update(BetterSprintingMod.config);
 		updateButtons();
 	}
 	
@@ -125,6 +125,12 @@ public class GuiSprint extends GuiScreen{
 			((GuiButton)buttonList.get(buttonId)).displayString = getKeyCodeString(buttonId);
 			buttonId = -1;
 			KeyBinding.resetKeyBindingArrayAndHash();
+			
+			ClientSettings.keyCodeSprintHold = ClientModManager.keyBindSprintHold.getKeyCode();
+			ClientSettings.keyCodeSprintToggle = ClientModManager.keyBindSprintToggle.getKeyCode();
+			ClientSettings.keyCodeSneakToggle = ClientModManager.keyBindSneakToggle.getKeyCode();
+			ClientSettings.keyCodeOptionsMenu = ClientModManager.keyBindOptionsMenu.getKeyCode();
+			ClientSettings.update(BetterSprintingMod.config);
 			return true;
 		}
 		else return false;
@@ -188,11 +194,10 @@ public class GuiSprint extends GuiScreen{
 					case 5: info="Sprint in all directions.#You cannot use this in multiplayer unless the server allows it."; break;
 					case 6: info="Press whilst flying in creative mode to fly faster.#Works in survival mode flying (modded game) if the server allows it."; break;
 					case 7: info="Disables all non-vanilla functionality of Better Sprinting.#This option can be used if a server doesn't allow the mod."; break;
-					case 8: info="Toggles update notifications."; break;
 				}
 				
 				String[] spl = info.split("#");
-				for(int line = 0; line < spl.length; line++)drawCenteredString(fontRendererObj,spl[line],width/2,top+146+10*line,-1);
+				for(int line = 0; line < spl.length; line++)drawCenteredString(fontRendererObj,spl[line],width/2,top+143+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2),-1);
 				break;
 			}
 		}

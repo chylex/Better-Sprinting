@@ -16,7 +16,7 @@ import chylex.bettersprinting.system.PacketPipeline;
 public class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void loadSidedConfig(BetterSprintingConfig config){
-		ClientSettings.refresh(config);
+		ClientSettings.reload(config);
 	}
 	
 	@Override

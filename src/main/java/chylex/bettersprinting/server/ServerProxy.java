@@ -9,7 +9,7 @@ import chylex.bettersprinting.system.PacketPipeline;
 public class ServerProxy extends BetterSprintingProxy{	
 	@Override
 	public void loadSidedConfig(BetterSprintingConfig config){
-		ServerSettings.refresh(config);
+		ServerSettings.reload(config);
 	}
 	
 	@Override

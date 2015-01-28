@@ -20,9 +20,6 @@ public class CustomMovementInput{
 		if (settings.keyBindLeft.isKeyDown())++options.moveStrafe;
 		if (settings.keyBindRight.isKeyDown())--options.moveStrafe;
 		
-		options.jump = settings.keyBindJump.isKeyDown();
-		options.sneak = settings.keyBindSneak.isKeyDown();
-		
 		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		
 		if (!sprint){
