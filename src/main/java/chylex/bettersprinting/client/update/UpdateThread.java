@@ -94,7 +94,7 @@ public class UpdateThread extends Thread{
 			}
 			else if (counter > 0 && ClientSettings.enableUpdateNotifications){
 				StringBuilder message = new StringBuilder()
-					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
+					.append(EnumChatFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
 					.append("\n Found a new version ").append(EnumChatFormatting.GREEN).append(newestVersionForCurrentMC.modVersionName).append(EnumChatFormatting.RESET)
 					.append(" for Minecraft ").append(mcVersion).append(", released ").append(newestVersionForCurrentMC.releaseDate)
 					.append(". You are currently ").append(counter).append(" version").append(counter == 1 ? "" : "s").append(" behind.");
@@ -110,7 +110,7 @@ public class UpdateThread extends Thread{
 			}
 			else if (newestVersion != newestVersionForCurrentMC && ClientSettings.enableUpdateNotifications){
 				StringBuilder message = new StringBuilder()
-					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
+					.append(EnumChatFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
 					.append("\n Found a new version ").append(EnumChatFormatting.GREEN).append(newestVersion.modVersion).append(EnumChatFormatting.RESET)
 					.append(" for Minecraft ").append(CommandBase.joinNiceString(newestVersion.mcVersions)).append(", released ").append(newestVersion.releaseDate)
 					.append(".");

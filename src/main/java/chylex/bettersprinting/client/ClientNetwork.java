@@ -5,9 +5,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
+@SideOnly(Side.CLIENT)
 public class ClientNetwork implements INetworkHandler{
 	public static PacketBuffer writeModNotification(int protocol){
 		PacketBuffer buffer = PacketPipeline.buf();

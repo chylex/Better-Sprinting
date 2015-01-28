@@ -7,12 +7,15 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.compatibility.OldNotificationPacket;
 import chylex.bettersprinting.client.gui.GuiControlsCustom;
 import chylex.bettersprinting.client.update.UpdateThread;
 import chylex.bettersprinting.system.PacketPipeline;
 
+@SideOnly(Side.CLIENT)
 public final class ClientEventHandler{
 	public static void register(){
 		ClientEventHandler events = new ClientEventHandler();

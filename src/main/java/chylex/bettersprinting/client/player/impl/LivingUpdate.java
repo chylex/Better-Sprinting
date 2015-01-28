@@ -5,8 +5,11 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
+@SideOnly(Side.CLIENT)
 final class LivingUpdate{
 	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){		
 		if (player.sprintingTicksLeft > 0 && --player.sprintingTicksLeft == 0)player.setSprinting(false);
