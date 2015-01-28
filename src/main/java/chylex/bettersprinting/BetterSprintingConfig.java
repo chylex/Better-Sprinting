@@ -28,7 +28,6 @@ public class BetterSprintingConfig{
 	
 	private void reload(){
 		BetterSprintingMod.proxy.loadSidedConfig(this);
-		update();
 	}
 	
 	public void update(){
