@@ -5,6 +5,8 @@ import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.stats.StatFileWriter;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -12,6 +14,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -22,6 +26,9 @@ public final class LogicImplOverride{
 		FMLCommonHandler.instance().bus().register(instance);
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
+	
+	private byte checkTimer = -120;
+	private boolean stopChecking = false;
 	
 	private LogicImplOverride(){}
 	
@@ -44,16 +51,22 @@ public final class LogicImplOverride{
 			mc.thePlayer.dimension = prevPlayer.dimension;
 		}
 	}
-	
-	// TODO client tick
-	/*@SubscribeEvent
-	public void onPlayerJoinWorld(PlayerLoggedInEvent e){
-		Class<?> controllerClass = Minecraft.getMinecraft().playerController.getClass();
+
+	@SubscribeEvent
+	public void onClientTick(ClientTickEvent e){
+		if (e.phase == Phase.END || Minecraft.getMinecraft().thePlayer == null)return;
 		
-		if (controllerClass != PlayerControllerMPOverride.class){
-			e.player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: "+controllerClass.getName()));
+		if (!stopChecking && --checkTimer < -125){
+			checkTimer = 120;
+			Minecraft mc = Minecraft.getMinecraft();
+			Class<?> controllerClass = mc.playerController.getClass();
+			
+			if (controllerClass != PlayerControllerMPOverride.class){
+				mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: "+controllerClass.getName()));
+				stopChecking = true;
+			}
 		}
-	}*/
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public static final class PlayerControllerMPOverride extends PlayerControllerMP{

@@ -17,7 +17,7 @@ public class BetterSprintingMod{
 	
 	public static BetterSprintingConfig config;
 	
-	public static final String buildId = "";
+	public static final String buildId = "29-01-2015-0";
 	public static String modVersion;
 	
 	@EventHandler
