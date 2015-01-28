@@ -1,6 +1,14 @@
 Better Sprinting
 ================
 
+## Network specifications (applicable after next release)
+
+If you are a server owner and want to disable the mod, or enable some of the singleplayer-only functions, see the Better Sprinting network specification which has all the information:
+
+https://raw.githubusercontent.com/chylex/Better-Sprinting/master/src/main/java/chylex/bettersprinting/server/ServerNetwork.java
+
+If you have a Forge server, you can just install the mod and use the /bettersprinting command to configure the behavior.
+
 ## Project license
 
 The project is under the All Rights Reserved license, which means that redistribution is forbidden. However, I do not want to be as restrictive, so here are some general rules, and some specific cases for what you may want to do with the source.
