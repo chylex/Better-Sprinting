@@ -5,8 +5,9 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true)
+@Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory")
 public class BetterSprintingMod{
 	@Instance("BetterSprinting")
 	public static BetterSprintingMod instance;
@@ -29,5 +30,10 @@ public class BetterSprintingMod{
 	@EventHandler
 	public void onInit(FMLInitializationEvent e){
 		proxy.onInit(e);
+	}
+	
+	@EventHandler
+	public void onServerStarting(FMLServerStartingEvent e){
+		proxy.onServerStarting(e);
 	}
 }

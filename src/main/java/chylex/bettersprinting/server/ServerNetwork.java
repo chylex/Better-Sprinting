@@ -12,7 +12,7 @@ public class ServerNetwork implements INetworkHandler{
 	 * ================
 	 * Payload packet on "BSprint" channel
 	 * * byte 4 - old protocol, no custom functionality
-	 * * byte 5 - new old protocol, if you updated your handling code then ignore people who send this one and wait for BSM
+	 * * byte 5 - new old protocol, if you updated your handling code then ignore people who send this one and wait for BSM packet
 	 * 
 	 * Payload packet on "BSM" channel
 	 * * byte 0, byte X - new protocol, X is the protocol version that can be used to determine the useable functionality (latest is 10)
@@ -41,8 +41,14 @@ public class ServerNetwork implements INetworkHandler{
 		byte type = data.readByte();
 		
 		if (type == 0){
-			int protocol = data.readByte();
-			// TODO send server-side settings
+			// unused: int protocol = data.readByte();
+			
+			if (ServerSettings.disableClientMod){
+				PacketPipeline.sendToPlayer(writeDisableMod(),player);
+			}
+			else if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
+				PacketPipeline.sendToPlayer(writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs),player);
+			}
 		}
 	}
 }

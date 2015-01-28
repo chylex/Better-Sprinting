@@ -1,10 +1,15 @@
 package chylex.bettersprinting;
 import java.io.File;
+import java.util.List;
+import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BetterSprintingConfig{
 	private final Configuration config;
@@ -30,6 +35,11 @@ public class BetterSprintingConfig{
 		config.save();
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public List<IConfigElement> getClientGuiElements(String category){
+		return new ConfigElement(config.getCategory(category)).getChildElements();
+	}
+	
 	public void setCategory(String newCategory){
 		this.currentCategory = newCategory;
 	}
@@ -48,5 +58,10 @@ public class BetterSprintingConfig{
 	
 	public void setInt(String name, int value){
 		config.get(currentCategory,name,value).set(value);
+	}
+	
+	@Override
+	public String toString(){
+		return config.toString();
 	}
 }

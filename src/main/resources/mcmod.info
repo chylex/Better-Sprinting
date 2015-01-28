@@ -9,9 +9,6 @@
   "updateUrl": "",
   "authorList": [ "chylex" ],
   "parent": "",
-  "screenshots": [],
-  "dependencies": [
-    "PlayerAPI"
-  ]
+  "screenshots": []
 }
 ]
