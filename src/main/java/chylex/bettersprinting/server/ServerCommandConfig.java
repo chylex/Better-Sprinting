@@ -27,8 +27,12 @@ public class ServerCommandConfig extends CommandBase{
 	public void execute(ICommandSender sender, String[] args) throws CommandException{
 		if (args.length == 0){
 			sendMessage(sender,EnumChatFormatting.GREEN+"[Better Sprinting]");
+			sendMessage(sender,"/bettersprinting info");
 			sendMessage(sender,"/bettersprinting disablemod <true|false>");
 			sendMessage(sender,"/bettersprinting setting <survivalFlyBoost|runInAllDirs> <true|false>");
+		}
+		else if (args[0].equalsIgnoreCase("info")){
+			sendMessage(sender,"You can use the command to either disable/enable the mod, or change specific settings of the mod. These will persist after restarting the server, and will also immediately affect players that are already on the server.");
 		}
 		else if (args[0].equalsIgnoreCase("disablemod")){
 			if (isValidBool(args,1)){
@@ -58,6 +62,7 @@ public class ServerCommandConfig extends CommandBase{
 				}
 			}
 		}
+		else sendMessage(sender,"Invalid syntax, do /bettersprinting for list of commands.");
 	}
 	
 	private void sendMessage(ICommandSender sender, String text){

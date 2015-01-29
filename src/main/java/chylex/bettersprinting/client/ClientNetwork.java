@@ -28,5 +28,9 @@ public class ClientNetwork implements INetworkHandler{
 			ClientModManager.svDisableMod = true;
 			PlayerLogicHandler.showDisableWarningWhenPossible = true;
 		}
+		else if (type == 2){
+			ClientModManager.svDisableMod = false;
+			PlayerLogicHandler.showDisableWarningWhenPossible = true;
+		}
 	}
 }

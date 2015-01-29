@@ -105,7 +105,8 @@ public class PlayerLogicHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect."));
+			if (ClientModManager.svDisableMod)player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect."));
+			else player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has enabled the mod again, sprinting mechanics are switched to Better Sprinting ones."));
 			showDisableWarningWhenPossible = false;
 		}
 	}
