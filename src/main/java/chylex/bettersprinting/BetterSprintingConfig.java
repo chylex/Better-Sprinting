@@ -34,6 +34,10 @@ public class BetterSprintingConfig{
 		if (config.hasChanged())config.save();
 	}
 	
+	public String getFileName(){
+		return config.toString();
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public List<IConfigElement> getClientGuiElements(String category){
 		return new ConfigElement(config.getCategory(category)).getChildElements();
@@ -57,10 +61,5 @@ public class BetterSprintingConfig{
 	
 	public void setInt(String name, int value){
 		config.get(currentCategory,name,value).set(value);
-	}
-	
-	@Override
-	public String toString(){
-		return config.toString();
 	}
 }

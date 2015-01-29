@@ -4,7 +4,7 @@
   "name": "Better Sprinting",
   "version": "1.1",
   "mcversion": "",
-  "description": "...\n\n§nFind me on Twitter:§r https://twitter.com/chylexMC",
+  "description": "New sprinting and sneaking functionality. Mod settings are configurable in Controls and in-game menu (default: 'O'), for internal settings (notifications) click Config button below.\n\n§nFind me on Twitter:§r https://twitter.com/chylexMC",
   "url": "http://bsprint.chylex.com",
   "updateUrl": "",
   "authorList": [ "chylex" ],
