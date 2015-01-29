@@ -14,6 +14,7 @@ public class ServerProxy extends BetterSprintingProxy{
 	
 	@Override
 	public void onPreInit(FMLPreInitializationEvent e){
+		ServerEventHandler.register();
 		PacketPipeline.initialize(new ServerNetwork());
 	}
 

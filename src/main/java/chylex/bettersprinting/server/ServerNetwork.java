@@ -22,6 +22,7 @@ public class ServerNetwork implements INetworkHandler{
 	 * Payload packet on "BSM" channel
 	 * * byte 0, boolean enableSurvivalFlyBoost, boolean enableAllDirs - custom settings, both are false by default [since 10]
 	 * * byte 1 - disables the mod on client-side [since 10]
+	 * * byte 2 - re-enables the mod in client-side, called from command [since 10]
 	 * 
 	 * ADDITIONAL INFO
 	 * ===============
@@ -53,25 +54,19 @@ public class ServerNetwork implements INetworkHandler{
 		return buffer;
 	}
 	
-	public static PacketBuffer writeDisableMod(){
+	public static PacketBuffer writeDisableMod(boolean disable){
 		PacketBuffer buffer = PacketPipeline.buf();
-		buffer.writeByte(1);
+		buffer.writeByte(disable ? 1 : 2);
 		return buffer;
 	}
 	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
-		byte type = data.readByte();System.out.println("RCVD S "+type);
+		byte type = data.readByte();
 		
 		if (type == 0){
-			// unused: int protocol = data.readByte();
-			
-			if (ServerSettings.disableClientMod){
-				PacketPipeline.sendToPlayer(writeDisableMod(),player);
-			}
-			else if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
-				PacketPipeline.sendToPlayer(writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs),player);
-			}
+			// might be useful later; maybe keep a list of players with the mod installed
+			// setting packet is sent in the login event
 		}
 	}
 }

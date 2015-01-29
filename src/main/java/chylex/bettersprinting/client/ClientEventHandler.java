@@ -6,6 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,11 +28,7 @@ public final class ClientEventHandler{
 	private boolean stopChecking;
 	
 	@SubscribeEvent
-	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
-		if (stopChecking || e.entity != Minecraft.getMinecraft().thePlayer)return;
-		
-		stopChecking = true;
-		
+	public void onPlayerLoginClient(PlayerLoggedInEvent e){
 		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
 			long time = System.currentTimeMillis();
 			
@@ -40,11 +37,16 @@ public final class ClientEventHandler{
 				new UpdateThread(BetterSprintingMod.modVersion).start();
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
+		if (stopChecking || e.entity != Minecraft.getMinecraft().thePlayer)return;
 		
+		stopChecking = true;
 		Minecraft mc = Minecraft.getMinecraft();
 		
 		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod){
-			ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
 			PacketPipeline.sendToServer(ClientNetwork.writeModNotification(10));
 			OldNotificationPacket.sendServerNotification(mc.thePlayer.sendQueue);
 		}
@@ -52,7 +54,8 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onClientDisconnectedFromServer(ClientDisconnectionFromServerEvent e){
-		stopChecking = ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
+		ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
+		stopChecking = false;
 	}
 	
 	@SubscribeEvent

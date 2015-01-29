@@ -2,10 +2,9 @@ package chylex.bettersprinting.client;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import chylex.bettersprinting.client.player.PlayerLogicHandler;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
@@ -27,7 +26,7 @@ public class ClientNetwork implements INetworkHandler{
 		}
 		else if (type == 1){
 			ClientModManager.svDisableMod = true;
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect."));
+			PlayerLogicHandler.showDisableWarningWhenPossible = true;
 		}
 	}
 }

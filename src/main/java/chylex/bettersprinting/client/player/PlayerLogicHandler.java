@@ -3,12 +3,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovementInputFromOptions;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
 
 public class PlayerLogicHandler{
+	public static boolean showDisableWarningWhenPossible;
+	
 	private final Minecraft mc;
 	private final CustomMovementInput customMovementInput;
 	private EntityPlayerSP player;
@@ -98,6 +102,11 @@ public class PlayerLogicHandler{
 
 		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
 			if ((ClientModManager.canRunInAllDirs(mc) && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F))player.setSprinting(false);
+		}
+		
+		if (showDisableWarningWhenPossible){
+			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect."));
+			showDisableWarningWhenPossible = false;
 		}
 	}
 	

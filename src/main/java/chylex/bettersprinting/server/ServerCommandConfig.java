@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.system.PacketPipeline;
 
 public class ServerCommandConfig extends CommandBase{
 	@Override
@@ -34,6 +35,7 @@ public class ServerCommandConfig extends CommandBase{
 				ServerSettings.disableClientMod = getBool(args,1);
 				ServerSettings.update(BetterSprintingMod.config);
 				sendMessage(sender,ServerSettings.disableClientMod ? "Better Sprinting will be automatically disabled when a user joins." : "Better Sprinting is now allowed on the server.");
+				PacketPipeline.sendToAll(ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
 			}
 			else sendMessage(sender,"Invalid syntax, do /bettersprinting for list of commands.");
 		}
@@ -46,11 +48,13 @@ public class ServerCommandConfig extends CommandBase{
 					ServerSettings.enableSurvivalFlyBoost = getBool(args,2);
 					ServerSettings.update(BetterSprintingMod.config);
 					sendMessage(sender,"Fly boost is now "+(ServerSettings.enableSurvivalFlyBoost ? "enabled" : "disabled")+" when the player is in survival mode.");
+					PacketPipeline.sendToAll(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs));
 				}
 				else if (args[1].equalsIgnoreCase("runInAllDirs")){
 					ServerSettings.enableAllDirs = getBool(args,2);
 					ServerSettings.update(BetterSprintingMod.config);
 					sendMessage(sender,"Sprinting in all directions is now "+(ServerSettings.enableAllDirs ? "enabled." : "disabled."));
+					PacketPipeline.sendToAll(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs));
 				}
 			}
 		}
