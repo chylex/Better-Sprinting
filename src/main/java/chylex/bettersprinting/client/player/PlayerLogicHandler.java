@@ -3,9 +3,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovementInputFromOptions;
-import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
@@ -106,16 +104,8 @@ public class PlayerLogicHandler{
 	private void updateSneakToggle(){
 		if (mc.currentScreen != null && player != null && player.isSneaking()){
 			if (customMovementInput.sneakToggle && !(mc.currentScreen instanceof GuiGameOver)){
-				if (!ClientSettings.showedSneakWarning){
-					player.addChatMessage(new ChatComponentText("First-time warning: You can open inventories and menus while sneaking, however you will not be sneaking for the time it is open. Once you close the menu, sneaking will be restored."));
-					mc.setIngameFocus();
-					ClientSettings.showedSneakWarning = true;
-					ClientSettings.reload(BetterSprintingMod.config);
-				}
-				else{
-					shouldRestoreSneakToggle = true;
-					customMovementInput.sneakToggle = false;
-				}
+				shouldRestoreSneakToggle = true;
+				customMovementInput.sneakToggle = false;
 			}
 		}
 		

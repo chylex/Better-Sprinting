@@ -3,10 +3,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingMod;
@@ -24,9 +24,14 @@ public final class ClientEventHandler{
 	}
 	
 	private long lastNotificationTime = -1;
+	private boolean stopChecking;
 	
 	@SubscribeEvent
-	public void onPlayerJoinWorld(PlayerLoggedInEvent e){
+	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
+		if (stopChecking || e.entity != Minecraft.getMinecraft().thePlayer)return;
+		
+		stopChecking = true;
+		
 		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
 			long time = System.currentTimeMillis();
 			
@@ -41,13 +46,13 @@ public final class ClientEventHandler{
 		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod){
 			ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
 			PacketPipeline.sendToServer(ClientNetwork.writeModNotification(10));
-			OldNotificationPacket.sendServerNotification();
+			OldNotificationPacket.sendServerNotification(mc.thePlayer.sendQueue);
 		}
 	}
 	
 	@SubscribeEvent
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
-		ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
+	public void onClientDisconnectedFromServer(ClientDisconnectionFromServerEvent e){
+		stopChecking = ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
 	}
 	
 	@SubscribeEvent

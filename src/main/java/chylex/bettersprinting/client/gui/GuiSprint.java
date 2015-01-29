@@ -188,7 +188,7 @@ public class GuiSprint extends GuiScreen{
 				switch(a){
 					case 0: info="Hold to sprint."; break;
 					case 1: info="Press once to start or stop sprinting."; break;
-					case 2: info="Press once to start or stop sneaking.#You cannot open menus whilst sneaking."; break;
+					case 2: info="Press once to start or stop sneaking.#When you open any GUI, you will stop sneaking until you close it."; break;
 					case 3: info="Key to open this menu ingame."; break;
 					case 4: info="Enable or disable sprinting by double-tapping the forward key."; break;
 					case 5: info="Sprint in all directions.#You cannot use this in multiplayer unless the server allows it."; break;

@@ -81,7 +81,6 @@ public final class LogicImplOverride{
 		
 		@Override
 		public EntityPlayerSP func_178892_a(World world, StatFileWriter statWriter){
-			System.out.println("SPAWN");
 			return new PlayerOverride(mc,world,netHandler,statWriter);
 		}
 	}

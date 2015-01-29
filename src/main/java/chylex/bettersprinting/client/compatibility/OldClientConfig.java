@@ -23,7 +23,6 @@ public class OldClientConfig{
     		ClientSettings.enableDoubleTap = tag.getBoolean("doubleTap");
     		ClientSettings.enableAllDirs = tag.getBoolean("allDirs");
     		ClientSettings.disableMod = tag.getBoolean("disableMod");
-    		ClientSettings.showedSneakWarning = tag.getBoolean("showedWarn");
     		ClientSettings.enableUpdateNotifications = tag.getBoolean("updateNotifications");
     		
     		return file.delete();

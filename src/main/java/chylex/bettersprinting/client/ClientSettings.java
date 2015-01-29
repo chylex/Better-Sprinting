@@ -19,7 +19,6 @@ public class ClientSettings{
 	
 	public static boolean enableUpdateNotifications = true;
 	public static boolean enableBuildCheck = true;
-	public static boolean showedSneakWarning = false;
 	
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("client");
@@ -37,7 +36,6 @@ public class ClientSettings{
 		
 		enableUpdateNotifications = config.getBool("enableUpdateNotifications",enableUpdateNotifications,"").getBoolean();
 		enableBuildCheck = config.getBool("enableBuildCheck",enableBuildCheck,"").getBoolean();
-		showedSneakWarning = config.getBool("showedSneakWarning",showedSneakWarning,"").setShowInGui(false).getBoolean();
 		
 		ClientModManager.keyBindSprintHold.setKeyCode(keyCodeSprintHold);
 		ClientModManager.keyBindSprintToggle.setKeyCode(keyCodeSprintToggle);
@@ -64,7 +62,6 @@ public class ClientSettings{
 		
 		config.setBool("enableUpdateNotifications",enableUpdateNotifications);
 		config.setBool("enableBuildCheck",enableBuildCheck);
-		config.setBool("showedSneakWarning",showedSneakWarning);
 		
 		config.update();
 		

@@ -11,6 +11,7 @@ import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.client.player.impl.LogicImplOverride;
 import chylex.bettersprinting.client.player.impl.LogicImplPlayerAPI;
+import chylex.bettersprinting.system.Log;
 import chylex.bettersprinting.system.PacketPipeline;
 
 public class ClientProxy extends BetterSprintingProxy{
@@ -21,6 +22,7 @@ public class ClientProxy extends BetterSprintingProxy{
 	
 	@Override
 	public void onPreInit(FMLPreInitializationEvent e){
+		Log.initializeDebug();
 		ClientEventHandler.register();
 		PacketPipeline.initialize(new ClientNetwork());
 	}

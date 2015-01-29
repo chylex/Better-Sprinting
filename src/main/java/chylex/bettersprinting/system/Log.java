@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Properties;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,11 +16,11 @@ import chylex.bettersprinting.BetterSprintingMod;
 public final class Log{
 	static final Logger logger = LogManager.getLogger("BetterSprinting");
 	
-	public static final boolean isDeobfEnvironment;
+	public static boolean isDeobfEnvironment;
 	public static boolean forceDebugEnabled;
 	private static byte obfEnvironmentWarning = 0;
 	
-	static{
+	public static void load(){
 		isDeobfEnvironment = ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
 		
 		if (isDeobfEnvironment && MinecraftServer.getServer().getClass().getSimpleName().equals("DedicatedServer")){
@@ -37,6 +39,7 @@ public final class Log{
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static void initializeDebug(){
 		if (forceDebugEnabled || isDeobfEnvironment){
 			Display.setTitle(new StringBuilder().append(Display.getTitle()).append(" - BetterSprinting - ").append(isDeobfEnvironment ? "dev" : "debug").append(' ').append(BetterSprintingMod.modVersion).toString());

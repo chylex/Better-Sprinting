@@ -61,7 +61,7 @@ public class ServerNetwork implements INetworkHandler{
 	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
-		byte type = data.readByte();
+		byte type = data.readByte();System.out.println("RCVD S "+type);
 		
 		if (type == 0){
 			// unused: int protocol = data.readByte();

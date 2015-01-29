@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import chylex.bettersprinting.system.Log;
 
 @Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*")
 public class BetterSprintingMod{
@@ -22,6 +23,7 @@ public class BetterSprintingMod{
 	
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent e){
+		Log.load();
 		modVersion = e.getModMetadata().version;
 		config = new BetterSprintingConfig(e.getSuggestedConfigurationFile());
 		proxy.onPreInit(e);
