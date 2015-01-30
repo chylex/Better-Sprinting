@@ -18,11 +18,11 @@ public final class ClientModManager{
     }
     
     public static boolean canRunInAllDirs(Minecraft mc){
-    	return !ClientSettings.disableMod && (inMenu(mc) || mc.isSingleplayer() || svRunInAllDirs);
+    	return !isModDisabled() && (inMenu(mc) || mc.isSingleplayer() || svRunInAllDirs);
     }
     
     public static boolean canBoostFlying(Minecraft mc){
-    	return !ClientSettings.disableMod && (inMenu(mc) || mc.isSingleplayer() || mc.thePlayer.capabilities.isCreativeMode || svSurvivalFlyingBoost);
+    	return !isModDisabled() && (inMenu(mc) || mc.isSingleplayer() || mc.thePlayer.capabilities.isCreativeMode || svSurvivalFlyingBoost);
     }
     
     public static boolean isModDisabled(){

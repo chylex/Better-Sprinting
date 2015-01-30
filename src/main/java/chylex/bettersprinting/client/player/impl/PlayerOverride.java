@@ -25,6 +25,8 @@ public class PlayerOverride extends EntityPlayerSP{
 		super(mc,world,netHandler,statWriter);
 		logic = new PlayerLogicHandler();
 		logic.setPlayer(this);
+		
+		entityUniqueID = mc.thePlayer.getUniqueID();
 	}
 	
 	@Override

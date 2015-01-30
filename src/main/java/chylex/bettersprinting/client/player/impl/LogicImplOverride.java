@@ -49,8 +49,6 @@ public final class LogicImplOverride{
             mc.playerController.setPlayerCapabilities(mc.thePlayer);
             mc.setRenderViewEntity(mc.thePlayer);
 			mc.thePlayer.dimension = prevPlayer.dimension;
-			
-			mc.thePlayer.setEntityId(prevPlayer.getEntityId());
 		}
 	}
 
