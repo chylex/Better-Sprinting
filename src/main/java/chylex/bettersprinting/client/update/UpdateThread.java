@@ -44,7 +44,8 @@ public class UpdateThread extends Thread{
 			JsonElement root = new JsonParser().parse(build.toString());
 			List<VersionEntry> versionList = Lists.newArrayList();
 			VersionEntry newestVersion = null, newestVersionForCurrentMC = null;
-			int counter = -1, buildId = 0;
+			int counter = -1;
+			String buildId = "";
 			boolean isInDev = true;
 			
 			String downloadURL = "http://tinyurl.com/better-sprinting-mod";
@@ -84,7 +85,7 @@ public class UpdateThread extends Thread{
 			}
 			else Log.debug("Done.");
 			
-			if (!String.valueOf(buildId).equals(BetterSprintingMod.buildId)){
+			if (!buildId.isEmpty() && !buildId.equals(BetterSprintingMod.buildId)){
 				StringBuilder message = new StringBuilder()
 					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Hardcore Ender Expansion ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
 					.append("\n Caution, you are using a broken build that can cause critical crashes! Please, redownload the mod, or update it if there is an update available.")

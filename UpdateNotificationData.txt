@@ -1,4 +1,11 @@
 {
+  "3 - 1.1": {
+    "modVersion": "1.1",
+    "mcVersions": [ "1.8" ],
+    "buildId": "test",
+    "releaseDate": "30 Jan 2015"
+  },
+  
   "2 - 1.0.1": {
     "modVersion": "1.0.1",
     "mcVersions": [ "1.7.2", "1.7.10" ],
