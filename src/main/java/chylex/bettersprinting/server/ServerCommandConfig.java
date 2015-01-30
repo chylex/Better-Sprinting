@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.server.compatibility.OldNotificationPacketReceiver;
 import chylex.bettersprinting.system.PacketPipeline;
 
 public class ServerCommandConfig extends CommandBase{
@@ -40,6 +41,7 @@ public class ServerCommandConfig extends CommandBase{
 				ServerSettings.update(BetterSprintingMod.config);
 				sendMessage(sender,ServerSettings.disableClientMod ? "Better Sprinting will be automatically disabled when a user joins." : "Better Sprinting is now allowed on the server.");
 				PacketPipeline.sendToAll(ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
+				if (ServerSettings.disableClientMod)OldNotificationPacketReceiver.kickOldModUsers();
 			}
 			else sendMessage(sender,"Invalid syntax, do /bettersprinting for list of commands.");
 		}
