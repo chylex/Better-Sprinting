@@ -34,7 +34,7 @@ public final class LogicImplOverride{
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent e){
-		if (e.gui != null && e.gui.getClass() == GuiDownloadTerrain.class){
+		if (e.gui != null && e.gui.getClass() == GuiDownloadTerrain.class && Minecraft.getMinecraft().playerController.getClass() != PlayerControllerMPOverride.class){
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.playerController = new PlayerControllerMPOverride(mc,(NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
