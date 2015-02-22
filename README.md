@@ -1,7 +1,7 @@
 Better Sprinting
 ================
 
-## Network specifications (applicable after next release)
+## Network specifications
 
 If you are a server owner and want to disable the mod, or enable some of the singleplayer-only functions, see the Better Sprinting network specification which has all the information:
 
