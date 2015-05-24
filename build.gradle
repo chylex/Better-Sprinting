@@ -19,15 +19,14 @@ apply plugin: 'forge'
 
 version = ""
 group = "chylex.bettersprinting.BetterSprintingMod"
-archivesBaseName = "BetterSprinting  MC-1.8  v1.1.1"
+archivesBaseName = "BetterSprinting  MC-1.7.10  v"
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 minecraft {
-    version = "1.8-11.14.0.1289-1.8"
+    version = "1.7.10-10.13.3.1408-1.7.10"
     runDir = "eclipse"
-    mappings = "snapshot_20150118"
 }
 
 processResources {

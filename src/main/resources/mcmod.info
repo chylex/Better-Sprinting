@@ -1,14 +1,16 @@
 [
 {
-  "modid": "BetterSprinting",
-  "name": "Better Sprinting",
-  "version": "1.1.1",
-  "mcversion": "",
-  "description": "New sprinting and sneaking functionality. Mod settings are configurable in Controls and in-game menu (default: 'O'), for internal settings (notifications) click Config button below.\n\n§nFind me on Twitter:§r https://twitter.com/chylexMC",
-  "url": "http://bsprint.chylex.com",
+  "modid": "examplemod",
+  "name": "Example Mod",
+  "description": "Example placeholder mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
   "updateUrl": "",
-  "authorList": [ "chylex" ],
-  "parent": "",
-  "screenshots": []
+  "authorList": ["ExampleDude"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
 }
 ]
