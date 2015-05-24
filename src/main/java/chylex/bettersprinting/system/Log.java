@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.util.Properties;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import chylex.bettersprinting.BetterSprintingMod;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public final class Log{
 	static final Logger logger = LogManager.getLogger("BetterSprinting");
@@ -23,7 +23,7 @@ public final class Log{
 	public static void load(){
 		isDeobfEnvironment = ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
 		
-		if (isDeobfEnvironment && MinecraftServer.getServer().getClass().getSimpleName().equals("DedicatedServer")){
+		if (isDeobfEnvironment && MinecraftServer.getServer() != null && MinecraftServer.getServer().getClass().getSimpleName().equals("DedicatedServer")){
 			FileOutputStream fos = null;
 			
 			try{

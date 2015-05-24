@@ -3,20 +3,19 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.common.network.FMLEventChannel;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import chylex.bettersprinting.server.ServerSettings;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.common.network.FMLEventChannel;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 public class OldNotificationPacketReceiver{
 	private static OldNotificationPacketReceiver instance;
@@ -29,8 +28,8 @@ public class OldNotificationPacketReceiver{
 	public static void kickOldModUsers(){
 		ServerConfigurationManager manager = MinecraftServer.getServer().getConfigurationManager();
 		
-		for(UUID id:instance.users.keySet()){
-			EntityPlayerMP player = manager.getPlayerByUUID(id);
+		for(String id:instance.users.keySet()){
+			EntityPlayerMP player = manager.func_152612_a(id);
 			if (player != null)player.playerNetServerHandler.kickPlayerFromServer("The server does not allow Better Sprinting. Newer versions of the mod can be disabled automatically without kicking.");
 		}
 		
@@ -38,7 +37,7 @@ public class OldNotificationPacketReceiver{
 	}
 	
 	private final FMLEventChannel channel;
-	private final TObjectIntHashMap<UUID> users = new TObjectIntHashMap<UUID>();
+	private final TObjectIntHashMap<String> users = new TObjectIntHashMap<>();
 	
 	private OldNotificationPacketReceiver(){
 		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("BSprint");
@@ -51,7 +50,7 @@ public class OldNotificationPacketReceiver{
 		
 		if (data.readByte() == 4){
 			NetHandlerPlayServer net = (NetHandlerPlayServer)e.handler;
-			users.put(net.playerEntity.getUniqueID(),100);
+			users.put(net.playerEntity.getCommandSenderName(),100);
 		}
 	}
 	
@@ -59,12 +58,12 @@ public class OldNotificationPacketReceiver{
 	public void onServerTick(ServerTickEvent e){
 		if (e.phase == Phase.END || !ServerSettings.disableClientMod)return;
 		
-		Set<UUID> ids = new HashSet<UUID>(users.keySet());
+		Set<String> ids = new HashSet<>(users.keySet());
 		
-		for(UUID id:ids){
+		for(String id:ids){
 			int val = users.adjustOrPutValue(id,-1,0);
 			
-			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerByUUID(id);
+			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(id);
 			
 			if (player == null){
 				users.remove(id);
@@ -84,6 +83,6 @@ public class OldNotificationPacketReceiver{
 	
 	@SubscribeEvent
 	public void onPlayerDisconnect(PlayerLoggedOutEvent e){
-		users.remove(e.player.getUniqueID());
+		users.remove(e.player.getCommandSenderName());
 	}
 }

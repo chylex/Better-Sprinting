@@ -1,10 +1,11 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import api.player.client.ClientPlayerAPI;
 import api.player.client.ClientPlayerBase;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PlayerBase extends ClientPlayerBase{
@@ -20,7 +21,7 @@ public class PlayerBase extends ClientPlayerBase{
 	@Override
 	public void onLivingUpdate(){
 		logic.setPlayer(player);
-		LivingUpdate.callPreSuper(player,mc,logic);
+		LivingUpdate.callPreSuper((EntityClientPlayerMP)player,mc,logic);
 		playerAPI.superOnLivingUpdate();
 		LivingUpdate.callPostSuper(player,mc,logic);
 	}

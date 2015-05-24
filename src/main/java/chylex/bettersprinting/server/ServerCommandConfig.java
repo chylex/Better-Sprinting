@@ -10,12 +10,12 @@ import chylex.bettersprinting.system.PacketPipeline;
 
 public class ServerCommandConfig extends CommandBase{
 	@Override
-	public String getName(){
+	public String getCommandName(){
 		return "bettersprinting";
 	}
 
 	@Override
-	public String getUsage(ICommandSender sender){
+	public String getCommandUsage(ICommandSender sender){
 		return "/bettersprinting [...]";
 	}
 	
@@ -25,7 +25,7 @@ public class ServerCommandConfig extends CommandBase{
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) throws CommandException{
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException{
 		if (args.length == 0){
 			sendMessage(sender,EnumChatFormatting.GREEN+"[Better Sprinting]");
 			sendMessage(sender,"/bettersprinting info");

@@ -1,8 +1,8 @@
 package chylex.bettersprinting.client.gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.client.config.GuiConfig;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingMod;
 
 @SideOnly(Side.CLIENT)

@@ -1,6 +1,6 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -11,13 +11,13 @@ import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class LogicImplOverride{
@@ -38,16 +38,16 @@ public final class LogicImplOverride{
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.playerController = new PlayerControllerMPOverride(mc,(NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
-			EntityPlayerSP prevPlayer = mc.thePlayer;
+			EntityClientPlayerMP prevPlayer = mc.thePlayer;
 			mc.theWorld.removeEntity(prevPlayer);
 			
-			mc.thePlayer = mc.playerController.func_178892_a(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
+			mc.thePlayer = mc.playerController.func_147493_a(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
 			mc.playerController.flipPlayer(mc.thePlayer);
 			mc.thePlayer.preparePlayerToSpawn();
 			mc.theWorld.spawnEntityInWorld(mc.thePlayer);
             mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
             mc.playerController.setPlayerCapabilities(mc.thePlayer);
-            mc.setRenderViewEntity(mc.thePlayer);
+            mc.renderViewEntity = mc.thePlayer;
 			mc.thePlayer.dimension = prevPlayer.dimension;
 		}
 	}
@@ -80,8 +80,8 @@ public final class LogicImplOverride{
 		}
 		
 		@Override
-		public EntityPlayerSP func_178892_a(World world, StatFileWriter statWriter){
-			return new PlayerOverride(mc,world,netHandler,statWriter);
+		public EntityClientPlayerMP func_147493_a(World world, StatFileWriter statWriter){
+			return new PlayerOverride(mc,world,mc.getSession(),netHandler,statWriter);
 		}
 	}
 }

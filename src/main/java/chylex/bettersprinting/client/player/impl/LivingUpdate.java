@@ -1,17 +1,18 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 final class LivingUpdate{
-	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){		
+	public static void callPreSuper(EntityClientPlayerMP player, Minecraft mc, PlayerLogicHandler logic){		
 		if (player.sprintingTicksLeft > 0 && --player.sprintingTicksLeft == 0)player.setSprinting(false);
 		if (player.sprintToggleTimer > 0)--player.sprintToggleTimer;
 		
@@ -20,7 +21,7 @@ final class LivingUpdate{
 		if (player.inPortal){
 			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame())mc.displayGuiScreen(null);
 			
-			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
+			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
 			
 			player.timeInPortal += 0.0125F;
 
@@ -50,37 +51,29 @@ final class LivingUpdate{
 			player.sprintToggleTimer = 0;
 		}
 		
-		player.pushOutOfBlocks(player.posX-player.width*0.35D,player.getEntityBoundingBox().minY+0.5D,player.posZ+player.width*0.35D);
-		player.pushOutOfBlocks(player.posX-player.width*0.35D,player.getEntityBoundingBox().minY+0.5D,player.posZ-player.width*0.35D);
-		player.pushOutOfBlocks(player.posX+player.width*0.35D,player.getEntityBoundingBox().minY+0.5D,player.posZ-player.width*0.35D);
-		player.pushOutOfBlocks(player.posX+player.width*0.35D,player.getEntityBoundingBox().minY+0.5D,player.posZ+player.width*0.35D);
+		player.func_145771_j(player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
+		player.func_145771_j(player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
+		player.func_145771_j(player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
+		player.func_145771_j(player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
 		
 		logic.updateLiving();
 		
-		if (player.capabilities.allowFlying){
-			if (mc.playerController.isSpectatorMode()){
-				if (!player.capabilities.isFlying){
-					player.capabilities.isFlying = true;
-					player.sendPlayerAbilities();
-				}
-			}
-			else if (!wasJumping && player.movementInput.jump){
-				if (player.flyToggleTimer == 0)player.flyToggleTimer = 7;
-				else{
-					player.capabilities.isFlying = !player.capabilities.isFlying;
-					player.sendPlayerAbilities();
-					player.flyToggleTimer = 0;
-				}
+		if (player.capabilities.allowFlying && !wasJumping && player.movementInput.jump){
+			if (player.flyToggleTimer == 0)player.flyToggleTimer = 7;
+			else{
+				player.capabilities.isFlying = !player.capabilities.isFlying;
+				player.sendPlayerAbilities();
+				player.flyToggleTimer = 0;
 			}
 		}
 
 		if (player.capabilities.isFlying){
 			if (player.movementInput.sneak){
-				player.motionY -= player.capabilities.getFlySpeed()*3F;
+				player.motionY -= 0.15D;
 			}
 
 			if (player.movementInput.jump){
-				player.motionY += player.capabilities.getFlySpeed()*3F;
+				player.motionY += 0.15D;
 			}
 		}
 
@@ -91,7 +84,7 @@ final class LivingUpdate{
 
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
-				player.sendQueue.addToSendQueue(new C0BPacketEntityAction(player,C0BPacketEntityAction.Action.RIDING_JUMP,(int)(player.getHorseJumpPower()*100F)));
+				player.sendQueue.addToSendQueue(new C0BPacketEntityAction(player,6,(int)(player.getHorseJumpPower()*100F)));
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;

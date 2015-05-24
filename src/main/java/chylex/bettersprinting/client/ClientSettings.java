@@ -1,7 +1,7 @@
 package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.client.compatibility.OldClientConfig;
 

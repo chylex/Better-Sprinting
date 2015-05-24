@@ -1,7 +1,7 @@
 package chylex.bettersprinting.client.player.impl;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -9,20 +9,21 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Session;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class PlayerOverride extends EntityPlayerSP{
+public class PlayerOverride extends EntityClientPlayerMP{
 	private final PlayerLogicHandler logic;
 	
 	private int jumpTicks;
 	
-	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatFileWriter statWriter){
-		super(mc,world,netHandler,statWriter);
+	public PlayerOverride(Minecraft mc, World world, Session session, NetHandlerPlayClient netHandler, StatFileWriter statWriter){
+		super(mc,world,session,netHandler,statWriter);
 		logic = new PlayerLogicHandler();
 		logic.setPlayer(this);
 		
@@ -39,7 +40,7 @@ public class PlayerOverride extends EntityPlayerSP{
 	private void onLivingUpdate$EntityPlayer(){
 		if (flyToggleTimer > 0)--flyToggleTimer;
 		
-		if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL && worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration")){
+		if (worldObj.difficultySetting == EnumDifficulty.PEACEFUL && worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration")){
 			if (getHealth() < getMaxHealth() && ticksExisted%20 == 0)heal(1F);
 			if (foodStats.needFood() && ticksExisted%10 == 0)foodStats.setFoodLevel(foodStats.getFoodLevel()+1);
 		}
@@ -68,11 +69,11 @@ public class PlayerOverride extends EntityPlayerSP{
 		cameraYaw += (moveDist-cameraYaw)*0.4F;
 		cameraPitch += (motYFactor-cameraPitch)*0.8F;
 
-		if (getHealth() > 0F && !isSpectator()){
+		if (getHealth() > 0F){
 			AxisAlignedBB aabb = null;
 
-			if (ridingEntity != null && !ridingEntity.isDead)aabb = getEntityBoundingBox().union(ridingEntity.getEntityBoundingBox()).expand(1D,0D,1D);
-			else aabb = getEntityBoundingBox().expand(1D,0.5D,1D);
+			if (ridingEntity != null && !ridingEntity.isDead)aabb = boundingBox.func_111270_a(ridingEntity.boundingBox).expand(1D,0D,1D);
+			else aabb = boundingBox.expand(1D,0.5D,1D);
 
 			for(Entity entity:(List<Entity>)worldObj.getEntitiesWithinAABBExcludingEntity(this,aabb)){
 				if (!entity.isDead)entity.onCollideWithPlayer(this);
@@ -93,7 +94,7 @@ public class PlayerOverride extends EntityPlayerSP{
 			setPosition(setPosX,setPosY,setPosZ);
 			setRotation(rotationYaw,rotationPitch);
 		}
-		else if (!isServerWorld()){
+		else if (!isClientWorld()){
 			motionX *= 0.98D;
 			motionY *= 0.98D;
 			motionZ *= 0.98D;
@@ -111,7 +112,7 @@ public class PlayerOverride extends EntityPlayerSP{
 			moveForward = 0F;
 			randomYawVelocity = 0F;
 		}
-		else if (isServerWorld()){
+		else if (isClientWorld()){
 			worldObj.theProfiler.startSection("newAi");
 			updateEntityActionState();
 			worldObj.theProfiler.endSection();
@@ -121,12 +122,13 @@ public class PlayerOverride extends EntityPlayerSP{
 		worldObj.theProfiler.startSection("jump");
 
 		if (isJumping){
-			if (isInWater())updateAITick();
-			else if (isInLava())func_180466_bG();
-			else if (onGround && jumpTicks == 0){
-				jump();
-				jumpTicks = 10;
+			if (!isInWater() && !handleLavaMovement()){
+				if (onGround && jumpTicks == 0){
+					jump();
+					jumpTicks = 10;
+				}
 			}
+			else motionY += 0.04D;
 		}
 		else jumpTicks = 0;
 

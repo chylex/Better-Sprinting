@@ -1,5 +1,4 @@
 package chylex.bettersprinting.client.gui;
-import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -7,11 +6,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{
@@ -110,12 +109,12 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
+	protected void mouseClicked(int mouseX, int mouseY, int button){
 		if (!handleInput(button-100))super.mouseClicked(mouseX,mouseY,button);
 	}
 	
 	@Override
-	protected void keyTyped(char keyChar, int keyCode) throws IOException{
+	protected void keyTyped(char keyChar, int keyCode){
 		if (!handleInput(keyCode))super.keyTyped(keyChar,keyCode);
 	}
 	

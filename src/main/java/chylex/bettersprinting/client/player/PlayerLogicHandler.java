@@ -41,11 +41,11 @@ public class PlayerLogicHandler{
 		
 		if (ClientModManager.isModDisabled()){
 			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness)){
-				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown())player.sprintToggleTimer = 7;
+				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.getIsKeyPressed())player.sprintToggleTimer = 7;
 				else player.setSprinting(true);
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness) && ClientModManager.keyBindSprintHold.getIsKeyPressed()){
 				player.setSprinting(true);
 			}
 		}
@@ -84,6 +84,7 @@ public class PlayerLogicHandler{
 			if (ClientSettings.flySpeedBoost > 0){
 				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying(mc)){
 					player.capabilities.setFlySpeed(0.05F*(1+ClientSettings.flySpeedBoost));
+					
 					if (player.movementInput.sneak){
 						player.motionY -= 0.15D*ClientSettings.flySpeedBoost;
 					}
@@ -97,7 +98,7 @@ public class PlayerLogicHandler{
 			else if (player.capabilities.getFlySpeed() > 0.05F)player.capabilities.setFlySpeed(0.05F);
 		}
 
-		if (ClientModManager.keyBindOptionsMenu.isKeyDown())mc.displayGuiScreen(new GuiSprint(null));
+		if (ClientModManager.keyBindOptionsMenu.getIsKeyPressed())mc.displayGuiScreen(new GuiSprint(null));
 		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying)player.setSprinting(false);
 
 		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.isCollidedHorizontally || !enoughHunger)){

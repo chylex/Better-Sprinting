@@ -1,10 +1,9 @@
 package chylex.bettersprinting.client.gui;
-import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiControlsCustom extends GuiControls{
@@ -19,7 +18,7 @@ public class GuiControlsCustom extends GuiControls{
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException{
+	protected void actionPerformed(GuiButton button){
 		if (button.id == 205)mc.displayGuiScreen(new GuiSprint(this));
 		else super.actionPerformed(button);
 	}

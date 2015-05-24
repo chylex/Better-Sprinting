@@ -2,7 +2,7 @@ package chylex.bettersprinting.server;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.Side;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
@@ -46,11 +46,6 @@ public class ServerNetwork implements INetworkHandler{
 	 *       - mod is automatically disabled and the client is notified about it
 	 * 
 	 * Since all versions send a packet on BSprint channel, existing solutions for older versions are not broken by the change.
-	 *
-	 * OLDER VERSION DETAILS
-	 * =====================
-	 * Old Forge versions of the mod do not send a BSprint packet, but the default FML mod list packet which can be rejected
-	 * if you want to disable the mod and the mod list contains 'bettersprinting' mod ID.
 	 */
 	
 	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
