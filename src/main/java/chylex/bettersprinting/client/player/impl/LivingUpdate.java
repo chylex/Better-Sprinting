@@ -5,6 +5,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -51,10 +52,10 @@ final class LivingUpdate{
 			player.sprintToggleTimer = 0;
 		}
 		
-		player.func_145771_j(player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
-		player.func_145771_j(player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
-		player.func_145771_j(player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
-		player.func_145771_j(player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
+		pushOutOfBlocks(player,player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
+		pushOutOfBlocks(player,player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
+		pushOutOfBlocks(player,player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
+		pushOutOfBlocks(player,player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
 		
 		logic.updateLiving();
 		
@@ -107,6 +108,74 @@ final class LivingUpdate{
 			player.capabilities.isFlying = false;
 			player.sendPlayerAbilities();
 		}
+	}
+	
+	// COPIED FROM EntityPlayerSP
+	
+	protected static boolean pushOutOfBlocks(EntityPlayerSP player, double x, double y, double z){
+		if (player.noClip)return false;
+		
+		int ix = MathHelper.floor_double(x);
+		int iy = MathHelper.floor_double(y);
+		int iz = MathHelper.floor_double(z);
+		double xDiff = x-ix;
+		double zDiff = z-iz;
+
+		int entHeight = Math.max(Math.round(player.height),1);
+
+		boolean inTranslucentBlock = true;
+		
+		for(int yOffset = 0; yOffset < entHeight; yOffset++){
+			if (!isBlockTranslucent(player,ix,iy+yOffset,iz))inTranslucentBlock = false;
+		}
+
+		if (inTranslucentBlock){
+			boolean freeNX = !isHeadspaceFree(player,ix-1,iy,iz,entHeight);
+			boolean freePX = !isHeadspaceFree(player,ix+1,iy,iz,entHeight);
+			boolean freeNZ = !isHeadspaceFree(player,ix,iy,iz-1,entHeight);
+			boolean freePZ = !isHeadspaceFree(player,ix,iy,iz+1,entHeight);
+			byte side = -1;
+			double limit = 9999D;
+
+			if (freeNX && xDiff < limit){
+				limit = xDiff;
+				side = 0;
+			}
+
+			if (freePX && 1D-xDiff < limit){
+				limit = 1D-xDiff;
+				side = 1;
+			}
+
+			if (freeNZ && zDiff < limit){
+				limit = zDiff;
+				side = 4;
+			}
+
+			if (freePZ && 1D-zDiff < limit){
+				limit = 1D-zDiff;
+				side = 5;
+			}
+
+			if (side == 0)player.motionX = -0.1F;
+			else if (side == 1)player.motionX = 0.1F;
+			else if (side == 4)player.motionZ = -0.1F;
+			else if (side == 5)player.motionZ = 0.1F;
+		}
+
+		return false;
+	}
+	
+	private static boolean isBlockTranslucent(EntityPlayerSP player, int x, int y, int z){
+		return player.worldObj.getBlock(x,y,z).isNormalCube();
+	}
+
+	private static boolean isHeadspaceFree(EntityPlayerSP player, int x, int y, int z, int height){
+		for(int yOffset = 0; yOffset < height; yOffset++){
+			if (isBlockTranslucent(player,x,y+yOffset,z+1))return false;
+		}
+		
+		return true;
 	}
 	
 	private LivingUpdate(){}
