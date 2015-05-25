@@ -14,7 +14,7 @@ public class GuiControlsCustom extends GuiControls{
 	@Override
 	public void initGui(){
 		super.initGui();
-		buttonList.add(0,new GuiButton(205,width/2+5,18+24,150,20,"Better Sprinting"));
+		if (parentScreen == null || parentScreen.getClass() != GuiSprint.class)buttonList.add(0,new GuiButton(205,width/2+5,18+24,150,20,"Better Sprinting"));
 	}
 	
 	@Override
