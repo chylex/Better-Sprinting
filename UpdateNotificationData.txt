@@ -18,7 +18,7 @@
   "3 - 1.1.2": {
     "modVersion": "1.1.2",
     "mcVersions": [ "1.7.10" ],
-    "buildId": "24-51-2015-0",
+    "buildId": "24-05-2015-0",
     "releaseDate": "25 May 2015"
   },
   
