@@ -1,4 +1,6 @@
 package chylex.bettersprinting;
+import java.util.Map;
+import chylex.bettersprinting.server.ServerSettings;
 import chylex.bettersprinting.system.Log;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -7,6 +9,8 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*")
 public class BetterSprintingMod{
@@ -37,5 +41,13 @@ public class BetterSprintingMod{
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent e){
 		proxy.onServerStarting(e);
+	}
+	
+	@NetworkCheckHandler
+	public boolean onNetworkCheck(Map<String,String> versions, Side side){
+		if (side == Side.SERVER || !ServerSettings.disableClientMod)return true;
+		
+		String version = versions.get("bettersprinting");
+		return !("1.0".equals(version) || "1.0.1".equals(version));
 	}
 }
