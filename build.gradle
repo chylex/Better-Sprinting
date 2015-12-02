@@ -1,51 +1,43 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
+buildscript{
+    repositories{
+        jcenter()
+        maven{
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
-}
-
-apply plugin: 'forge'
-
-version = ""
-group = "chylex.bettersprinting.BetterSprintingMod"
-archivesBaseName = "BetterSprinting  MC-1.7.10  v1.1.2"
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
-minecraft {
-    version = "1.8-11.14.0.1289-1.8"
-    runDir = "eclipse"
-    mappings = "snapshot_20150118"
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs){
-        include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
     
-    from(sourceSets.main.resources.srcDirs){
-        exclude 'mcmod.info'
+    dependencies{
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 
-jar {
-    manifest {
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+minecraft{
+    version = "1.8.8-11.15.0.1602-1.8.8"
+    runDir = "run"
+    mappings = "snapshot_20151122"
+}
+
+String modid = ""
+String modver = ""
+
+processResources{
+    File info = new File(sourceSets.main.resources.srcDirs.iterator().next(), "mcmod.info")
+    def slurp = new groovy.json.JsonSlurper()
+    def data = slurp.parseText(info.getText())[0]
+    modid = data.modid
+    modver = data.version
+}
+
+jar{
+    archiveName = modid+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
+    
+    manifest{
         attributes 'FMLAT': 'bs_at.cfg'
     }
 }
