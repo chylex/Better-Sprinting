@@ -1,9 +1,8 @@
 package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
+import chylex.bettersprinting.BetterSprintingConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import chylex.bettersprinting.BetterSprintingConfig;
-import chylex.bettersprinting.client.compatibility.OldClientConfig;
 
 @SideOnly(Side.CLIENT)
 public class ClientSettings{
@@ -22,7 +21,6 @@ public class ClientSettings{
 	
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("client");
-		OldClientConfig.loadAndDeleteOldConfig();
 		
 		keyCodeSprintHold = config.getInt("keySprintHold",keyCodeSprintHold,"").setShowInGui(false).getInt();
 		keyCodeSprintToggle = config.getInt("keySprintToggle",keyCodeSprintToggle,"").setShowInGui(false).getInt();
