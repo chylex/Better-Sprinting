@@ -40,9 +40,9 @@ public class PlayerOverride extends EntityClientPlayerMP{
 	private void onLivingUpdate$EntityPlayer(){
 		if (flyToggleTimer > 0)--flyToggleTimer;
 		
-		if (worldObj.difficultySetting == EnumDifficulty.PEACEFUL && worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration")){
-			if (getHealth() < getMaxHealth() && ticksExisted%20 == 0)heal(1F);
-			if (foodStats.needFood() && ticksExisted%10 == 0)foodStats.setFoodLevel(foodStats.getFoodLevel()+1);
+		if (worldObj.difficultySetting == EnumDifficulty.PEACEFUL && getHealth() < getMaxHealth() &&
+			worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && ticksExisted % 20*12 == 0){
+			heal(1F);
 		}
 
 		inventory.decrementAnimations();
@@ -112,10 +112,9 @@ public class PlayerOverride extends EntityClientPlayerMP{
 			moveForward = 0F;
 			randomYawVelocity = 0F;
 		}
-		else if (isClientWorld()){
-			worldObj.theProfiler.startSection("newAi");
+		else if (isClientWorld()){ // isAIEnabled is false
 			updateEntityActionState();
-			worldObj.theProfiler.endSection();
+			rotationYawHead = rotationYaw;
 		}
 
 		worldObj.theProfiler.endSection();

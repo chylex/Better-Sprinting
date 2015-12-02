@@ -20,7 +20,7 @@ final class LivingUpdate{
 		player.prevTimeInPortal = player.timeInPortal;
 		
 		if (player.inPortal){
-			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame())mc.displayGuiScreen(null);
+			if (mc.currentScreen != null)mc.displayGuiScreen(null);
 			
 			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
 			
@@ -50,6 +50,10 @@ final class LivingUpdate{
 			player.movementInput.moveStrafe *= 0.2F;
 			player.movementInput.moveForward *= 0.2F;
 			player.sprintToggleTimer = 0;
+		}
+		
+		if (player.movementInput.sneak && player.ySize < 0.2F){
+			player.ySize = 0.2F;
 		}
 		
 		pushOutOfBlocks(player,player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
