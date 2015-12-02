@@ -2,6 +2,7 @@ package chylex.bettersprinting.client.player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiGameOver;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -106,8 +107,8 @@ public class PlayerLogicHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			if (ClientModManager.svDisableMod)player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect."));
-			else player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" The server has enabled the mod again, sprinting mechanics are switched to Better Sprinting ones."));
+			if (ClientModManager.svDisableMod)player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.disabled")));
+			else player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.reenabled")));
 			showDisableWarningWhenPossible = false;
 		}
 	}

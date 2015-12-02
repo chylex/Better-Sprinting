@@ -58,10 +58,10 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	private void updateButtons(){
-		btnDoubleTap.displayString = ClientModManager.isModDisabled() ? "Unavailable" : (ClientSettings.enableDoubleTap ? "Enabled" : "Disabled");
-		btnFlyBoost.displayString = ClientModManager.canBoostFlying(mc) ? (ClientSettings.flySpeedBoost == 0 ? "Disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "Unavailable";
-		btnAllDirs.displayString = ClientModManager.canRunInAllDirs(mc) ? (ClientSettings.enableAllDirs ? "Enabled" : "Disabled") : "Unavailable";
-		btnDisableMod.displayString = ClientModManager.isModDisabled() ? "Yes" : "No";
+		btnDoubleTap.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap ? "gui.enabled" : "gui.disabled"));
+		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying(mc) ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "gui.unavailable");
+		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs(mc) ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
+		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
 	}
 	
 	@Override
@@ -167,35 +167,35 @@ public class GuiSprint extends GuiScreen{
 				else if (alreadyUsed)((GuiButton)buttonList.get(a)).displayString = "\u00a7c"+getKeyCodeString(a);
 				else ((GuiButton)buttonList.get(a)).displayString = getKeyCodeString(a);
 	
-				drawString(fontRendererObj,sprintBindings[a].getKeyDescription(),left+a%2*160+70+6,top+24*(a>>1)+7,-1);
+				drawString(fontRendererObj,I18n.format(sprintBindings[a].getKeyDescription()),left+a%2*160+70+6,top+24*(a>>1)+7,-1);
 				a++;
 				break;
 			}
 		}
 	
-		drawButtonTitle("Double tapping",btnDoubleTap);
-		drawButtonTitle("Run in all directions",btnAllDirs);
-		drawButtonTitle("Flying boost",btnFlyBoost);
-		drawButtonTitle("Disable mod functionality",btnDisableMod);
+		drawButtonTitle(I18n.format("bs.doubleTapping"),btnDoubleTap);
+		drawButtonTitle(I18n.format("bs.runAllDirs"),btnAllDirs);
+		drawButtonTitle(I18n.format("bs.flyBoost"),btnFlyBoost);
+		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod);
 		
 		for(int a = 0; a < buttonList.size(); a++){
 			GuiButton btn = (GuiButton)buttonList.get(a);
 			
 			if (mouseX >= btn.xPosition && mouseX <= btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY <= btn.yPosition+20){
-				String info="";
+				String info = "";
 				
 				switch(a){
-					case 0: info="Hold to sprint."; break;
-					case 1: info="Press once to start or stop sprinting."; break;
-					case 2: info="Press once to start or stop sneaking.#When you open any GUI, you will stop sneaking until you close it."; break;
-					case 3: info="Key to open this menu ingame."; break;
-					case 4: info="Enable or disable sprinting by double-tapping the forward key."; break;
-					case 5: info="Sprint in all directions.#You cannot use this in multiplayer unless the server allows it."; break;
-					case 6: info="Press whilst flying in creative mode to fly faster.#Works in survival mode flying (modded game) if the server allows it."; break;
-					case 7: info="Disables all non-vanilla functionality of Better Sprinting.#This option can be used if a server doesn't allow the mod."; break;
+					case 0: info = "bs.sprint.hold.info"; break;
+					case 1: info = "bs.sprint.toggle.info"; break;
+					case 2: info = "bs.sneak.toggle.info"; break;
+					case 3: info = "bs.menu.info"; break;
+					case 4: info = "bs.doubleTapping.info"; break;
+					case 5: info = "bs.runAllDirs.info"; break;
+					case 6: info = "bs.flyBoost.info"; break;
+					case 7: info = "bs.disableMod.info"; break;
 				}
 				
-				String[] spl = info.split("#");
+				String[] spl = I18n.format(info).split("#");
 				for(int line = 0; line < spl.length; line++)drawCenteredString(fontRendererObj,spl[line],width/2,top+143+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2),-1);
 				break;
 			}

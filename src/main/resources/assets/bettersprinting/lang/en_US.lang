@@ -1,0 +1,35 @@
+gui.enabled=Enabled
+gui.disabled=Disabled
+gui.unavailable=Unavailable
+
+bs.sprint.hold=Sprint (hold)
+bs.sprint.toggle=Sprint (toggle)
+bs.sneak.toggle=Sneak (toggle)
+bs.menu=Sprint menu
+
+bs.doubleTapping=Double tapping
+bs.runAllDirs=Run in all directions
+bs.flyBoost=Flying boost
+bs.disableMod=Disable mod functionality
+
+# Use the '#' character for splitting lines
+
+bs.sprint.hold.info=Hold to sprint.
+bs.sprint.toggle.info=Press once to start or stop sprinting.
+bs.sneak.toggle.info=Press once to start or stop sneaking.#When you open any GUI, you will stop sneaking until you close it.
+bs.menu.info=Key to open this menu ingame.
+
+bs.doubleTapping.info=Enable or disable sprinting by double-tapping the forward key.
+bs.runAllDirs.info=Sprint in all directions.#You cannot use this in multiplayer unless the server allows it.
+bs.flyBoost.info=Hold when flying in creative mode to fly faster.
+bs.disableMod.info=Disables all non-vanilla functionality of Better Sprinting.#This option can be used if a server doesn't allow the mod.
+
+# In-game messages
+
+bs.game.integrity=Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: $
+bs.game.disabled=The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect.
+bs.game.reenabled=The server has enabled the mod again, sprinting mechanics are switched to Better Sprinting ones.
+
+# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+
+2x=2x
