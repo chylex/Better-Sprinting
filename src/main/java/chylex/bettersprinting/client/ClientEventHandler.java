@@ -7,6 +7,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.compatibility.OldNotificationPacket;
 import chylex.bettersprinting.client.gui.GuiControlsCustom;
+import chylex.bettersprinting.client.update.UpdateNotificationManager;
 import chylex.bettersprinting.client.update.UpdateThread;
 import chylex.bettersprinting.system.PacketPipeline;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -29,14 +30,7 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onPlayerLoginClient(PlayerLoggedInEvent e){
-		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
-			long time = System.currentTimeMillis();
-			
-			if (lastNotificationTime == -1 || time-lastNotificationTime > 1200000){
-				lastNotificationTime = time;
-				new UpdateThread(BetterSprintingMod.modVersion).start();
-			}
-		}
+		UpdateNotificationManager.run();
 	}
 	
 	@SubscribeEvent
