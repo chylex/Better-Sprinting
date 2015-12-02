@@ -2,11 +2,14 @@ package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class ClientModManager{
+	public static final String chatPrefix = EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" ";
+	
 	public static final KeyBinding keyBindSprintHold = new KeyBinding("bs.sprint.hold",29,"key.categories.movement");
     public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle",34,"key.categories.movement");
     public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle",21,"key.categories.movement");

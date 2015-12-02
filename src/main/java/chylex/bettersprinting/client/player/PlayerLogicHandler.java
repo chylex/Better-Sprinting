@@ -105,8 +105,8 @@ public class PlayerLogicHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.disabled")));
-			else player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.reenabled")));
+			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new ChatComponentText(ClientModManager.chatPrefix+I18n.format("bs.game.disabled")));
+			else player.addChatMessage(new ChatComponentText(ClientModManager.chatPrefix+I18n.format("bs.game.reenabled")));
 			showDisableWarningWhenPossible = false;
 		}
 	}

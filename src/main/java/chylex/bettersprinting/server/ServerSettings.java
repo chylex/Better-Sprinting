@@ -8,9 +8,9 @@ public class ServerSettings{
 	
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("server");
-		enableSurvivalFlyBoost = config.getBool("enableSurvivalFlyBoost",enableSurvivalFlyBoost,"").getBoolean();
-		enableAllDirs = config.getBool("enableAllDirs",enableAllDirs,"").getBoolean();
-		disableClientMod = config.getBool("disableClientMod",disableClientMod,"").getBoolean();
+		enableSurvivalFlyBoost = config.getBool("enableSurvivalFlyBoost",enableSurvivalFlyBoost).getBoolean();
+		enableAllDirs = config.getBool("enableAllDirs",enableAllDirs).getBoolean();
+		disableClientMod = config.getBool("disableClientMod",disableClientMod).getBoolean();
 		config.update();
 	}
 	
