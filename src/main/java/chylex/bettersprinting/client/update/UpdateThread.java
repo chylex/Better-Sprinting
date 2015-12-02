@@ -87,7 +87,7 @@ public class UpdateThread extends Thread{
 			
 			if (!buildId.isEmpty() && !buildId.equals(BetterSprintingMod.buildId)){
 				StringBuilder message = new StringBuilder()
-					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Hardcore Ender Expansion ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
+					.append(EnumChatFormatting.LIGHT_PURPLE).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
 					.append("\n Caution, you are using a broken build that can cause critical crashes! Please, redownload the mod, or update it if there is an update available.")
 					.append("\n\n ").append(EnumChatFormatting.GRAY).append(downloadURL);
 				

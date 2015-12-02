@@ -1,15 +1,16 @@
 package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class ClientModManager{
-	public static KeyBinding keyBindSprintHold = new KeyBinding("Sprint (hold)",29,"key.categories.movement");
-    public static KeyBinding keyBindSprintToggle = new KeyBinding("Sprint (toggle)",34,"key.categories.movement");
-    public static KeyBinding keyBindSneakToggle = new KeyBinding("Sneak (toggle)",21,"key.categories.movement");
-    public static KeyBinding keyBindOptionsMenu = new KeyBinding("Sprint menu",24,"key.categories.movement");
+	public static KeyBinding keyBindSprintHold = new KeyBinding("bs.sprint.hold",29,"key.categories.movement");
+    public static KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle",34,"key.categories.movement");
+    public static KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle",21,"key.categories.movement");
+    public static KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu",24,"key.categories.movement");
     
 	public static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
     

@@ -62,7 +62,7 @@ public final class LogicImplOverride{
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
-				mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: "+controllerClass.getName()));
+				mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.integrity").replace("$",controllerClass.getName())));
 				stopChecking = true;
 			}
 		}
