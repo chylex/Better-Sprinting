@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client.gui;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -142,6 +143,9 @@ public class GuiSprint extends GuiScreen{
 	
 		int left = getLeftColumnX(), top = height/6;
 		
+		final int maxWidthLeft = 82;
+		final int maxWidthRight = 124;
+		
 		for(int a = 0; a < sprintBindings.length;){
 			boolean alreadyUsed = false;
 			int b = 0;
@@ -166,17 +170,17 @@ public class GuiSprint extends GuiScreen{
 				if (buttonId == a)((GuiButton)buttonList.get(a)).displayString = "\u00a7f> \u00a7e??? \u00a7f<";
 				else if (alreadyUsed)((GuiButton)buttonList.get(a)).displayString = "\u00a7c"+getKeyCodeString(a);
 				else ((GuiButton)buttonList.get(a)).displayString = getKeyCodeString(a);
-	
-				drawString(fontRendererObj,I18n.format(sprintBindings[a].getKeyDescription()),left+a%2*160+70+6,top+24*(a>>1)+7,-1);
+				
+				drawButtonTitle(I18n.format(sprintBindings[a].getKeyDescription()),(GuiButton)buttonList.get(a),a%2 == 0 ? maxWidthLeft : maxWidthRight);
 				a++;
 				break;
 			}
 		}
 	
-		drawButtonTitle(I18n.format("bs.doubleTapping"),btnDoubleTap);
-		drawButtonTitle(I18n.format("bs.runAllDirs"),btnAllDirs);
-		drawButtonTitle(I18n.format("bs.flyBoost"),btnFlyBoost);
-		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod);
+		drawButtonTitle(I18n.format("bs.doubleTapping"),btnDoubleTap,maxWidthLeft);
+		drawButtonTitle(I18n.format("bs.runAllDirs"),btnAllDirs,maxWidthRight);
+		drawButtonTitle(I18n.format("bs.flyBoost"),btnFlyBoost,maxWidthLeft);
+		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod,maxWidthRight);
 		
 		for(int a = 0; a < buttonList.size(); a++){
 			GuiButton btn = (GuiButton)buttonList.get(a);
@@ -213,7 +217,8 @@ public class GuiSprint extends GuiScreen{
 		return GameSettings.getKeyDisplayString(sprintBindings[i].getKeyCode());
 	}
 	
-	private void drawButtonTitle(String title, GuiButton btn){
-		drawString(fontRendererObj,title,btn.xPosition+70+6,btn.yPosition+7,-1);
+	private void drawButtonTitle(String title, GuiButton btn, int maxWidth){
+		int lines = fontRendererObj.listFormattedStringToWidth(title,maxWidth).size();
+		fontRendererObj.drawSplitString(title,btn.xPosition+76,btn.yPosition+7-5*(lines-1),maxWidth,-1);
 	}
 }
