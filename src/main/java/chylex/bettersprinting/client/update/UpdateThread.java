@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -11,6 +12,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.io.IOUtils;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.system.Log;
@@ -34,21 +36,17 @@ public class UpdateThread extends Thread{
 	@Override
 	public void run(){
 		try{
-			String line;
-			StringBuilder build = new StringBuilder();
+			Thread.sleep(1337L);
 			
-			BufferedReader read = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-			while((line = read.readLine()) != null)build.append(line).append('\n');
-			read.close();
+			JsonElement root = new JsonParser().parse(IOUtils.toString(new URL(url),StandardCharsets.UTF_8));
 			
-			JsonElement root = new JsonParser().parse(build.toString());
 			List<VersionEntry> versionList = Lists.newArrayList();
 			VersionEntry newestVersion = null, newestVersionForCurrentMC = null;
 			int counter = -1;
 			String buildId = "";
 			boolean isInDev = true;
 			
-			String downloadURL = "http://tinyurl.com/better-sprinting-mod";
+			String downloadURL = "http://bsprint.chylex.com/";
 			
 			Log.debug("Detecting Better Sprinting updates...");
 			
@@ -106,15 +104,6 @@ public class UpdateThread extends Thread{
 				}
 				
 				message.append("\n\n ").append(EnumChatFormatting.GRAY).append(downloadURL);
-				
-				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(s));
-			}
-			else if (newestVersion != newestVersionForCurrentMC && ClientSettings.enableUpdateNotifications){
-				StringBuilder message = new StringBuilder()
-					.append(EnumChatFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
-					.append("\n Found a new version ").append(EnumChatFormatting.GREEN).append(newestVersion.modVersion).append(EnumChatFormatting.RESET)
-					.append(" for Minecraft ").append(CommandBase.joinNiceString(newestVersion.mcVersions)).append(", released ").append(newestVersion.releaseDate)
-					.append(".");
 				
 				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(s));
 			}
