@@ -4,6 +4,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,6 +27,8 @@ public final class LogicImplOverride{
 		FMLCommonHandler.instance().bus().register(instance);
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
+	
+	private static final Minecraft mc = Minecraft.getMinecraft();
 	
 	private byte checkTimer = -120;
 	private boolean stopChecking = false;
@@ -54,11 +57,10 @@ public final class LogicImplOverride{
 
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent e){
-		if (e.phase == Phase.END || Minecraft.getMinecraft().thePlayer == null)return;
+		if (e.phase == Phase.END || mc.thePlayer == null || mc.playerController == null)return;
 		
 		if (!stopChecking && --checkTimer < -125){
 			checkTimer = 120;
-			Minecraft mc = Minecraft.getMinecraft();
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
