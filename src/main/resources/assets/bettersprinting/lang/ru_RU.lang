@@ -1,6 +1,10 @@
+# Generic GUI titles
+
 gui.enabled=Включено
 gui.disabled=Отключено
 gui.unavailable=Недоступно
+
+# Titles for controls
 
 bs.sprint.hold=Бег (удерживать)
 bs.sprint.toggle=Бег (переключить)
@@ -12,7 +16,7 @@ bs.runAllDirs=Бег во всех направлениях
 bs.flyBoost=Ускорение полёта
 bs.disableMod=Отключить модификацию
 
-# Use the '#' character for splitting lines
+# Tooltips for controls (use the '#' character for splitting lines)
 
 bs.sprint.hold.info=Удерживайте, чтобы бежать.
 bs.sprint.toggle.info=Нажмите, чтобы бежать или остановиться.
@@ -24,12 +28,17 @@ bs.runAllDirs.info=Бег во всех направлениях.#Вы не мо
 bs.flyBoost.info=Удерживайте во время полёта в творческом режиме, чтобы лететь быстрее.
 bs.disableMod.info=Отключает все функции модификации Better Sprinting.#Это опция может быть полезна, если сервер не разрешает использовать этот мод.
 
+# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+
+2x=2x
+
 # In-game messages
 
 bs.game.integrity=Проверка целостности провалилась, другая модификация конфликтует с Better Sprinting. Установите PlayerAPI, чтобы устранить конфликт. Конфликтующий класс-файл: $
 bs.game.disabled=Сервер отключил эту модификацию, механизм бега изменён на оригинальный.
 bs.game.reenabled=Сервер включил эту модификацию, используется механизм бега модификации Better Sprinting.
 
-# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+# Server messages (translated on client)
 
-2x=2x
+# Configuration
+

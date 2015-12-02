@@ -1,6 +1,10 @@
+# Generic GUI titles
+
 gui.enabled=Enabled
 gui.disabled=Disabled
 gui.unavailable=Unavailable
+
+# Titles for controls
 
 bs.sprint.hold=Sprint (hold)
 bs.sprint.toggle=Sprint (toggle)
@@ -12,7 +16,7 @@ bs.runAllDirs=Run in all directions
 bs.flyBoost=Flying boost
 bs.disableMod=Disable mod functionality
 
-# Use the '#' character for splitting lines
+# Tooltips for controls (use the '#' character for splitting lines)
 
 bs.sprint.hold.info=Hold to sprint.
 bs.sprint.toggle.info=Press once to start or stop sprinting.
@@ -24,15 +28,28 @@ bs.runAllDirs.info=Sprint in all directions.#You cannot use this in multiplayer 
 bs.flyBoost.info=Hold when flying in creative mode to fly faster.
 bs.disableMod.info=Disables all non-vanilla functionality of Better Sprinting.#This option can be used if a server doesn't allow the mod.
 
+# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+
+2x=2x
+
 # In-game messages
 
 bs.game.integrity=Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: $
 bs.game.disabled=The server has requested to disable the mod, the sprinting mechanics are switched to vanilla until you disconnect.
 bs.game.reenabled=The server has enabled the mod again, sprinting mechanics are switched to Better Sprinting ones.
 
-# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+# Server messages (translated on client)
 
-2x=2x
+bs.server.kick=The server does not allow Better Sprinting. Newer versions of the mod can be disabled automatically without kicking.
+
+bs.command.invalidSyntax=Invalid syntax, do /bettersprinting for list of commands.
+bs.command.info=You can use the command to either disable/enable the mod, or change specific settings of the mod. These will persist after restarting the server, and will also immediately affect players that are already on the server.
+bs.command.disableMod=Better Sprinting will be automatically disabled when a user joins.
+bs.command.enableMod=Better Sprinting is now allowed on the server.
+bs.command.disableFlyBoost=Fly boost is now disabled when the player is in survival mode.
+bs.command.enableFlyBoost=Fly boost is now enabled when the player is in survival mode.
+bs.command.disableAllDirs=Sprinting in all directions is now disabled.
+bs.command.enableAllDirs=Sprinting in all directions is now enabled.
 
 # Configuration
 

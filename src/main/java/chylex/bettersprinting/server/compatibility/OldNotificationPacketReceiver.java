@@ -1,11 +1,15 @@
 package chylex.bettersprinting.server.compatibility;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.play.server.S40PacketDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.util.ChatComponentTranslation;
 import chylex.bettersprinting.server.ServerSettings;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -27,7 +31,7 @@ public class OldNotificationPacketReceiver{
 		
 		for(String id:instance.users){
 			EntityPlayerMP player = manager.func_152612_a(id);
-			if (player != null)player.playerNetServerHandler.kickPlayerFromServer("The server does not allow Better Sprinting. Newer versions of the mod can be disabled automatically without kicking.");
+			if (player != null)kickPlayer(player.playerNetServerHandler,"bs.server.kick");
 		}
 		
 		instance.users.clear();
@@ -48,7 +52,7 @@ public class OldNotificationPacketReceiver{
 		if (data.readByte() == 4){
 			NetHandlerPlayServer handler = (NetHandlerPlayServer)e.handler;
 			
-			if (ServerSettings.disableClientMod)handler.kickPlayerFromServer("The server does not allow Better Sprinting. Newer versions of the mod can be disabled automatically without kicking.");
+			if (ServerSettings.disableClientMod)kickPlayer(handler,"bs.server.kick");
 			else users.add(handler.playerEntity.getCommandSenderName());
 		}
 	}
@@ -56,5 +60,20 @@ public class OldNotificationPacketReceiver{
 	@SubscribeEvent
 	public void onPlayerDisconnect(PlayerLoggedOutEvent e){
 		users.remove(e.player.getCommandSenderName());
+	}
+	
+	private static void kickPlayer(final NetHandlerPlayServer netHandler, String translationName){
+		final ChatComponentTranslation msg = new ChatComponentTranslation(translationName);
+		
+		netHandler.netManager.scheduleOutboundPacket(new S40PacketDisconnect(msg),new GenericFutureListener[]{
+			new GenericFutureListener(){
+				@Override
+				public void operationComplete(Future isBright){
+					netHandler.netManager.closeChannel(msg);
+				}
+			}
+		});
+		
+		netHandler.netManager.disableAutoRead();
 	}
 }
