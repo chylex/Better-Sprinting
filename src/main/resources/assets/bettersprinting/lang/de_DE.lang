@@ -42,14 +42,14 @@ bs.game.reenabled=Der Server hat die Mod wieder aktiviert, Sprintfunktionen werd
 
 bs.server.kick=Der Server erlaubt Better Sprinting nicht. Neuere Versionen könnten automatisch deaktiviert werden, ohne dich vom Server zu werfen.
 
-bs.command.invalidSyntax=Invalid syntax, do /bettersprinting for list of commands.
-bs.command.info=You can use the command to either disable/enable the mod, or change specific settings of the mod. These will persist after restarting the server, and will also immediately affect players that are already on the server.
-bs.command.disableMod=Better Sprinting will be automatically disabled when a user joins.
-bs.command.enableMod=Better Sprinting is now allowed on the server.
-bs.command.disableFlyBoost=Fly boost is now disabled when the player is in survival mode.
-bs.command.enableFlyBoost=Fly boost is now enabled when the player is in survival mode.
-bs.command.disableAllDirs=Sprinting in all directions is now disabled.
-bs.command.enableAllDirs=Sprinting in all directions is now enabled.
+bs.command.invalidSyntax=Ungültige Schreibweise, für eine Liste an Befehlen gib /bettersprinting ein.
+bs.command.info=Du kannst den Befehl nutzen, um die Mod zu aktivieren, zu deaktivieren sowie zum (De-)Aktiveren bestimmter Funktionen. Diese Einstellungen werden über Server-Neustarts hinaus aktiv bleiben und auch sofort Spieler, die sich bereits auf dem Server befinden, beeinflussen.
+bs.command.disableMod=Better Sprinting wird nun für Spieler auf diesem Server automatisch deaktiviert.
+bs.command.enableMod=Better Sprinting ist nun auf dem Server erlaubt.
+bs.command.disableFlyBoost=Flug-Boost ist nun deaktiviert, wenn ein Spieler im Überlebensmodus erscheint.
+bs.command.enableFlyBoost=Flug-Boost ist nun aktiviert, wenn ein Spieler im Überlebensmodus erscheint.
+bs.command.disableAllDirs=Sprinten in alle Richtungen ist nun deaktiviert.
+bs.command.enableAllDirs=Sprinten in alle Richtungen ist nun aktiviert.
 
 # Configuration
 
