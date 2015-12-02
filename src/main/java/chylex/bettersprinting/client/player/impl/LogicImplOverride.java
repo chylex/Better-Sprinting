@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -37,17 +38,22 @@ public final class LogicImplOverride{
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.playerController = new PlayerControllerMPOverride(mc,(NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
-			EntityClientPlayerMP prevPlayer = mc.thePlayer;
+			EntityPlayerSP prevPlayer = mc.thePlayer;
 			mc.theWorld.removeEntity(prevPlayer);
 			
-			mc.thePlayer = mc.playerController.func_147493_a(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
-			mc.playerController.flipPlayer(mc.thePlayer);
-			mc.thePlayer.preparePlayerToSpawn();
-			mc.theWorld.spawnEntityInWorld(mc.thePlayer);
-            mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
-            mc.playerController.setPlayerCapabilities(mc.thePlayer);
-            mc.renderViewEntity = mc.thePlayer;
+			mc.setRenderViewEntity(null);
+			mc.thePlayer = mc.playerController.func_178892_a(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
+			mc.thePlayer.getDataWatcher().updateWatchedObjectsFromList(prevPlayer.getDataWatcher().getAllWatched());
 			mc.thePlayer.dimension = prevPlayer.dimension;
+            mc.setRenderViewEntity(mc.thePlayer);
+			mc.thePlayer.preparePlayerToSpawn();
+			mc.thePlayer.setClientBrand(prevPlayer.getClientBrand());
+			mc.theWorld.spawnEntityInWorld(mc.thePlayer);
+			mc.playerController.flipPlayer(mc.thePlayer);
+            mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
+            mc.thePlayer.setEntityId(prevPlayer.getEntityId());
+            mc.playerController.setPlayerCapabilities(mc.thePlayer);
+            mc.thePlayer.setReducedDebug(prevPlayer.hasReducedDebug());
 		}
 	}
 
@@ -78,8 +84,8 @@ public final class LogicImplOverride{
 		}
 		
 		@Override
-		public EntityClientPlayerMP func_147493_a(World world, StatFileWriter statWriter){
-			return new PlayerOverride(mc,world,mc.getSession(),netHandler,statWriter);
+		public EntityPlayerSP func_178892_a(World world, StatFileWriter statWriter){
+			return new PlayerOverride(mc,world,netHandler,statWriter);
 		}
 	}
 }

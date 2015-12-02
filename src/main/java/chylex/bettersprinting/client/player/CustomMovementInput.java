@@ -15,15 +15,15 @@ public class CustomMovementInput{
 		
 		GameSettings settings = mc.gameSettings;
 
-		if (settings.keyBindForward.getIsKeyPressed())++options.moveForward;
-		if (settings.keyBindBack.getIsKeyPressed())--options.moveForward;
-		if (settings.keyBindLeft.getIsKeyPressed())++options.moveStrafe;
-		if (settings.keyBindRight.getIsKeyPressed())--options.moveStrafe;
+		if (settings.keyBindForward.isKeyDown())++options.moveForward;
+		if (settings.keyBindBack.isKeyDown())--options.moveForward;
+		if (settings.keyBindLeft.isKeyDown())++options.moveStrafe;
+		if (settings.keyBindRight.isKeyDown())--options.moveStrafe;
 		
-		sprint = ClientModManager.keyBindSprintHold.getIsKeyPressed();
+		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		
 		if (!sprint){
-			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSprintToggle.getIsKeyPressed()){
+			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSprintToggle.isKeyDown()){
 				if (!hasToggledSprint){
 					sprintToggle = !sprintToggle;
 					hasToggledSprint = true;
@@ -35,11 +35,11 @@ public class CustomMovementInput{
 		}
 		else sprintToggle = false;
 		
-		options.jump = settings.keyBindJump.getIsKeyPressed();
-		options.sneak = settings.keyBindSneak.getIsKeyPressed();
+		options.jump = settings.keyBindJump.isKeyDown();
+		options.sneak = settings.keyBindSneak.isKeyDown();
 		
 		if (!options.sneak){
-			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSneakToggle.getIsKeyPressed()){
+			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSneakToggle.isKeyDown()){
 				if (!hasToggledSneak){
 					sneakToggle = !sneakToggle;
 					hasToggledSneak = true;

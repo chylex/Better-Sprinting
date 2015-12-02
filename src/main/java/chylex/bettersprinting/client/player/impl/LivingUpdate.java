@@ -1,19 +1,19 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
-import chylex.bettersprinting.client.player.PlayerLogicHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 final class LivingUpdate{
-	public static void callPreSuper(EntityClientPlayerMP player, Minecraft mc, PlayerLogicHandler logic){		
+	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){		
 		if (player.sprintingTicksLeft > 0 && --player.sprintingTicksLeft == 0)player.setSprinting(false);
 		if (player.sprintToggleTimer > 0)--player.sprintToggleTimer;
 		
@@ -22,7 +22,7 @@ final class LivingUpdate{
 		if (player.inPortal){
 			if (mc.currentScreen != null)mc.displayGuiScreen(null);
 			
-			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
+			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
 			
 			player.timeInPortal += 0.0125F;
 
@@ -52,14 +52,15 @@ final class LivingUpdate{
 			player.sprintToggleTimer = 0;
 		}
 		
-		if (player.movementInput.sneak && player.ySize < 0.2F){
-			player.ySize = 0.2F;
-		}
+		//if (player.movementInput.sneak && player.ySize < 0.2F){
+		//	player.ySize = 0.2F;
+		// TODO }
 		
-		pushOutOfBlocks(player,player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
-		pushOutOfBlocks(player,player.posX-player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
-		pushOutOfBlocks(player,player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ-player.width*0.35D);
-		pushOutOfBlocks(player,player.posX+player.width*0.35D,player.boundingBox.minY+0.5D,player.posZ+player.width*0.35D);
+		AxisAlignedBB playerBoundingBox = player.getEntityBoundingBox();
+		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ+player.width*0.35D);
+		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ-player.width*0.35D);
+		pushOutOfBlocks(player,player.posX+player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ-player.width*0.35D);
+		pushOutOfBlocks(player,player.posX+player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ+player.width*0.35D);
 		
 		logic.updateLiving();
 		
@@ -89,7 +90,7 @@ final class LivingUpdate{
 
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
-				player.sendQueue.addToSendQueue(new C0BPacketEntityAction(player,6,(int)(player.getHorseJumpPower()*100F)));
+				player.sendQueue.addToSendQueue(new C0BPacketEntityAction(player,C0BPacketEntityAction.Action.RIDING_JUMP,(int)(player.getHorseJumpPower()*100F)));
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;
@@ -119,44 +120,32 @@ final class LivingUpdate{
 	protected static boolean pushOutOfBlocks(EntityPlayerSP player, double x, double y, double z){
 		if (player.noClip)return false;
 		
-		int ix = MathHelper.floor_double(x);
-		int iy = MathHelper.floor_double(y);
-		int iz = MathHelper.floor_double(z);
-		double xDiff = x-ix;
-		double zDiff = z-iz;
+		BlockPos pos = new BlockPos(x,y,z);
+		double xDiff = x-pos.getX();
+		double zDiff = z-pos.getZ();
 
 		int entHeight = Math.max(Math.round(player.height),1);
-
-		boolean inTranslucentBlock = true;
 		
-		for(int yOffset = 0; yOffset < entHeight; yOffset++){
-			if (!isBlockTranslucent(player,ix,iy+yOffset,iz))inTranslucentBlock = false;
-		}
-
-		if (inTranslucentBlock){
-			boolean freeNX = !isHeadspaceFree(player,ix-1,iy,iz,entHeight);
-			boolean freePX = !isHeadspaceFree(player,ix+1,iy,iz,entHeight);
-			boolean freeNZ = !isHeadspaceFree(player,ix,iy,iz-1,entHeight);
-			boolean freePZ = !isHeadspaceFree(player,ix,iy,iz+1,entHeight);
+		if (isHeadspaceFree(player,pos,entHeight)){
 			byte side = -1;
 			double limit = 9999D;
 
-			if (freeNX && xDiff < limit){
+			if (!isHeadspaceFree(player,pos.west(),entHeight) && xDiff < limit){
 				limit = xDiff;
 				side = 0;
 			}
 
-			if (freePX && 1D-xDiff < limit){
+			if (!isHeadspaceFree(player,pos.east(),entHeight) && 1D-xDiff < limit){
 				limit = 1D-xDiff;
 				side = 1;
 			}
 
-			if (freeNZ && zDiff < limit){
+			if (!isHeadspaceFree(player,pos.north(),entHeight) && zDiff < limit){
 				limit = zDiff;
 				side = 4;
 			}
 
-			if (freePZ && 1D-zDiff < limit){
+			if (!isHeadspaceFree(player,pos.south(),entHeight) && 1D-zDiff < limit){
 				limit = 1D-zDiff;
 				side = 5;
 			}
@@ -170,13 +159,13 @@ final class LivingUpdate{
 		return false;
 	}
 	
-	private static boolean isBlockTranslucent(EntityPlayerSP player, int x, int y, int z){
-		return player.worldObj.getBlock(x,y,z).isNormalCube();
+	private static boolean isBlockTranslucent(EntityPlayerSP player, BlockPos pos){
+		return !player.worldObj.getBlockState(pos).getBlock().isNormalCube() && !player.worldObj.getBlockState(pos.up()).getBlock().isNormalCube();
 	}
 
-	private static boolean isHeadspaceFree(EntityPlayerSP player, int x, int y, int z, int height){
+	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
 		for(int yOffset = 0; yOffset < height; yOffset++){
-			if (isBlockTranslucent(player,x,y+yOffset,z+1))return false;
+			if (isBlockTranslucent(player,pos.add(0,yOffset,0)))return false;
 		}
 		
 		return true;
