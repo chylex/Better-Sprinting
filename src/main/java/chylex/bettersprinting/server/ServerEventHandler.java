@@ -1,5 +1,5 @@
 package chylex.bettersprinting.server;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -9,7 +9,7 @@ import chylex.bettersprinting.system.PacketPipeline;
 @SideOnly(Side.SERVER)
 public final class ServerEventHandler{
 	public static void register(){
-		FMLCommonHandler.instance().bus().register(new ServerEventHandler());
+		MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
 	}
 	
 	@SubscribeEvent

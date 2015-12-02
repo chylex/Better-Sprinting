@@ -1,5 +1,5 @@
 package chylex.bettersprinting.client.gui;
-import net.minecraft.client.gui.FontRenderer;
+import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -7,11 +7,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{
@@ -67,7 +67,7 @@ public class GuiSprint extends GuiScreen{
 	
 	@Override
 	protected void actionPerformed(GuiButton btn){
-		for(int a = 0; a < sprintBindings.length; a++)((GuiButton)buttonList.get(a)).displayString = getKeyCodeString(a);
+		for(int a = 0; a < sprintBindings.length; a++)buttonList.get(a).displayString = getKeyCodeString(a);
 	
 		switch(btn.id){
 			case 190:
@@ -110,19 +110,19 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int button){
+	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
 		if (!handleInput(button-100))super.mouseClicked(mouseX,mouseY,button);
 	}
 	
 	@Override
-	protected void keyTyped(char keyChar, int keyCode){
+	protected void keyTyped(char keyChar, int keyCode) throws IOException{
 		if (!handleInput(keyCode))super.keyTyped(keyChar,keyCode);
 	}
 	
 	private boolean handleInput(int keyId){
 		if (buttonId >= 0 && buttonId < 180){
 			sprintBindings[buttonId].setKeyCode(keyId);
-			((GuiButton)buttonList.get(buttonId)).displayString = getKeyCodeString(buttonId);
+			buttonList.get(buttonId).displayString = getKeyCodeString(buttonId);
 			buttonId = -1;
 			KeyBinding.resetKeyBindingArrayAndHash();
 			
@@ -167,11 +167,11 @@ public class GuiSprint extends GuiScreen{
 					}
 				}
 	
-				if (buttonId == a)((GuiButton)buttonList.get(a)).displayString = "\u00a7f> \u00a7e??? \u00a7f<";
-				else if (alreadyUsed)((GuiButton)buttonList.get(a)).displayString = "\u00a7c"+getKeyCodeString(a);
-				else ((GuiButton)buttonList.get(a)).displayString = getKeyCodeString(a);
+				if (buttonId == a)buttonList.get(a).displayString = "\u00a7f> \u00a7e??? \u00a7f<";
+				else if (alreadyUsed)buttonList.get(a).displayString = "\u00a7c"+getKeyCodeString(a);
+				else buttonList.get(a).displayString = getKeyCodeString(a);
 				
-				drawButtonTitle(I18n.format(sprintBindings[a].getKeyDescription()),(GuiButton)buttonList.get(a),a%2 == 0 ? maxWidthLeft : maxWidthRight);
+				drawButtonTitle(I18n.format(sprintBindings[a].getKeyDescription()),buttonList.get(a),a%2 == 0 ? maxWidthLeft : maxWidthRight);
 				a++;
 				break;
 			}
@@ -183,7 +183,7 @@ public class GuiSprint extends GuiScreen{
 		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod,maxWidthRight);
 		
 		for(int a = 0; a < buttonList.size(); a++){
-			GuiButton btn = (GuiButton)buttonList.get(a);
+			GuiButton btn = buttonList.get(a);
 			
 			if (mouseX >= btn.xPosition && mouseX <= btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY <= btn.yPosition+20){
 				String info;

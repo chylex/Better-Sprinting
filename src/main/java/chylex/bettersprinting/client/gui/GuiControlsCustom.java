@@ -1,5 +1,5 @@
 package chylex.bettersprinting.client.gui;
-import chylex.bettersprinting.BetterSprintingMod;
+import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
@@ -19,7 +19,7 @@ public class GuiControlsCustom extends GuiControls{
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button){
+	protected void actionPerformed(GuiButton button) throws IOException{
 		if (button.id == 205)mc.displayGuiScreen(new GuiSprint(this));
 		else super.actionPerformed(button);
 	}
