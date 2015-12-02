@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client.gui;
+import chylex.bettersprinting.BetterSprintingMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;

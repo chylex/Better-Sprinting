@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import chylex.bettersprinting.BetterSprintingConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,18 +23,21 @@ public class ClientSettings{
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("client");
 		
-		keyCodeSprintHold = config.getInt("keySprintHold",keyCodeSprintHold,"").setShowInGui(false).getInt();
-		keyCodeSprintToggle = config.getInt("keySprintToggle",keyCodeSprintToggle,"").setShowInGui(false).getInt();
-		keyCodeSneakToggle = config.getInt("keySneakToggle",keyCodeSneakToggle,"").setShowInGui(false).getInt();
-		keyCodeOptionsMenu = config.getInt("keyOptionsMenu",keyCodeOptionsMenu,"").setShowInGui(false).getInt();
+		keyCodeSprintHold = config.getInt("keySprintHold",keyCodeSprintHold).setShowInGui(false).getInt();
+		keyCodeSprintToggle = config.getInt("keySprintToggle",keyCodeSprintToggle).setShowInGui(false).getInt();
+		keyCodeSneakToggle = config.getInt("keySneakToggle",keyCodeSneakToggle).setShowInGui(false).getInt();
+		keyCodeOptionsMenu = config.getInt("keyOptionsMenu",keyCodeOptionsMenu).setShowInGui(false).getInt();
 		
-		flySpeedBoost = (byte)config.getInt("flySpeedBoost",flySpeedBoost,"").setShowInGui(false).getInt();
-		enableDoubleTap = config.getBool("enableDoubleTap",enableDoubleTap,"").setShowInGui(false).getBoolean();
-		enableAllDirs = config.getBool("enableAllDirs",enableAllDirs,"").setShowInGui(false).getBoolean();
-		disableMod = config.getBool("disableMod",disableMod,"").setShowInGui(false).getBoolean();
+		flySpeedBoost = (byte)config.getInt("flySpeedBoost",flySpeedBoost).setShowInGui(false).getInt();
+		enableDoubleTap = config.getBool("enableDoubleTap",enableDoubleTap).setShowInGui(false).getBoolean();
+		enableAllDirs = config.getBool("enableAllDirs",enableAllDirs).setShowInGui(false).getBoolean();
+		disableMod = config.getBool("disableMod",disableMod).setShowInGui(false).getBoolean();
 		
-		enableUpdateNotifications = config.getBool("enableUpdateNotifications",enableUpdateNotifications,"").getBoolean();
-		enableBuildCheck = config.getBool("enableBuildCheck",enableBuildCheck,"").getBoolean();
+		enableUpdateNotifications = config.getBool("enableUpdateNotifications",enableUpdateNotifications).getBoolean();
+		enableBuildCheck = config.getBool("enableBuildCheck",enableBuildCheck).getBoolean();
+		
+		config.setComment("enableUpdateNotifications",I18n.format("bs.config.notifications"));
+		config.setComment("enableBuildCheck",I18n.format("bs.config.buildCheck"));
 		
 		ClientModManager.keyBindSprintHold.setKeyCode(keyCodeSprintHold);
 		ClientModManager.keyBindSprintToggle.setKeyCode(keyCodeSprintToggle);

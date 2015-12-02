@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client.player.impl;
+import chylex.bettersprinting.client.ClientModManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiDownloadTerrain;
@@ -64,7 +65,7 @@ public final class LogicImplOverride{
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
-				mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.integrity").replace("$",controllerClass.getName())));
+				mc.thePlayer.addChatMessage(new ChatComponentText(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$",controllerClass.getName())));
 				stopChecking = true;
 			}
 		}
