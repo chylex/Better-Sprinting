@@ -3,6 +3,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.server.compatibility.OldNotificationPacketReceiver;
@@ -33,42 +34,46 @@ public class ServerCommandConfig extends CommandBase{
 			sendMessage(sender,"/bettersprinting setting <survivalFlyBoost|runInAllDirs> <true|false>");
 		}
 		else if (args[0].equalsIgnoreCase("info")){
-			sendMessage(sender,"You can use the command to either disable/enable the mod, or change specific settings of the mod. These will persist after restarting the server, and will also immediately affect players that are already on the server.");
+			sendMessageTranslated(sender,"bs.command.info");
 		}
 		else if (args[0].equalsIgnoreCase("disablemod")){
 			if (isValidBool(args,1)){
 				ServerSettings.disableClientMod = getBool(args,1);
 				ServerSettings.update(BetterSprintingMod.config);
-				sendMessage(sender,ServerSettings.disableClientMod ? "Better Sprinting will be automatically disabled when a user joins." : "Better Sprinting is now allowed on the server.");
+				sendMessageTranslated(sender,ServerSettings.disableClientMod ? "bs.command.disableMod" : "bs.command.enableMod");
 				PacketPipeline.sendToAll(ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
 				if (ServerSettings.disableClientMod)OldNotificationPacketReceiver.kickOldModUsers();
 			}
-			else sendMessage(sender,"Invalid syntax, do /bettersprinting for list of commands.");
+			else sendMessageTranslated(sender,"bs.command.invalidSyntax");
 		}
 		else if (args[0].equalsIgnoreCase("setting")){
 			if (args.length <= 1 || !isValidBool(args,2)){
-				sendMessage(sender,"Invalid syntax, do /bettersprinting for list of commands.");
+				sendMessageTranslated(sender,"bs.command.invalidSyntax");
 			}
 			else{
 				if (args[1].equalsIgnoreCase("survivalFlyBoost")){
 					ServerSettings.enableSurvivalFlyBoost = getBool(args,2);
 					ServerSettings.update(BetterSprintingMod.config);
-					sendMessage(sender,"Fly boost is now "+(ServerSettings.enableSurvivalFlyBoost ? "enabled" : "disabled")+" when the player is in survival mode.");
+					sendMessageTranslated(sender,ServerSettings.enableSurvivalFlyBoost ? "bs.command.enableFlyBoost" : "bs.command.disableFlyBoost");
 					PacketPipeline.sendToAll(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs));
 				}
 				else if (args[1].equalsIgnoreCase("runInAllDirs")){
 					ServerSettings.enableAllDirs = getBool(args,2);
 					ServerSettings.update(BetterSprintingMod.config);
-					sendMessage(sender,"Sprinting in all directions is now "+(ServerSettings.enableAllDirs ? "enabled." : "disabled."));
+					sendMessageTranslated(sender,ServerSettings.enableAllDirs ? "bs.command.enableAllDirs" : "bs.command.disableAllDirs");
 					PacketPipeline.sendToAll(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs));
 				}
 			}
 		}
-		else sendMessage(sender,"Invalid syntax, do /bettersprinting for list of commands.");
+		else sendMessageTranslated(sender,"bs.command.invalidSyntax");
 	}
 	
 	private void sendMessage(ICommandSender sender, String text){
 		sender.addChatMessage(new ChatComponentText(text));
+	}
+	
+	private void sendMessageTranslated(ICommandSender sender, String translationName){
+		sender.addChatMessage(new ChatComponentTranslation(translationName));
 	}
 	
 	private boolean isValidBool(String[] args, int index){
