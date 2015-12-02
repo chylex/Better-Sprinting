@@ -5,8 +5,8 @@ import net.minecraft.network.PacketBuffer;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ClientNetwork implements INetworkHandler{

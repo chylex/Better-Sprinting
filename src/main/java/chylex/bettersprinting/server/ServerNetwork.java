@@ -2,7 +2,7 @@ package chylex.bettersprinting.server;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 

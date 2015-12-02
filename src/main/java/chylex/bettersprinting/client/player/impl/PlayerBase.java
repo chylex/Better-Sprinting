@@ -4,8 +4,8 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import api.player.client.ClientPlayerAPI;
 import api.player.client.ClientPlayerBase;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PlayerBase extends ClientPlayerBase{
