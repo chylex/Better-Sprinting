@@ -6,7 +6,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import chylex.bettersprinting.BetterSprintingMod;
-import chylex.bettersprinting.server.compatibility.OldNotificationPacketReceiver;
 import chylex.bettersprinting.system.PacketPipeline;
 
 public class ServerCommandConfig extends CommandBase{
@@ -42,7 +41,6 @@ public class ServerCommandConfig extends CommandBase{
 				ServerSettings.update(BetterSprintingMod.config);
 				sendMessageTranslated(sender,ServerSettings.disableClientMod ? "bs.command.disableMod" : "bs.command.enableMod");
 				PacketPipeline.sendToAll(ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
-				if (ServerSettings.disableClientMod)OldNotificationPacketReceiver.kickOldModUsers();
 			}
 			else sendMessageTranslated(sender,"bs.command.invalidSyntax");
 		}

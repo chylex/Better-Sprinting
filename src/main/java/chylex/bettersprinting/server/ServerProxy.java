@@ -4,7 +4,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
-import chylex.bettersprinting.server.compatibility.OldNotificationPacketReceiver;
 import chylex.bettersprinting.system.PacketPipeline;
 
 public class ServerProxy extends BetterSprintingProxy{	
@@ -17,7 +16,6 @@ public class ServerProxy extends BetterSprintingProxy{
 	public void onPreInit(FMLPreInitializationEvent e){
 		ServerEventHandler.register();
 		PacketPipeline.initialize(new ServerNetwork());
-		OldNotificationPacketReceiver.register();
 	}
 
 	@Override
