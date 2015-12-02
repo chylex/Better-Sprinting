@@ -1,0 +1,57 @@
+# Generic GUI titles
+
+gui.enabled=Aktiviert
+gui.disabled=Deaktiviert
+gui.unavailable=Nicht verfügbar
+
+# Titles for controls
+
+bs.sprint.hold=Sprint (Halten)
+bs.sprint.toggle=Sprint (Umschalten)
+bs.sneak.toggle=Schleichen (Umschalten)
+bs.menu=Sprintmenü
+
+bs.doubleTapping=Doppelklick
+bs.runAllDirs=Rennen in alle Richtungen
+bs.flyBoost=Flug-Boost
+bs.disableMod=Modfunktionalität deaktivieren
+
+# Tooltips for controls (use the '#' character for splitting lines)
+
+bs.sprint.hold.info=Halte zum Sprinten gedrückt.
+bs.sprint.toggle.info=Drücken, um kontinuierliches Sprinten zu (de-)aktivieren.
+bs.sneak.toggle.info=Drücken, um kontinuierliches Schleichen zu (de-)aktivieren.#Wenn du ein Interface öffnest, wirst zu aufhören,#zu schleichen, bis es wieder geschlossen ist.
+bs.menu.info=Taste zum Öffnen dieses Menüs.
+
+bs.doubleTapping.info=Sprinten durch doppeltes Betätigen der Vorwärtstaste.
+bs.runAllDirs.info=Sprinten in alle Richtungen ermöglichen.#Sofern der Server es nicht explizit erlaubt,#kannst du dies nicht im Mehrspielermodus verwenden.
+bs.flyBoost.info=Halte beim Fliegen im Kreativ-Modus gedrückt, um schneller zu fliegen.
+bs.disableMod.info=Deaktiviert alle nicht standardmäßigen Funktionen von Better Sprinting.#Diese Option kann genutzt werden, sollte ein Server diese Mod nicht erlauben.
+
+# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+
+2x=2x
+
+# In-game messages
+
+bs.game.integrity=Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: $
+bs.game.disabled=Der Server hat diese mod deaktiviert. Die Sprintfunktionen werden auf Standard zurückgesetzt, solange du auf diesem Server bist.
+bs.game.reenabled=Der Server hat die Mod wieder aktiviert, Sprintfunktionen werden auf BetterSprinting-Standard gesetzt.
+
+# Server messages (translated on client)
+
+bs.server.kick=Der Server erlaubt Better Sprinting nicht. Neuere Versionen könnten automatisch deaktiviert werden, ohne dich vom Server zu werfen.
+
+bs.command.invalidSyntax=Ungültige Schreibweise, für eine Liste an Befehlen gib /bettersprinting ein.
+bs.command.info=Du kannst den Befehl nutzen, um die Mod zu aktivieren, zu deaktivieren sowie zum (De-)Aktiveren bestimmter Funktionen. Diese Einstellungen werden über Server-Neustarts hinaus aktiv bleiben und auch sofort Spieler, die sich bereits auf dem Server befinden, beeinflussen.
+bs.command.disableMod=Better Sprinting wird nun für Spieler auf diesem Server automatisch deaktiviert.
+bs.command.enableMod=Better Sprinting ist nun auf dem Server erlaubt.
+bs.command.disableFlyBoost=Flug-Boost ist nun deaktiviert, wenn ein Spieler im Überlebensmodus erscheint.
+bs.command.enableFlyBoost=Flug-Boost ist nun aktiviert, wenn ein Spieler im Überlebensmodus erscheint.
+bs.command.disableAllDirs=Sprinten in alle Richtungen ist nun deaktiviert.
+bs.command.enableAllDirs=Sprinten in alle Richtungen ist nun aktiviert.
+
+# Configuration
+
+bs.config.notifications=Notifies users about new updates. The update check only runs once per day, and does not impact the game's performance.
+bs.config.buildCheck=It is highly suggested to keep this option enabled. This will detect broken builds with critical errors that can crash your game. These are usually fixed very quickly, but it is important to notify people who downloaded the broken build.
