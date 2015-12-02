@@ -17,8 +17,6 @@ public final class Log{
 	static final Logger logger = LogManager.getLogger("BetterSprinting");
 	
 	public static boolean isDeobfEnvironment;
-	public static boolean forceDebugEnabled;
-	private static byte obfEnvironmentWarning = 0;
 	
 	public static void load(){
 		isDeobfEnvironment = ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
@@ -41,23 +39,14 @@ public final class Log{
 	
 	@SideOnly(Side.CLIENT)
 	public static void initializeDebug(){
-		if (forceDebugEnabled || isDeobfEnvironment){
+		if (isDeobfEnvironment){
 			Display.setTitle(new StringBuilder().append(Display.getTitle()).append(" - BetterSprinting - ").append(isDeobfEnvironment ? "dev" : "debug").append(' ').append(BetterSprintingMod.modVersion).toString());
 		}
-	}
-	
-	public static boolean isDebugEnabled(){
-		return forceDebugEnabled || isDeobfEnvironment;
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */
 	public static void debug(String message, Object...data){
-		if (forceDebugEnabled || isDeobfEnvironment)logger.info(getMessage(message,data));
-		
-		if (forceDebugEnabled && !isDeobfEnvironment && ++obfEnvironmentWarning >= 30){
-			logger.warn(getMessage("Detected obfuscated environment, don't forget to disable logging debug info after you are done debugging!"));
-			obfEnvironmentWarning = 0;
-		}
+		if (isDeobfEnvironment)logger.info(getMessage(message,data));
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */

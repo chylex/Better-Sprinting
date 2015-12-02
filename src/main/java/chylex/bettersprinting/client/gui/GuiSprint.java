@@ -182,7 +182,7 @@ public class GuiSprint extends GuiScreen{
 			GuiButton btn = (GuiButton)buttonList.get(a);
 			
 			if (mouseX >= btn.xPosition && mouseX <= btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY <= btn.yPosition+20){
-				String info = "";
+				String info;
 				
 				switch(a){
 					case 0: info = "bs.sprint.hold.info"; break;
@@ -193,6 +193,7 @@ public class GuiSprint extends GuiScreen{
 					case 5: info = "bs.runAllDirs.info"; break;
 					case 6: info = "bs.flyBoost.info"; break;
 					case 7: info = "bs.disableMod.info"; break;
+					default: info = "";
 				}
 				
 				String[] spl = I18n.format(info).split("#");

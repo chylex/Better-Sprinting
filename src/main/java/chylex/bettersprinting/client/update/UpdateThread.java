@@ -72,7 +72,6 @@ public class UpdateThread extends Thread{
 				if (version.modVersion.equals(modVersion)){
 					isInDev = false;
 					buildId = version.buildId;
-					UpdateNotificationManager.refreshUpdateData(version);
 					break;
 				}
 			}

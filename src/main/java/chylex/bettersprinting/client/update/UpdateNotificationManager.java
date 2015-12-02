@@ -10,14 +10,6 @@ import chylex.bettersprinting.system.Log;
 import com.google.common.base.Joiner;
 
 public final class UpdateNotificationManager{
-	public static String mcVersions = "?";
-	public static String releaseDate = "?";
-	
-	public static synchronized void refreshUpdateData(VersionEntry version){
-		mcVersions = Joiner.on(", ").join(version.mcVersions);
-		releaseDate = version.releaseDate;
-	}
-	
 	private static final Preferences globalData = Preferences.userRoot().node("chylex");
 	private static final String prefKey = "bettersprint-lut";
 	

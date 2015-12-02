@@ -18,7 +18,6 @@ public class PlayerLogicHandler{
 	private final CustomMovementInput customMovementInput;
 	private EntityPlayerSP player;
 	
-	private boolean wasSneaking;
 	private boolean isMovingForward;
 	private boolean shouldRestoreSneakToggle;
 	
@@ -32,7 +31,6 @@ public class PlayerLogicHandler{
 	}
 	
 	public void updateMovementInput(){
-		wasSneaking = player.movementInput.sneak;
 		isMovingForward = player.movementInput.moveForward >= 0.8F;
 		customMovementInput.update(mc,(MovementInputFromOptions)player.movementInput);
 	}
@@ -107,7 +105,7 @@ public class PlayerLogicHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			if (ClientModManager.svDisableMod)player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.disabled")));
+			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.disabled")));
 			else player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN+"[Better Sprinting]"+EnumChatFormatting.RESET+" "+I18n.format("bs.game.reenabled")));
 			showDisableWarningWhenPossible = false;
 		}

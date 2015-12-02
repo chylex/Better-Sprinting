@@ -7,12 +7,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class ClientModManager{
-	public static KeyBinding keyBindSprintHold = new KeyBinding("bs.sprint.hold",29,"key.categories.movement");
-    public static KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle",34,"key.categories.movement");
-    public static KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle",21,"key.categories.movement");
-    public static KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu",24,"key.categories.movement");
+	public static final KeyBinding keyBindSprintHold = new KeyBinding("bs.sprint.hold",29,"key.categories.movement");
+    public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle",34,"key.categories.movement");
+    public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle",21,"key.categories.movement");
+    public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu",24,"key.categories.movement");
     
-	public static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
+	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
     
     public static boolean inMenu(Minecraft mc){
     	return mc.thePlayer == null || mc.theWorld == null;
@@ -28,5 +28,9 @@ public final class ClientModManager{
     
     public static boolean isModDisabled(){
     	return ClientSettings.disableMod || svDisableMod;
+    }
+    
+    public static boolean isModDisabledByServer(){
+    	return svDisableMod;
     }
 }
