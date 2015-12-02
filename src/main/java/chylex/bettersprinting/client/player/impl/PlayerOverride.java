@@ -116,8 +116,9 @@ public class PlayerOverride extends EntityPlayerSP{
 			randomYawVelocity = 0F;
 		}
 		else if (isServerWorld()){ // isAIEnabled is false
-			updateEntityActionState();
-			rotationYawHead = rotationYaw;
+			worldObj.theProfiler.startSection("newAi");
+            updateEntityActionState();
+            worldObj.theProfiler.endSection();
 		}
 
 		worldObj.theProfiler.endSection();
@@ -143,11 +144,11 @@ public class PlayerOverride extends EntityPlayerSP{
 		moveForward *= 0.98F;
 		randomYawVelocity *= 0.9F;
 		moveEntityWithHeading(moveStrafing,moveForward);
+		
 		worldObj.theProfiler.endSection();
+		
 		worldObj.theProfiler.startSection("push");
-
 		if (!worldObj.isRemote)collideWithNearbyEntities();
-
 		worldObj.theProfiler.endSection();
 	}
 }

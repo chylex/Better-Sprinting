@@ -20,7 +20,7 @@ final class LivingUpdate{
 		player.prevTimeInPortal = player.timeInPortal;
 		
 		if (player.inPortal){
-			if (mc.currentScreen != null)mc.displayGuiScreen(null);
+			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame())mc.displayGuiScreen(null);
 			
 			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
 			
@@ -52,10 +52,6 @@ final class LivingUpdate{
 			player.sprintToggleTimer = 0;
 		}
 		
-		//if (player.movementInput.sneak && player.ySize < 0.2F){
-		//	player.ySize = 0.2F;
-		// TODO }
-		
 		AxisAlignedBB playerBoundingBox = player.getEntityBoundingBox();
 		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ+player.width*0.35D);
 		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ-player.width*0.35D);
@@ -64,16 +60,24 @@ final class LivingUpdate{
 		
 		logic.updateLiving();
 		
-		if (player.capabilities.allowFlying && !wasJumping && player.movementInput.jump){
-			if (player.flyToggleTimer == 0)player.flyToggleTimer = 7;
-			else{
-				player.capabilities.isFlying = !player.capabilities.isFlying;
-				player.sendPlayerAbilities();
-				player.flyToggleTimer = 0;
+		if (player.capabilities.allowFlying){
+			if (mc.playerController.isSpectatorMode()){
+				if (!player.capabilities.isFlying){
+					player.capabilities.isFlying = true;
+					player.sendPlayerAbilities();
+				}
+			}
+			else if (!wasJumping && player.movementInput.jump){
+				if (player.flyToggleTimer == 0)player.flyToggleTimer = 7;
+				else{
+					player.capabilities.isFlying = !player.capabilities.isFlying;
+					player.sendPlayerAbilities();
+					player.flyToggleTimer = 0;
+				}
 			}
 		}
 
-		if (player.capabilities.isFlying){
+		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){
 			if (player.movementInput.sneak){
 				player.motionY -= 0.15D;
 			}
@@ -109,7 +113,7 @@ final class LivingUpdate{
 	}
 	
 	public static void callPostSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
-		if (player.onGround && player.capabilities.isFlying){
+		if (player.onGround && player.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			player.capabilities.isFlying = false;
 			player.sendPlayerAbilities();
 		}
