@@ -55,4 +55,14 @@ final class VersionEntry implements Comparable<VersionEntry>{
 	public int compareTo(VersionEntry o){
 		return o.orderId.compareTo(orderId);
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return obj instanceof VersionEntry && ((VersionEntry)obj).orderId.compareTo(orderId) == 0;
+	}
+	
+	@Override
+	public int hashCode(){
+		return orderId;
+	}
 }

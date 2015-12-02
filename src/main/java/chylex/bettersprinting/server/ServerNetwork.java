@@ -26,7 +26,7 @@ public class ServerNetwork implements INetworkHandler{
 	 * 
 	 * ADDITIONAL INFO
 	 * ===============
-	 * Since this server mod can only run the BSM channel since it doesn't support older versions of MC, so if you made your server
+	 * This server mod can only run the BSM channel since it doesn't support older versions of MC, so if you made your server
 	 * accept clients from older versions of MC which only support the old protocol, you will need to handle that yourself. Same
 	 * if you don't have a Forge server at all. All details about the workings should be comprehensible, if you have any questions,
 	 * feel free to contact me. There is also a diagram below, because I was bored:
@@ -62,11 +62,13 @@ public class ServerNetwork implements INetworkHandler{
 	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
-		byte type = data.readByte();
+		// currently handled outside of the networking handler
+		
+		/*byte type = data.readByte();
 		
 		if (type == 0){
 			// might be useful later; maybe keep a list of players with the mod installed
 			// setting packet is sent in the login event
-		}
+		}*/
 	}
 }

@@ -25,7 +25,6 @@ public final class ClientEventHandler{
 		FMLCommonHandler.instance().bus().register(events);
 	}
 	
-	private long lastNotificationTime = -1;
 	private boolean stopChecking;
 	
 	@SubscribeEvent
