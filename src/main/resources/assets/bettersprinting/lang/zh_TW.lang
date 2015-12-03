@@ -1,0 +1,57 @@
+# Generic GUI titles
+
+gui.enabled=啟用
+gui.disabled=禁用
+gui.unavailable=不可用
+
+# Titles for controls
+
+bs.sprint.hold=疾跑(按住)
+bs.sprint.toggle=疾跑(切換)
+bs.sneak.toggle=潛行(切換)
+bs.menu=疾跑設定
+
+bs.doubleTapping=按兩次
+bs.runAllDirs=全方向疾跑
+bs.flyBoost=飛行加速
+bs.disableMod=禁用本模組
+
+# Tooltips for controls (use the '#' character for splitting lines)
+
+bs.sprint.hold.info=按住以疾跑。
+bs.sprint.toggle.info=按一次按鍵即可開啟或關閉疾跑。
+bs.sneak.toggle.info=按一次按鍵即可開啟或關閉潛行。#當你打開任何GUI時，你會停止潛行直到該GUI關閉。
+bs.menu.info=打開此選單的熱鍵。
+
+bs.doubleTapping.info=啟用或停用按兩次前進鍵開啟疾跑的功能。
+bs.runAllDirs.info=全方向疾跑。#只有在允許此功能的伺服器中才可使用此功能。
+bs.flyBoost.info=創造模式時按下按鍵可提升飛行速度。
+bs.disableMod.info=禁用疾跑增強(Better Sprinting)提供的非原版特性。#可用於禁止此模組的伺服器時。
+
+# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+
+2x=2x
+
+# In-game messages
+
+bs.game.integrity=相容性檢查失敗，因有其它模組與疾跑增強(Better Sprinting)存在衝突。請嘗試安裝PlayerAPI以解決。衝突種類： $
+bs.game.disabled=伺服器限制此模組，目前此模組功能已停用，從伺服器斷開後會恢復用戶設定值。
+bs.game.reenabled=伺服器允許使用此模組，原版疾跑機制已替換為疾跑增強(Better Sprinting)的機制。
+
+# Server messages (translated on client)
+
+bs.server.kick=伺服器已要求禁用此模組。本模組新版本可在不被踢出伺服器的情況下自動停用本模組功能。
+
+bs.command.invalidSyntax=無效參數，輸入/bettersprinting以查詢可用參數。
+bs.command.info=你可以使用指令來啟用或禁用本模組，也可更改模組的特定設定。所有更改在重啟伺服器後生效，同時會立刻影響到伺服器上的既有玩家。
+bs.command.disableMod=當玩家加入時，疾跑增強(Better Sprinting)會自動禁用。
+bs.command.enableMod=伺服器已允許使用疾跑增強(Better Sprinting)。
+bs.command.disableFlyBoost=玩家處於生存模式時停用飛行加速。
+bs.command.enableFlyBoost=玩家處於生存模式時啟用飛行加速。
+bs.command.disableAllDirs=全方向疾跑已禁用。
+bs.command.enableAllDirs=全方向疾跑已啟用。
+
+# Configuration
+
+bs.config.notifications=提醒用戶更新。更新檢查每天會運行一次，不會影響遊戲體驗。
+bs.config.buildCheck=強烈建議保持此功能開啟。這可以檢測此版本是否有可能導致遊戲錯誤而崩潰。修復版會盡快放出，但玩家需要被及時提醒更新。
