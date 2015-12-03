@@ -2,9 +2,11 @@ package chylex.bettersprinting.server;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.server.compatibility.OldNotificationPacketReceiver;
 import chylex.bettersprinting.system.PacketPipeline;
@@ -73,7 +75,12 @@ public class ServerCommandConfig extends CommandBase{
 	}
 	
 	private void sendMessageTranslated(ICommandSender sender, String translationName){
-		sender.addChatMessage(new ChatComponentTranslation(translationName));
+		if (sender instanceof EntityPlayer && !ServerNetwork.hasBetterSprinting((EntityPlayer)sender)){
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(translationName)));
+		}
+		else{
+			sender.addChatMessage(new ChatComponentTranslation(translationName));
+		}
 	}
 	
 	private boolean isValidBool(String[] args, int index){
