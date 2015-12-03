@@ -54,5 +54,9 @@ public class CustomMovementInput{
 			options.moveStrafe = options.moveStrafe*0.3F;
 			options.moveForward = options.moveForward*0.3F;
 		}
+		
+		if (ClientModManager.isModDisabled()){
+			sneakToggle = sprintToggle = false;
+		}
 	}
 }
