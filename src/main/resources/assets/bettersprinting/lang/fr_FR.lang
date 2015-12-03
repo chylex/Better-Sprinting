@@ -20,7 +20,7 @@ bs.disableMod=Désactive la fonctionnalité du mod
 
 bs.sprint.hold.info=Maintenez pour courrir.
 bs.sprint.toggle.info=Appuyez une fois pour débuter ou arrêter de courir.
-bs.sneak.toggle.info=Appuyez une fois pour débuter ou arrêter de vous accroupir.#Lorsque vous ouvrirez une interface, vous ar^èterez de vous accroupir dès sa fermeture.
+bs.sneak.toggle.info=Appuyez une fois pour débuter ou arrêter de vous accroupir.#Lorsque vous ouvrirez une interface, vous arèterez de vous accroupir dès sa fermeture.
 bs.menu.info=Touche pour ouvrir ce menu en jeu.
 
 bs.doubleTapping.info=Activez ou désactivez la course par la double-frappe de la touche pour avancer.
