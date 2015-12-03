@@ -1,5 +1,8 @@
 package chylex.bettersprinting.server;
 import io.netty.buffer.ByteBuf;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,6 +51,12 @@ public class ServerNetwork implements INetworkHandler{
 	 * Since all versions send a packet on BSprint channel, existing solutions for older versions are not broken by the change.
 	 */
 	
+	private static final Set<UUID> players = new HashSet<>();
+	
+	public static boolean hasBetterSprinting(EntityPlayer player){
+		return players.contains(player.getUniqueID());
+	}
+	
 	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
 		PacketBuffer buffer = PacketPipeline.buf();
 		buffer.writeByte(0).writeBoolean(enableSurvivalFlyBoost).writeBoolean(enableAllDirs);
@@ -62,7 +71,7 @@ public class ServerNetwork implements INetworkHandler{
 	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
-		// currently handled outside of the networking handler
+		players.add(player.getUniqueID());
 		
 		/*byte type = data.readByte();
 		
