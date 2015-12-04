@@ -9,6 +9,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
@@ -121,7 +122,7 @@ public class GuiSprint extends GuiScreen{
 	
 	private boolean handleInput(int keyId){
 		if (buttonId >= 0 && buttonId < 180){
-			sprintBindings[buttonId].setKeyCode(keyId);
+			sprintBindings[buttonId].setKeyCode(keyId == Keyboard.KEY_ESCAPE ? 0 : keyId);
 			buttonList.get(buttonId).displayString = getKeyCodeString(buttonId);
 			buttonId = -1;
 			KeyBinding.resetKeyBindingArrayAndHash();
@@ -161,7 +162,7 @@ public class GuiSprint extends GuiScreen{
 				}
 				
 				for(KeyBinding binding:mc.gameSettings.keyBindings){
-					if (sprintBindings[a].getKeyCode() == binding.getKeyCode()){
+					if (sprintBindings[a].getKeyCode() == binding.getKeyCode() && sprintBindings[a].getKeyCode() != 0){
 						alreadyUsed = true;
 						break;
 					}
