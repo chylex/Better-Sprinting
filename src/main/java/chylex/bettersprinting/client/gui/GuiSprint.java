@@ -153,7 +153,7 @@ public class GuiSprint extends GuiScreen{
 	
 			while(true){
 				if (b < sprintBindings.length){
-					if (b == a || sprintBindings[a].getKeyCode() != sprintBindings[b].getKeyCode()){
+					if (b == a || sprintBindings[a].getKeyCode() != sprintBindings[b].getKeyCode() || sprintBindings[a].getKeyCode() == 0){
 						++b;
 						continue;
 					}
