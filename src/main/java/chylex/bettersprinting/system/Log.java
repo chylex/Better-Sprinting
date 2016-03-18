@@ -1,7 +1,6 @@
 package chylex.bettersprinting.system;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Properties;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -22,18 +21,11 @@ public final class Log{
 		isDeobfEnvironment = ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
 		
 		if (isDeobfEnvironment && FMLCommonHandler.instance().getSide() == Side.SERVER){
-			FileOutputStream fos = null;
-			
-			try{
+			try(FileOutputStream fos = new FileOutputStream(new File("eula.txt"))){
 				Properties properties = new Properties();
 				properties.setProperty("eula","true");
-				properties.store(fos = new FileOutputStream(new File("eula.txt")),"Screw your EULA, I don't want that stuff in my workspace.");
-			}catch(Exception e){
-			}finally{
-				try{
-					if (fos != null)fos.close();
-				}catch(IOException e){}
-			}
+				properties.store(fos,"Screw your EULA, I don't want that stuff in my workspace.");
+			}catch(Exception e){}
 		}
 	}
 	
