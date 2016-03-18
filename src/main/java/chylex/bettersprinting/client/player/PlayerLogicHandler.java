@@ -38,12 +38,12 @@ public class PlayerLogicHandler{
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness)){
+			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness)){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown())player.sprintToggleTimer = 7;
 				else player.setSprinting(true);
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -55,13 +55,13 @@ public class PlayerLogicHandler{
 
 			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak)sprint = false;
 			
-			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness)){
+			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness)){
 				player.setSprinting(sprint);
 			}
 			
 			customMovementInput.held = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness)){
+			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness)){
 				if (player.sprintToggleTimer == 0){
 					player.sprintToggleTimer = 7;
 				}
@@ -73,6 +73,7 @@ public class PlayerLogicHandler{
 			
 			if (dblTap){
 				if (prevHeld && !customMovementInput.held)customMovementInput.stoptime = 1;
+				
 				if (customMovementInput.stoptime > 0){
 					customMovementInput.stoptime--;
 					player.setSprinting(false);
@@ -97,15 +98,21 @@ public class PlayerLogicHandler{
 		}
 
 		if (ClientModManager.keyBindOptionsMenu.isKeyDown())mc.displayGuiScreen(new GuiSprint(null));
-		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying)player.setSprinting(false);
+		
+		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying){
+			player.setSprinting(false);
+		}
 
 		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
-			if ((ClientModManager.canRunInAllDirs(mc) && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F))player.setSprinting(false);
+			if ((ClientModManager.canRunInAllDirs(mc) && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F)){
+				player.setSprinting(false);
+			}
 		}
 		
 		if (showDisableWarningWhenPossible){
 			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.disabled")));
 			else player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.reenabled")));
+			
 			showDisableWarningWhenPossible = false;
 		}
 	}

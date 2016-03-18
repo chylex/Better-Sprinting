@@ -2,11 +2,17 @@ package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.IJumpingMount;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemElytra;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
@@ -14,15 +20,19 @@ import chylex.bettersprinting.client.player.PlayerLogicHandler;
 @SideOnly(Side.CLIENT)
 final class LivingUpdate{
 	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
-		if (player.sprintingTicksLeft > 0 && --player.sprintingTicksLeft == 0)player.setSprinting(false);
+		++player.sprintingTicksLeft;
 		if (player.sprintToggleTimer > 0)--player.sprintToggleTimer;
 		
 		player.prevTimeInPortal = player.timeInPortal;
 		
 		if (player.inPortal){
-			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame())mc.displayGuiScreen(null);
+			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame()){
+				mc.displayGuiScreen(null);
+			}
 			
-			if (player.timeInPortal == 0F)mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("portal.trigger"),player.getRNG().nextFloat()*0.4F+0.8F));
+			if (player.timeInPortal == 0F){
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.block_portal_trigger,player.getRNG().nextFloat()*0.4F+0.8F));
+			}
 			
 			player.timeInPortal += 0.0125F;
 
@@ -46,7 +56,7 @@ final class LivingUpdate{
 		boolean wasJumping = player.movementInput.jump;
 		logic.updateMovementInput();
 		
-		if (player.isUsingItem() && !player.isRiding()){
+		if (player.isHandActive() && !player.isRiding()){
 			player.movementInput.moveStrafe *= 0.2F;
 			player.movementInput.moveForward *= 0.2F;
 			player.sprintToggleTimer = 0;
@@ -76,25 +86,38 @@ final class LivingUpdate{
 				}
 			}
 		}
+		
+		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
+			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			
+			if (chestIS != null && chestIS.getItem() == Items.elytra && ItemElytra.isBroken(chestIS)){
+				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
+			}
+		}
 
-		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){
+		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){ // uses isCurrentViewEntity but it is protected
 			if (player.movementInput.sneak){
-				player.motionY -= 0.15D;
+				player.movementInput.moveStrafe = player.movementInput.moveStrafe/0.3F;
+				player.movementInput.moveForward = player.movementInput.moveForward/0.3F;
+				player.motionY -= 0.15D; // ignore capabilities.getFlySpeed()
 			}
 
 			if (player.movementInput.jump){
-				player.motionY += 0.15D;
+				player.motionY += 0.15D; // ignore capabilities.getFlySpeed()
 			}
 		}
 
 		if (player.isRidingHorse()){
+			IJumpingMount mount = (IJumpingMount)player.getRidingEntity();
+			
 			if (player.horseJumpPowerCounter < 0 && ++player.horseJumpPowerCounter == 0){
 				player.horseJumpPower = 0F;
 			}
 
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
-				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F)));
+				mount.setJumpPower(MathHelper.floor_float(player.getHorseJumpPower()*100F));
+				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;
@@ -163,13 +186,13 @@ final class LivingUpdate{
 		return false;
 	}
 	
-	private static boolean isBlockTranslucent(EntityPlayerSP player, BlockPos pos){
-		return !player.worldObj.getBlockState(pos).getBlock().isNormalCube() && !player.worldObj.getBlockState(pos.up()).getBlock().isNormalCube();
+	private static boolean isOpenBlockSpace(EntityPlayerSP player, BlockPos pos){
+		return !player.worldObj.getBlockState(pos).isNormalCube() && !player.worldObj.getBlockState(pos.up()).isNormalCube();
 	}
 
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
 		for(int yOffset = 0; yOffset < height; yOffset++){
-			if (isBlockTranslucent(player,pos.add(0,yOffset,0)))return false;
+			if (isOpenBlockSpace(player,pos.add(0,yOffset,0)))return false;
 		}
 		
 		return true;
