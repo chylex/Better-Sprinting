@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.client.compatibility.OldNotificationPacket;
 import chylex.bettersprinting.client.gui.GuiControlsCustom;
 import chylex.bettersprinting.client.update.UpdateNotificationManager;
 import chylex.bettersprinting.system.PacketPipeline;
@@ -36,7 +35,6 @@ public final class ClientEventHandler{
 		
 		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod){
 			PacketPipeline.sendToServer(ClientNetwork.writeModNotification(10));
-			OldNotificationPacket.sendServerNotification(mc.thePlayer.sendQueue);
 		}
 	}
 	

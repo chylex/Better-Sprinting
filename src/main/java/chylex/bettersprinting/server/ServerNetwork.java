@@ -11,44 +11,40 @@ import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
 public class ServerNetwork implements INetworkHandler{
 	/*
+	 * OVERVIEW
+	 * ========
+	 * Use this guide to handle players with Better Sprinting in Minecraft 1.9. If you need information for older versions,
+	 * view this file in the 1.8.8 branch where you can find a guide to disable the mod in all legacy versions of the mod.
+	 * 
+	 * Better Sprinting for Minecraft 1.9 no longer uses the legacy BSprint channel, if you are using unofficial mods or
+	 * plugins to ban the mod from your server, please make sure it takes advantage of the new BSM channel features which
+	 * allow seamlessly disabling the mod when a player enters your server.
+	 * 
+	 * 
+	 * 
 	 * INCOMING PACKETS
 	 * ================
-	 * Payload packet on "BSprint" channel
-	 * * byte 4 - old protocol, no custom functionality
-	 * * byte 5 - new old protocol, if you updated your handling code then ignore people who send this one and wait for BSM packet
+	 * Payload packet on "BSM" channel, sent when a player connects to the server
 	 * 
-	 * Payload packet on "BSM" channel
-	 * * byte 0, byte X - new protocol, X is the protocol version that can be used to determine the useable functionality (latest is 10)
+	 *** byte 0, byte <protocolVersion> - the protocol version can be used to determine available functionality (see below)
+	 * 
+	 * 
 	 * 
 	 * OUTCOMING PACKETS
 	 * =================
-	 * Payload packet on "BSM" channel
-	 * * byte 0, boolean enableSurvivalFlyBoost, boolean enableAllDirs - custom settings, both are false by default [since 10]
-	 * * byte 1 - disables the mod on client-side [since 10]
-	 * * byte 2 - re-enables the mod in client-side, called from command [since 10]
+	 * Payload packet on "BSM" channel, sent when a player connects to the server or the server settings change.
+	 * 
+	 *** byte 0, boolean <enableSurvivalFlyBoost>, boolean <enableAllDirs> - custom settings, both are false by default [since 10]
+	 *** byte 1 - disables the mod on client-side [since 10]
+	 *** byte 2 - re-enables the mod in client-side, called from command [since 10]
+	 * 
+	 * 
 	 * 
 	 * ADDITIONAL INFO
 	 * ===============
-	 * This server mod can only run the BSM channel since it doesn't support older versions of MC, so if you made your server
-	 * accept clients from older versions of MC which only support the old protocol, you will need to handle that yourself. Same
-	 * if you don't have a Forge server at all. All details about the workings should be comprehensible, if you have any questions,
-	 * feel free to contact me. There is also a diagram below, because I was bored:
-	 * 
-	 * SIMPLE DIAGRAM TO DISABLE THE MOD
-	 * =================================
-	 * client joins server
-	 *   - payload on BSprint holding 1 byte of value 4
-	 *     - kick the player and tell him to disable the mod in the config
-	 * 
-	 * client joins server
-	 *   - payload on BSprint holding 1 byte of value 5
-	 *     - ignore and wait
-	 *   - payload on BSM holding 2 bytes of values 0, 10
-	 *     - protocol 10 supports deactivation
-	 *     - send a payload on BSM with 1 byte of value 1
-	 *       - mod is automatically disabled and the client is notified about it
-	 * 
-	 * Since all versions send a packet on BSprint channel, existing solutions for older versions are not broken by the change.
+	 * Feel free to contact me if you need details on how to implement special cases, such as servers that accept clients
+	 * from older Minecraft versions. The Forge version of Better Sprinting is the only official server mod, I cannot
+	 * guarantee support of the protocol features in any unofficial mods or plugins.
 	 */
 	
 	private static final Set<UUID> players = new HashSet<>();
