@@ -29,7 +29,7 @@ targetCompatibility = 1.7
 minecraft{
     version = "1.9-12.16.0.1767-1.9"
     runDir = "run"
-    mappings = "snapshot_20151122"
+    mappings = "snapshot_20160312"
     makeObfSourceJar = false
 }
 
