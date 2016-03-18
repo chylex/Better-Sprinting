@@ -42,18 +42,20 @@ public final class LogicImplOverride{
 			mc.theWorld.removeEntity(prevPlayer);
 			
 			mc.setRenderViewEntity(null);
-			mc.thePlayer = mc.playerController.func_178892_a(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
-			mc.thePlayer.getDataWatcher().updateWatchedObjectsFromList(prevPlayer.getDataWatcher().getAllWatched());
+			mc.thePlayer = mc.playerController.createClientPlayer(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
+			mc.thePlayer.getDataManager().setEntryValues(prevPlayer.getDataManager().getAll());
 			mc.thePlayer.dimension = prevPlayer.dimension;
-            mc.setRenderViewEntity(mc.thePlayer);
+			mc.setRenderViewEntity(mc.thePlayer);
 			mc.thePlayer.preparePlayerToSpawn();
-			mc.thePlayer.setClientBrand(prevPlayer.getClientBrand());
+			mc.thePlayer.setServerBrand(prevPlayer.getServerBrand());
 			mc.theWorld.spawnEntityInWorld(mc.thePlayer);
 			mc.playerController.flipPlayer(mc.thePlayer);
-            mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
-            mc.thePlayer.setEntityId(prevPlayer.getEntityId());
-            mc.playerController.setPlayerCapabilities(mc.thePlayer);
-            mc.thePlayer.setReducedDebug(prevPlayer.hasReducedDebug());
+			mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
+			mc.thePlayer.setEntityId(prevPlayer.getEntityId());
+			mc.playerController.setPlayerCapabilities(mc.thePlayer);
+			mc.thePlayer.setReducedDebug(prevPlayer.hasReducedDebug());
+			
+			// Minecraft.setDimensionAndSpawnPlayer
 		}
 	}
 
