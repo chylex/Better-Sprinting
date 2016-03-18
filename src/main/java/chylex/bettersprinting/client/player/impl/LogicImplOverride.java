@@ -6,8 +6,8 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.stats.StatFileWriter;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,7 +66,7 @@ public final class LogicImplOverride{
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
-				mc.thePlayer.addChatMessage(new ChatComponentText(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$",controllerClass.getName())));
+				mc.thePlayer.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$",controllerClass.getName())));
 				stopChecking = true;
 			}
 		}
@@ -84,7 +84,7 @@ public final class LogicImplOverride{
 		}
 		
 		@Override
-		public EntityPlayerSP func_178892_a(World world, StatFileWriter statWriter){
+		public EntityPlayerSP createClientPlayer(World world, StatFileWriter statWriter){
 			return new PlayerOverride(mc,world,netHandler,statWriter);
 		}
 	}

@@ -2,12 +2,9 @@ package chylex.bettersprinting.client.update;
 import java.util.Calendar;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.system.Log;
-import com.google.common.base.Joiner;
 
 public final class UpdateNotificationManager{
 	private static final Preferences globalData = Preferences.userRoot().node("chylex");

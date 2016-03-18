@@ -3,10 +3,11 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.system.PacketPipeline;
 
@@ -27,9 +28,9 @@ public class ServerCommandConfig extends CommandBase{
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException{
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
 		if (args.length == 0){
-			sendMessage(sender,EnumChatFormatting.GREEN+"[Better Sprinting]");
+			sendMessage(sender,TextFormatting.GREEN+"[Better Sprinting]");
 			sendMessage(sender,"/bettersprinting info");
 			sendMessage(sender,"/bettersprinting disablemod <true|false>");
 			sendMessage(sender,"/bettersprinting setting <survivalFlyBoost|runInAllDirs> <true|false>");
@@ -69,21 +70,21 @@ public class ServerCommandConfig extends CommandBase{
 	}
 	
 	private void sendMessage(ICommandSender sender, String text){
-		sender.addChatMessage(new ChatComponentText(text));
+		sender.addChatMessage(new TextComponentString(text));
 	}
 	
 	private void sendMessageTranslated(ICommandSender sender, String translationName){
 		if (sender instanceof EntityPlayer && !ServerNetwork.hasBetterSprinting((EntityPlayer)sender)){
-			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(translationName)));
+			sender.addChatMessage(new TextComponentString(I18n.translateToLocal(translationName)));
 		}
 		else{
-			sender.addChatMessage(new ChatComponentTranslation(translationName));
+			sender.addChatMessage(new TextComponentTranslation(translationName));
 		}
 	}
 	
 	private boolean isValidBool(String[] args, int index){
 		if (index >= args.length)return false;
-		return args[index].equalsIgnoreCase("true") || args[index].equalsIgnoreCase("false"); 
+		return args[index].equalsIgnoreCase("true") || args[index].equalsIgnoreCase("false");
 	}
 	
 	private boolean getBool(String[] args, int index){

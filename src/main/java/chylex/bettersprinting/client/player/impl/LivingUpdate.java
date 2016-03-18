@@ -2,18 +2,18 @@ package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.init.MobEffects;
+import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 final class LivingUpdate{
-	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){		
+	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
 		if (player.sprintingTicksLeft > 0 && --player.sprintingTicksLeft == 0)player.setSprinting(false);
 		if (player.sprintToggleTimer > 0)--player.sprintToggleTimer;
 		
@@ -32,7 +32,7 @@ final class LivingUpdate{
 			
 			player.inPortal = false;
 		}
-		else if (player.isPotionActive(Potion.confusion) && player.getActivePotionEffect(Potion.confusion).getDuration() > 60){
+		else if (player.isPotionActive(MobEffects.confusion) && player.getActivePotionEffect(MobEffects.confusion).getDuration() > 60){
 			player.timeInPortal += 0.006666667F;
 			if (player.timeInPortal > 1F)player.timeInPortal = 1F;
 		}
@@ -94,7 +94,7 @@ final class LivingUpdate{
 
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
-				player.sendQueue.addToSendQueue(new C0BPacketEntityAction(player,C0BPacketEntityAction.Action.RIDING_JUMP,(int)(player.getHorseJumpPower()*100F)));
+				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F)));
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;

@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.stats.StatFileWriter;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,7 +38,7 @@ public class PlayerOverride extends EntityPlayerSP{
 	private void onLivingUpdate$EntityPlayer(){
 		if (flyToggleTimer > 0)--flyToggleTimer;
 		
-		if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL && worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration")){
+		if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL && worldObj.getGameRules().getBoolean("naturalRegeneration")){
 			if (getHealth() < getMaxHealth() && ticksExisted%20 == 0){
 				heal(1F);
 			}
@@ -53,7 +53,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		
 		onLivingUpdate$EntityLivingBase();
 		
-		IAttributeInstance speedAttr = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+		IAttributeInstance speedAttr = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
 		if (!worldObj.isRemote)speedAttr.setBaseValue(capabilities.getWalkSpeed());
 

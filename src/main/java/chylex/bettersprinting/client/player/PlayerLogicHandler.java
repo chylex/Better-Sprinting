@@ -3,10 +3,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.util.text.TextComponentString;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
@@ -39,12 +38,12 @@ public class PlayerLogicHandler{
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness)){
+			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness)){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown())player.sprintToggleTimer = 7;
 				else player.setSprinting(true);
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -56,13 +55,13 @@ public class PlayerLogicHandler{
 
 			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak)sprint = false;
 			
-			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness)){
+			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness)){
 				player.setSprinting(sprint);
 			}
 			
 			customMovementInput.held = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(Potion.blindness)){
+			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isUsingItem() && !player.isPotionActive(MobEffects.blindness)){
 				if (player.sprintToggleTimer == 0){
 					player.sprintToggleTimer = 7;
 				}
@@ -105,8 +104,8 @@ public class PlayerLogicHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new ChatComponentText(ClientModManager.chatPrefix+I18n.format("bs.game.disabled")));
-			else player.addChatMessage(new ChatComponentText(ClientModManager.chatPrefix+I18n.format("bs.game.reenabled")));
+			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.disabled")));
+			else player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.reenabled")));
 			showDisableWarningWhenPossible = false;
 		}
 	}

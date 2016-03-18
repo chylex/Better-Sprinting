@@ -1,6 +1,4 @@
 package chylex.bettersprinting.client.update;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -8,9 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.CommandBase;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.IOUtils;
@@ -85,19 +81,19 @@ public class UpdateThread extends Thread{
 			
 			if (!buildId.isEmpty() && !buildId.equals(BetterSprintingMod.buildId)){
 				message = new StringBuilder()
-					.append(EnumChatFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
+					.append(TextFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(TextFormatting.RESET)
 					.append("\n Caution, you are using a broken build that can cause critical crashes! Please, redownload or update the mod.");
 			}
 			else if (counter > 0 && newestVersionForCurrentMC != null && ClientSettings.enableUpdateNotifications){
 				message = new StringBuilder()
-					.append(EnumChatFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(EnumChatFormatting.RESET)
-					.append("\n Found update ").append(EnumChatFormatting.GREEN).append(newestVersionForCurrentMC.modVersionName).append(EnumChatFormatting.RESET)
+					.append(TextFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(TextFormatting.RESET)
+					.append("\n Found update ").append(TextFormatting.GREEN).append(newestVersionForCurrentMC.modVersionName).append(TextFormatting.RESET)
 					.append(" for MC ").append(mcVersion).append(", released ").append(newestVersionForCurrentMC.releaseDate)
 					.append(".\n You are currently ").append(counter).append(" version").append(counter == 1 ? "" : "s").append(" behind.");
 			}
 			
 			if (message != null){
-				message.append("\n ").append(EnumChatFormatting.GOLD).append("Click to download: ").append(downloadURL);
+				message.append("\n ").append(TextFormatting.GOLD).append("Click to download: ").append(downloadURL);
 				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
 			}
 		}
