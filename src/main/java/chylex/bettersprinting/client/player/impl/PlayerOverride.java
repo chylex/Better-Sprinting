@@ -5,6 +5,10 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemElytra;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -75,11 +79,15 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (getHealth() > 0F && !isSpectator()){
 			AxisAlignedBB aabb = null;
 
-			if (ridingEntity != null && !ridingEntity.isDead)aabb = getEntityBoundingBox().union(ridingEntity.getEntityBoundingBox()).expand(1D,0D,1D);
-			else aabb = getEntityBoundingBox().expand(1D,0.5D,1D);
+			if (isRiding() && !getRidingEntity().isDead){
+				aabb = getEntityBoundingBox().union(getRidingEntity().getEntityBoundingBox()).expand(1D,0D,1D);
+			}
+			else{
+				aabb = getEntityBoundingBox().expand(1D,0.5D,1D);
+			}
 
 			for(Entity entity:worldObj.getEntitiesWithinAABBExcludingEntity(this,aabb)){
-				if (!entity.isDead)entity.onCollideWithPlayer(this);
+				if (!entity.isDead)entity.onCollideWithPlayer(this); // uses collideWithPlayer but it's private
 			}
 		}
 	}
@@ -87,12 +95,12 @@ public class PlayerOverride extends EntityPlayerSP{
 	private void onLivingUpdate$EntityLivingBase(){
 		if (jumpTicks > 0)--jumpTicks;
 
-		if (newPosRotationIncrements > 0){
-			double setPosX = posX+(newPosX-posX)/newPosRotationIncrements;
-			double setPosY = posY+(newPosY-posY)/newPosRotationIncrements;
-			double setPosZ = posZ+(newPosZ-posZ)/newPosRotationIncrements;
-			rotationYaw = (float)(rotationYaw+MathHelper.wrapAngleTo180_double(newRotationYaw-rotationYaw)/newPosRotationIncrements);
-			rotationPitch = (float)(rotationPitch+(newRotationPitch-rotationPitch)/newPosRotationIncrements);
+		if (newPosRotationIncrements > 0 && !canPassengerSteer()){
+			double setPosX = posX+(interpTargetX-posX)/newPosRotationIncrements;
+			double setPosY = posY+(interpTargetY-posY)/newPosRotationIncrements;
+			double setPosZ = posZ+(interpTargetZ-posZ)/newPosRotationIncrements;
+			rotationYaw = (float)(rotationYaw+MathHelper.wrapAngleTo180_double(interpTargetYaw-rotationYaw)/newPosRotationIncrements);
+			rotationPitch = (float)(rotationPitch+(newPosX-rotationPitch)/newPosRotationIncrements); // TODO newPosX -> interpTargetPitch
 			--newPosRotationIncrements;
 			setPosition(setPosX,setPosY,setPosZ);
 			setRotation(rotationYaw,rotationPitch);
@@ -103,9 +111,9 @@ public class PlayerOverride extends EntityPlayerSP{
 			motionZ *= 0.98D;
 		}
 
-		if (Math.abs(motionX) < 0.005D)motionX = 0D;
-		if (Math.abs(motionY) < 0.005D)motionY = 0D;
-		if (Math.abs(motionZ) < 0.005D)motionZ = 0D;
+		if (Math.abs(motionX) < 0.003D)motionX = 0D;
+		if (Math.abs(motionY) < 0.003D)motionY = 0D;
+		if (Math.abs(motionZ) < 0.003D)motionZ = 0D;
 		
 		worldObj.theProfiler.startSection("ai");
 
@@ -140,15 +148,40 @@ public class PlayerOverride extends EntityPlayerSP{
 
 		worldObj.theProfiler.endSection();
 		worldObj.theProfiler.startSection("travel");
+		
 		moveStrafing *= 0.98F;
 		moveForward *= 0.98F;
 		randomYawVelocity *= 0.9F;
+		updateElytra$EntityLivingBase();
 		moveEntityWithHeading(moveStrafing,moveForward);
 		
 		worldObj.theProfiler.endSection();
-		
 		worldObj.theProfiler.startSection("push");
-		if (!worldObj.isRemote)collideWithNearbyEntities();
+		
+		collideWithNearbyEntities();
+		
 		worldObj.theProfiler.endSection();
+	}
+	
+	private void updateElytra$EntityLivingBase(){
+		boolean flag = getFlag(7);
+		
+		if (flag && !onGround && !isRiding()){
+			ItemStack is = getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			
+			if (is != null && is.getItem() == Items.elytra && ItemElytra.isBroken(is)){
+				flag = true;
+				
+				if (!worldObj.isRemote && (ticksElytraFlying+1)%20 == 0){
+					is.damageItem(1,this);
+				}
+			}
+			else flag = false;
+		}
+		else flag = false;
+		
+		if (!worldObj.isRemote){
+			setFlag(7,flag);
+		}
 	}
 }
