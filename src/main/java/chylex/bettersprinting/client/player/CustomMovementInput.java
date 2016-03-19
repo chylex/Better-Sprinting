@@ -15,11 +15,31 @@ public class CustomMovementInput{
 		
 		GameSettings settings = mc.gameSettings;
 
-		if (settings.keyBindForward.isKeyDown())++options.moveForward;
-		if (settings.keyBindBack.isKeyDown())--options.moveForward;
-		if (settings.keyBindLeft.isKeyDown())++options.moveStrafe;
-		if (settings.keyBindRight.isKeyDown())--options.moveStrafe;
+		if (settings.keyBindForward.isKeyDown()){
+			++options.moveForward;
+			options.forwardKeyDown = true;
+		}
+		else options.forwardKeyDown = false;
 		
+		if (settings.keyBindBack.isKeyDown()){
+			--options.moveForward;
+			options.backKeyDown = true;
+		}
+		else options.backKeyDown = false;
+		
+		if (settings.keyBindLeft.isKeyDown()){
+			++options.moveStrafe;
+			options.leftKeyDown = true;
+		}
+		else options.leftKeyDown = false;
+		
+		if (settings.keyBindRight.isKeyDown()){
+			--options.moveStrafe;
+			options.rightKeyDown = true;
+		}
+		else options.rightKeyDown = false;
+		
+		// custom handling
 		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		
 		if (!sprint){
