@@ -1,5 +1,4 @@
 package chylex.bettersprinting;
-import java.util.Map;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -7,9 +6,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import chylex.bettersprinting.server.ServerSettings;
 import chylex.bettersprinting.system.Log;
 
 @Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*", updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
@@ -22,7 +18,7 @@ public class BetterSprintingMod{
 	
 	public static BetterSprintingConfig config;
 	
-	public static final String buildId = "03-12-2015-0";
+	public static final String buildId = "19-03-2016-0";
 	public static String modVersion;
 	
 	@EventHandler
@@ -41,13 +37,5 @@ public class BetterSprintingMod{
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent e){
 		proxy.onServerStarting(e);
-	}
-	
-	@NetworkCheckHandler
-	public boolean onNetworkCheck(Map<String,String> versions, Side side){
-		if (side == Side.SERVER || !ServerSettings.disableClientMod)return true;
-		
-		String version = versions.get("bettersprinting");
-		return !("1.0".equals(version) || "1.0.1".equals(version));
 	}
 }
