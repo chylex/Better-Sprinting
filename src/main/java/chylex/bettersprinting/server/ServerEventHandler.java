@@ -2,6 +2,7 @@ package chylex.bettersprinting.server;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.system.PacketPipeline;
@@ -20,6 +21,11 @@ public final class ServerEventHandler{
 		else if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
 			PacketPipeline.sendToPlayer(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs),e.player);
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLogout(PlayerLoggedOutEvent e){
+		ServerNetwork.onDisconnected(e.player);
 	}
 	
 	private ServerEventHandler(){}

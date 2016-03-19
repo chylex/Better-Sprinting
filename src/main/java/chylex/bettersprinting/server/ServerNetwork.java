@@ -53,6 +53,10 @@ public class ServerNetwork implements INetworkHandler{
 		return players.contains(player.getUniqueID());
 	}
 	
+	public static void onDisconnected(EntityPlayer player){
+		players.remove(player.getUniqueID());
+	}
+	
 	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
 		PacketBuffer buffer = PacketPipeline.buf();
 		buffer.writeByte(0).writeBoolean(enableSurvivalFlyBoost).writeBoolean(enableAllDirs);
