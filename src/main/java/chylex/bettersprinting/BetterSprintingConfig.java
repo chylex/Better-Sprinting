@@ -23,7 +23,7 @@ public class BetterSprintingConfig{
 	
 	@SubscribeEvent
 	public void onConfigChanged(OnConfigChangedEvent e){
-		if (e.modID.equals("BetterSprinting"))reload();
+		if (e.getModID().equals("BetterSprinting"))reload();
 	}
 	
 	private void reload(){
@@ -48,7 +48,7 @@ public class BetterSprintingConfig{
 	}
 	
 	public void setComment(String name, String comment){
-		config.getCategory(currentCategory).get(name).comment = comment;
+		config.getCategory(currentCategory).get(name).setComment(comment);;
 	}
 	
 	public Property getBool(String name, boolean defValue){

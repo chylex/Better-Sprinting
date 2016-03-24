@@ -35,12 +35,12 @@ public class PacketPipeline{
 	
 	@SubscribeEvent
 	public void onClientPacket(ClientCustomPacketEvent e){
-		handler.onPacket(Side.CLIENT,e.packet.payload(),getClientPlayer());
+		handler.onPacket(Side.CLIENT,e.getPacket().payload(),getClientPlayer());
 	}
 	
 	@SubscribeEvent
 	public void onServerPacket(ServerCustomPacketEvent e){
-		handler.onPacket(Side.SERVER,e.packet.payload(),((NetHandlerPlayServer)e.handler).playerEntity);
+		handler.onPacket(Side.SERVER,e.getPacket().payload(),((NetHandlerPlayServer)e.getHandler()).playerEntity);
 	}
 	
 	@SideOnly(Side.CLIENT)
