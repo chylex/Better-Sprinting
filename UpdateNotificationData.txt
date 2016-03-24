@@ -1,6 +1,13 @@
 {
   "~URL": "http://bsprint.chylex.com",
   
+  "9 - 1.1.4a": {
+    "modVersion": "1.1.4a",
+    "mcVersions": [ "1.9" ],
+    "buildId": "25-03-2016-0",
+    "releaseDate": "25 Mar 2016"
+  },
+  
   "8 - 1.1.4": {
     "modVersion": "1.1.4",
     "mcVersions": [ "1.9" ],
