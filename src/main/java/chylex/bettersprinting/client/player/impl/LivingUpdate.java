@@ -31,7 +31,7 @@ final class LivingUpdate{
 			}
 			
 			if (player.timeInPortal == 0F){
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.block_portal_trigger,player.getRNG().nextFloat()*0.4F+0.8F));
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER,player.getRNG().nextFloat()*0.4F+0.8F));
 			}
 			
 			player.timeInPortal += 0.0125F;
@@ -42,7 +42,7 @@ final class LivingUpdate{
 			
 			player.inPortal = false;
 		}
-		else if (player.isPotionActive(MobEffects.confusion) && player.getActivePotionEffect(MobEffects.confusion).getDuration() > 60){
+		else if (player.isPotionActive(MobEffects.NAUSEA) && player.getActivePotionEffect(MobEffects.NAUSEA).getDuration() > 60){
 			player.timeInPortal += 0.006666667F;
 			if (player.timeInPortal > 1F)player.timeInPortal = 1F;
 		}
@@ -90,8 +90,8 @@ final class LivingUpdate{
 		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
 			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (chestIS != null && chestIS.getItem() == Items.elytra && ItemElytra.isBroken(chestIS)){
-				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
+			if (chestIS != null && chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
+				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
 			}
 		}
 
@@ -117,7 +117,7 @@ final class LivingUpdate{
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
 				mount.setJumpPower(MathHelper.floor_float(player.getHorseJumpPower()*100F));
-				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
+				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;
