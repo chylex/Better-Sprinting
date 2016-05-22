@@ -11,6 +11,7 @@ import net.minecraft.util.text.translation.I18n;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.system.PacketPipeline;
 
+@SuppressWarnings("deprecation")
 public class ServerCommandConfig extends CommandBase{
 	@Override
 	public String getCommandName(){

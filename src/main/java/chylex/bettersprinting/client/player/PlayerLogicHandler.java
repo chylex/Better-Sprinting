@@ -38,12 +38,12 @@ public class PlayerLogicHandler{
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness)){
+			if (player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown())player.sprintToggleTimer = 7;
 				else player.setSprinting(true);
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness) && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS) && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -55,13 +55,13 @@ public class PlayerLogicHandler{
 
 			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak)sprint = false;
 			
-			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness)){
+			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
 				player.setSprinting(sprint);
 			}
 			
 			customMovementInput.held = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.blindness)){
+			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !isMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
 				if (player.sprintToggleTimer == 0){
 					player.sprintToggleTimer = 7;
 				}

@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ElytraSound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.IJumpingMount;
@@ -31,7 +32,7 @@ final class LivingUpdate{
 			}
 			
 			if (player.timeInPortal == 0F){
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.block_portal_trigger,player.getRNG().nextFloat()*0.4F+0.8F));
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER,player.getRNG().nextFloat()*0.4F+0.8F));
 			}
 			
 			player.timeInPortal += 0.0125F;
@@ -42,7 +43,7 @@ final class LivingUpdate{
 			
 			player.inPortal = false;
 		}
-		else if (player.isPotionActive(MobEffects.confusion) && player.getActivePotionEffect(MobEffects.confusion).getDuration() > 60){
+		else if (player.isPotionActive(MobEffects.NAUSEA) && player.getActivePotionEffect(MobEffects.NAUSEA).getDuration() > 60){
 			player.timeInPortal += 0.006666667F;
 			if (player.timeInPortal > 1F)player.timeInPortal = 1F;
 		}
@@ -90,8 +91,9 @@ final class LivingUpdate{
 		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
 			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (chestIS != null && chestIS.getItem() == Items.elytra && ItemElytra.isBroken(chestIS)){
-				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
+			if (chestIS != null && chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
+				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
+                mc.getSoundHandler().playSound(new ElytraSound(player));
 			}
 		}
 
@@ -117,7 +119,7 @@ final class LivingUpdate{
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
 				mount.setJumpPower(MathHelper.floor_float(player.getHorseJumpPower()*100F));
-				player.sendQueue.addToSendQueue(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
+				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;
@@ -151,10 +153,10 @@ final class LivingUpdate{
 		double xDiff = x-pos.getX();
 		double zDiff = z-pos.getZ();
 
-		int entHeight = Math.max(Math.round(player.height),1);
+		int entHeight = Math.max((int)Math.ceil(player.height),1);
 		
 		if (isHeadspaceFree(player,pos,entHeight)){
-			byte side = -1;
+			int side = -1;
 			double limit = 9999D;
 
 			if (!isHeadspaceFree(player,pos.west(),entHeight) && xDiff < limit){
@@ -178,16 +180,16 @@ final class LivingUpdate{
 			}
 
 			if (side == 0)player.motionX = -0.1F;
-			else if (side == 1)player.motionX = 0.1F;
-			else if (side == 4)player.motionZ = -0.1F;
-			else if (side == 5)player.motionZ = 0.1F;
+			if (side == 1)player.motionX = 0.1F;
+			if (side == 4)player.motionZ = -0.1F;
+			if (side == 5)player.motionZ = 0.1F;
 		}
 
 		return false;
 	}
 	
 	private static boolean isOpenBlockSpace(EntityPlayerSP player, BlockPos pos){
-		return !player.worldObj.getBlockState(pos).isNormalCube() && !player.worldObj.getBlockState(pos.up()).isNormalCube();
+		return !player.worldObj.getBlockState(pos).isNormalCube();
 	}
 
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){

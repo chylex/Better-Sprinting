@@ -9,7 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatFileWriter;
+import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -24,8 +24,8 @@ public class PlayerOverride extends EntityPlayerSP{
 	
 	private int jumpTicks;
 	
-	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatFileWriter statWriter){
-		super(mc,world,netHandler,statWriter);
+	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatisticsManager statFile){
+		super(mc,world,netHandler,statFile);
 		logic = new PlayerLogicHandler();
 		logic.setPlayer(this);
 		
@@ -99,8 +99,8 @@ public class PlayerOverride extends EntityPlayerSP{
 			double setPosX = posX+(interpTargetX-posX)/newPosRotationIncrements;
 			double setPosY = posY+(interpTargetY-posY)/newPosRotationIncrements;
 			double setPosZ = posZ+(interpTargetZ-posZ)/newPosRotationIncrements;
-			rotationYaw = (float)(rotationYaw+MathHelper.wrapAngleTo180_double(interpTargetYaw-rotationYaw)/newPosRotationIncrements);
-			rotationPitch = (float)(rotationPitch+(newPosX-rotationPitch)/newPosRotationIncrements); // TODO newPosX -> interpTargetPitch
+			rotationYaw = (float)(rotationYaw+MathHelper.wrapDegrees(interpTargetYaw-rotationYaw)/newPosRotationIncrements);
+			rotationPitch = (float)(rotationPitch+(interpTargetPitch-rotationPitch)/newPosRotationIncrements);
 			--newPosRotationIncrements;
 			setPosition(setPosX,setPosY,setPosZ);
 			setRotation(rotationYaw,rotationPitch);
@@ -134,7 +134,7 @@ public class PlayerOverride extends EntityPlayerSP{
 
 		if (isJumping){
 			if (isInWater()){
-				updateAITick();
+				handleJumpWater();
 			}
 			else if (isInLava()){
 				handleJumpLava();
@@ -169,7 +169,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (flag && !onGround && !isRiding()){
 			ItemStack is = getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (is != null && is.getItem() == Items.elytra && ItemElytra.isBroken(is)){
+			if (is != null && is.getItem() == Items.ELYTRA && ItemElytra.isBroken(is)){
 				flag = true;
 				
 				if (!worldObj.isRemote && (ticksElytraFlying+1)%20 == 0){

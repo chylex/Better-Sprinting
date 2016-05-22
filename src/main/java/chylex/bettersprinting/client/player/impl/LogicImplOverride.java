@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.stats.StatFileWriter;
+import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -86,8 +86,8 @@ public final class LogicImplOverride{
 		}
 		
 		@Override
-		public EntityPlayerSP createClientPlayer(World world, StatFileWriter statWriter){
-			return new PlayerOverride(mc,world,netHandler,statWriter);
+		public EntityPlayerSP createClientPlayer(World world, StatisticsManager statFile){
+			return new PlayerOverride(mc,world,netHandler,statFile);
 		}
 	}
 }
