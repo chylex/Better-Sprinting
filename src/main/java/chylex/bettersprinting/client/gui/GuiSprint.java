@@ -229,7 +229,7 @@ public class GuiSprint extends GuiScreen{
 		for(int a = 0; a < buttonList.size(); a++){
 			GuiButton btn = buttonList.get(a);
 			
-			if (mouseX >= btn.xPosition && mouseX <= btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY <= btn.yPosition+20){
+			if (mouseX >= btn.xPosition && mouseX < btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY < btn.yPosition+20){
 				String info = a < buttonTitles.length ? buttonTitles[a] : "";
 				String[] spl = I18n.format(info).split("#");
 				
