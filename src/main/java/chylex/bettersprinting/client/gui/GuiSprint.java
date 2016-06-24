@@ -16,17 +16,37 @@ import chylex.bettersprinting.client.ClientSettings;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{
-	private final GuiScreen parentScreen;
-	private int buttonId = -1;
+	private static final int idDone = 200;
+	private static final int idDoubleTap = 199;
+	private static final int idAllDirs = 198;
+	private static final int idFlyBoost = 197;
+	private static final int idDisableMod = 196;
+	private static final int idAutoJump = 195;
+	private static final int idControls = 194;
 	
-	private KeyBinding[] sprintBindings = new KeyBinding[]{
+	private final String[] buttonTitles = new String[]{
+		"bs.sprint.hold.info",
+		"bs.sprint.toggle.info",
+		"bs.sneak.toggle.info",
+		"bs.menu.info",
+		"bs.doubleTapping.info",
+		"bs.runAllDirs.info",
+		"bs.flyBoost.info",
+		"bs.disableMod.info",
+		"bs.autoJump.info"
+	};
+	
+	private final KeyBinding[] sprintBindings = new KeyBinding[]{
 		ClientModManager.keyBindSprintHold,
 		ClientModManager.keyBindSprintToggle,
 		ClientModManager.keyBindSneakToggle,
 		ClientModManager.keyBindOptionsMenu
 	};
 	
-	private GuiButton btnDoubleTap, btnFlyBoost, btnAllDirs, btnDisableMod;
+	private final GuiScreen parentScreen;
+	
+	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnAllDirs, btnDisableMod;
+	private int buttonId = -1;
 	
 	public GuiSprint(GuiScreen parentScreen){
 		this.parentScreen = parentScreen;
@@ -44,18 +64,23 @@ public class GuiSprint extends GuiScreen{
 			if ((a == 1 || a == 2) && ClientModManager.isModDisabled())btn.enabled = false;
 		}
 	    
-	    buttonList.add(btnDoubleTap = new GuiButton(199,left,top+72,70,20,""));
-	    buttonList.add(btnAllDirs = new GuiButton(198,left+160,top+72,70,20,""));
-	    buttonList.add(btnFlyBoost = new GuiButton(197,left,top+96,70,20,""));
-	    buttonList.add(btnDisableMod = new GuiButton(196,left+160,top+96,70,20,""));
+	    buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap,left,top+60,70,20,""));
+	    buttonList.add(btnAllDirs = new GuiButton(idAllDirs,left+160,top+60,70,20,""));
+	    buttonList.add(btnFlyBoost = new GuiButton(idFlyBoost,left,top+84,70,20,""));
+	    buttonList.add(btnDisableMod = new GuiButton(idDisableMod,left+160,top+84,70,20,""));
+	    buttonList.add(btnAutoJump = new GuiButton(idAutoJump,left,top+108,70,20,""));
 	    
 	    if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled = false;
 	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled = false;
 	    if (!(mc.thePlayer == null && mc.theWorld == null))btnDisableMod.enabled = false;
 	    
-	    buttonList.add(new GuiButton(200,width/2-100,top+168,parentScreen == null ? 98 : 200,20,I18n.format("gui.done")));
-	    if (parentScreen == null)buttonList.add(new GuiButton(190,width/2+2,top+168,98,20,I18n.format("options.controls")));
+	    buttonList.add(new GuiButton(idDone,width/2-100,top+168,parentScreen == null ? 98 : 200,20,I18n.format("gui.done")));
+	    
+	    if (parentScreen == null){
+	    	buttonList.add(new GuiButton(idControls,width/2+2,top+168,98,20,I18n.format("options.controls")));
+	    }
+	    
 	    updateButtons();
 	}
 	
@@ -64,18 +89,26 @@ public class GuiSprint extends GuiScreen{
 		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying(mc) ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "gui.unavailable");
 		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs(mc) ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
+		btnAutoJump.displayString = I18n.format(mc.gameSettings.field_189989_R ? "gui.yes" : "gui.no");
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton btn){
-		for(int a = 0; a < sprintBindings.length; a++)buttonList.get(a).displayString = getKeyCodeString(a);
+		for(int a = 0; a < sprintBindings.length; a++){
+			buttonList.get(a).displayString = getKeyCodeString(a);
+		}
 	
 		switch(btn.id){
-			case 190:
+			case idControls:
 				mc.displayGuiScreen(new GuiControls(this,mc.gameSettings));
 				break;
 				
-			case 196:
+			case idAutoJump:
+				mc.gameSettings.field_189989_R = !mc.gameSettings.field_189989_R;
+				mc.gameSettings.saveOptions();
+				break;
+				
+			case idDisableMod:
 				if (ClientModManager.inMenu(mc)){
 					ClientSettings.disableMod = !ClientSettings.disableMod;
 					initGui();
@@ -83,19 +116,28 @@ public class GuiSprint extends GuiScreen{
 				
 				break;
 				
-			case 197:
-				if (ClientModManager.canBoostFlying(mc) && ++ClientSettings.flySpeedBoost == 8)ClientSettings.flySpeedBoost = 0;
+			case idFlyBoost:
+				if (ClientModManager.canBoostFlying(mc) && ++ClientSettings.flySpeedBoost == 8){
+					ClientSettings.flySpeedBoost = 0;
+				}
+				
 				break;
 				
-			case 198:
-				if (ClientModManager.canRunInAllDirs(mc))ClientSettings.enableAllDirs = !ClientSettings.enableAllDirs;
+			case idAllDirs:
+				if (ClientModManager.canRunInAllDirs(mc)){
+					ClientSettings.enableAllDirs = !ClientSettings.enableAllDirs;
+				}
+				
 				break;
 				
-			case 199:
-				if (!ClientSettings.disableMod)ClientSettings.enableDoubleTap = !ClientSettings.enableDoubleTap;
+			case idDoubleTap:
+				if (!ClientSettings.disableMod){
+					ClientSettings.enableDoubleTap = !ClientSettings.enableDoubleTap;
+				}
+				
 				break;
 				
-			case 200:
+			case idDone:
 				if (parentScreen == null)mc.setIngameFocus();
 				else mc.displayGuiScreen(parentScreen);
 				
@@ -182,27 +224,19 @@ public class GuiSprint extends GuiScreen{
 		drawButtonTitle(I18n.format("bs.runAllDirs"),btnAllDirs,maxWidthRight);
 		drawButtonTitle(I18n.format("bs.flyBoost"),btnFlyBoost,maxWidthLeft);
 		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod,maxWidthRight);
+		drawButtonTitle(I18n.format("bs.autoJump"),btnAutoJump,maxWidthLeft);
 		
 		for(int a = 0; a < buttonList.size(); a++){
 			GuiButton btn = buttonList.get(a);
 			
 			if (mouseX >= btn.xPosition && mouseX <= btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY <= btn.yPosition+20){
-				String info;
+				String info = a < buttonTitles.length ? buttonTitles[a] : "";
+				String[] spl = I18n.format(info).split("#");
 				
-				switch(a){
-					case 0: info = "bs.sprint.hold.info"; break;
-					case 1: info = "bs.sprint.toggle.info"; break;
-					case 2: info = "bs.sneak.toggle.info"; break;
-					case 3: info = "bs.menu.info"; break;
-					case 4: info = "bs.doubleTapping.info"; break;
-					case 5: info = "bs.runAllDirs.info"; break;
-					case 6: info = "bs.flyBoost.info"; break;
-					case 7: info = "bs.disableMod.info"; break;
-					default: info = "";
+				for(int line = 0; line < spl.length; line++){
+					drawCenteredString(fontRendererObj,spl[line],width/2,top+148+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2),-1);
 				}
 				
-				String[] spl = I18n.format(info).split("#");
-				for(int line = 0; line < spl.length; line++)drawCenteredString(fontRendererObj,spl[line],width/2,top+143+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2),-1);
 				break;
 			}
 		}

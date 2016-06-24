@@ -2,6 +2,7 @@ package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -21,6 +22,7 @@ public final class ClientEventHandler{
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 	}
 	
+	private final Minecraft mc = Minecraft.getMinecraft();
 	private boolean stopChecking;
 	
 	@SubscribeEvent
@@ -30,10 +32,9 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
-		if (stopChecking || e.getEntity() != Minecraft.getMinecraft().thePlayer)return;
+		if (stopChecking || e.getEntity() != mc.thePlayer)return;
 		
 		stopChecking = true;
-		Minecraft mc = Minecraft.getMinecraft();
 		
 		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod){
 			PacketPipeline.sendToServer(ClientNetwork.writeModNotification(10));
@@ -50,8 +51,12 @@ public final class ClientEventHandler{
 	public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post e){
 		GuiScreen gui = e.getGui();
 		
-		if (gui instanceof GuiControls && !(((GuiControls)gui).parentScreen instanceof GuiSprint)){
-			gui.buttonList.add(0,new GuiButtonSprint(205,gui.width/2+5,18+24,150,20,"Better Sprinting"));
+		if (gui instanceof GuiControls){
+			gui.buttonList.stream().filter(btn -> btn.id == GameSettings.Options.AUTO_JUMP.returnEnumOrdinal()).findFirst().ifPresent(gui.buttonList::remove);
+			
+			if (!(((GuiControls)gui).parentScreen instanceof GuiSprint)){
+				gui.buttonList.add(0,new GuiButtonSprint(205,gui.width/2+5,18+24,150,20,"Better Sprinting"));
+			}
 		}
 	}
 	
