@@ -59,10 +59,15 @@ public class PlayerOverride extends EntityPlayerSP{
 		
 		IAttributeInstance speedAttr = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		if (!worldObj.isRemote)speedAttr.setBaseValue(capabilities.getWalkSpeed());
+		if (!worldObj.isRemote){
+			speedAttr.setBaseValue(capabilities.getWalkSpeed());
+		}
 
 		jumpMovementFactor = speedInAir;
-		if (isSprinting())jumpMovementFactor = (float)(jumpMovementFactor+speedInAir*0.3D);
+		
+		if (isSprinting()){
+			jumpMovementFactor = (float)(jumpMovementFactor+speedInAir*0.3D);
+		}
 
 		setAIMoveSpeed((float)speedAttr.getAttributeValue());
 		float moveDist = MathHelper.sqrt_double(motionX*motionX+motionZ*motionZ);

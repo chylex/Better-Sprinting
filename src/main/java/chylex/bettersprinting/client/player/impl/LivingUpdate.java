@@ -1,6 +1,5 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ElytraSound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.IJumpingMount;
@@ -63,6 +62,14 @@ final class LivingUpdate{
 			player.sprintToggleTimer = 0;
 		}
 		
+		boolean hasAutoJumped = false;
+		
+		if (player.field_189812_cs > 0){
+			--player.field_189812_cs;
+			hasAutoJumped = true;
+			player.movementInput.jump = true;
+		}
+		
 		AxisAlignedBB playerBoundingBox = player.getEntityBoundingBox();
 		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ+player.width*0.35D);
 		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ-player.width*0.35D);
@@ -78,8 +85,10 @@ final class LivingUpdate{
 					player.sendPlayerAbilities();
 				}
 			}
-			else if (!wasJumping && player.movementInput.jump){
-				if (player.flyToggleTimer == 0)player.flyToggleTimer = 7;
+			else if (!wasJumping && player.movementInput.jump && !hasAutoJumped){
+				if (player.flyToggleTimer == 0){
+					player.flyToggleTimer = 7;
+				}
 				else{
 					player.capabilities.isFlying = !player.capabilities.isFlying;
 					player.sendPlayerAbilities();
@@ -93,9 +102,10 @@ final class LivingUpdate{
 			
 			if (chestIS != null && chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
 				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
-                mc.getSoundHandler().playSound(new ElytraSound(player));
 			}
 		}
+		
+		player.field_189813_ct = player.isElytraFlying();
 
 		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){ // uses isCurrentViewEntity but it is protected
 			if (player.movementInput.sneak){
@@ -155,26 +165,26 @@ final class LivingUpdate{
 
 		int entHeight = Math.max((int)Math.ceil(player.height),1);
 		
-		if (isHeadspaceFree(player,pos,entHeight)){
+		if (!isHeadspaceFree(player,pos,entHeight)){
 			int side = -1;
 			double limit = 9999D;
 
-			if (!isHeadspaceFree(player,pos.west(),entHeight) && xDiff < limit){
+			if (isHeadspaceFree(player,pos.west(),entHeight) && xDiff < limit){
 				limit = xDiff;
 				side = 0;
 			}
 
-			if (!isHeadspaceFree(player,pos.east(),entHeight) && 1D-xDiff < limit){
+			if (isHeadspaceFree(player,pos.east(),entHeight) && 1D-xDiff < limit){
 				limit = 1D-xDiff;
 				side = 1;
 			}
 
-			if (!isHeadspaceFree(player,pos.north(),entHeight) && zDiff < limit){
+			if (isHeadspaceFree(player,pos.north(),entHeight) && zDiff < limit){
 				limit = zDiff;
 				side = 4;
 			}
 
-			if (!isHeadspaceFree(player,pos.south(),entHeight) && 1D-zDiff < limit){
+			if (isHeadspaceFree(player,pos.south(),entHeight) && 1D-zDiff < limit){
 				limit = 1D-zDiff;
 				side = 5;
 			}
@@ -194,7 +204,7 @@ final class LivingUpdate{
 
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
 		for(int yOffset = 0; yOffset < height; yOffset++){
-			if (isOpenBlockSpace(player,pos.add(0,yOffset,0)))return false;
+			if (!isOpenBlockSpace(player,pos.add(0,yOffset,0)))return false;
 		}
 		
 		return true;
