@@ -1,5 +1,5 @@
 {
-  "~URL": "http://bsprint.chylex.com",
+  "~URL": "https://bsprint.chylex.com",
   
   "10 - 1.1.4b": {
     "modVersion": "1.1.4b",
