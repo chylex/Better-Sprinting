@@ -43,7 +43,7 @@ public class UpdateThread extends Thread{
 			String buildId = "";
 			boolean isInDev = true;
 			
-			String downloadURL = "http://bsprint.chylex.com/";
+			String downloadURL = "https://bsprint.chylex.com/";
 			
 			Log.debug("Detecting Better Sprinting updates...");
 			
