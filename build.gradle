@@ -23,8 +23,8 @@ dependencies{
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 minecraft{
     version = "1.9.4-12.17.0.1909-1.9.4"
@@ -61,6 +61,6 @@ jar{
     
     manifest{
         attributes 'FMLAT': 'bs_at.cfg'
-        attributes 'TweakClass': 'bsm.javacheck.Java7Checker'
+        attributes 'TweakClass': 'bsm.javacheck.Java8Checker'
     }
 }
