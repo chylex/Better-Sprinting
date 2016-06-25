@@ -15,6 +15,7 @@ bs.doubleTapping=Doppelklick
 bs.runAllDirs=Rennen in alle Richtungen
 bs.flyBoost=Flug-Boost
 bs.disableMod=Modfunktionalität deaktivieren
+bs.autoJump=Automatisch springen
 
 # Tooltips for controls (use the '#' character for splitting lines)
 
@@ -27,6 +28,7 @@ bs.doubleTapping.info=Sprinten durch doppeltes Betätigen der Vorwärtstaste.
 bs.runAllDirs.info=Sprinten in alle Richtungen ermöglichen.#Sofern der Server es nicht explizit erlaubt,#kannst du dies nicht im Mehrspielermodus verwenden.
 bs.flyBoost.info=Halte beim Fliegen im Kreativ-Modus gedrückt, um schneller zu fliegen.
 bs.disableMod.info=Deaktiviert alle nicht standardmäßigen Funktionen von Better Sprinting.#Diese Option kann genutzt werden, sollte ein Server diese Mod nicht erlauben.
+bs.autoJump.info=Lässt dich vor Hindernissen automatisch springen.
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
 
