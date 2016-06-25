@@ -15,6 +15,7 @@ bs.doubleTapping=按兩次
 bs.runAllDirs=全方向疾跑
 bs.flyBoost=飛行加速
 bs.disableMod=禁用本模組
+bs.autoJump=自動跳躍
 
 # Tooltips for controls (use the '#' character for splitting lines)
 

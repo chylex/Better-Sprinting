@@ -15,6 +15,7 @@ bs.doubleTapping=Double frappe d'avancer
 bs.runAllDirs=Courir dans toutes les directions
 bs.flyBoost=Accélération de vol
 bs.disableMod=Désactive la fonctionnalité du mod
+bs.autoJump=Saut automatique
 
 # Tooltips for controls (use the '#' character for splitting lines)
 

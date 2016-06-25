@@ -15,6 +15,7 @@ bs.doubleTapping=Двойное нажатие
 bs.runAllDirs=Бег во всех направлениях
 bs.flyBoost=Ускорение полёта
 bs.disableMod=Отключить модификацию
+bs.autoJump=Автопрыжок
 
 # Tooltips for controls (use the '#' character for splitting lines)
 
