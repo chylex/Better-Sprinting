@@ -15,6 +15,7 @@ bs.doubleTapping=按两次
 bs.runAllDirs=全方向疾跑。
 bs.flyBoost=飞行加速
 bs.disableMod=禁用本模组
+bs.autoJump=自动跳跃
 
 # Tooltips for controls (use the '#' character for splitting lines)
 
@@ -27,6 +28,7 @@ bs.doubleTapping.info=开启或关闭按两次前进键开启疾跑的功能。
 bs.runAllDirs.info=全方向疾跑。#只有在允许此功能的服务器中你才可以使用该功能。
 bs.flyBoost.info=创造模式时按下按键可提升飞行速度。
 bs.disableMod.info=禁用疾跑增强(Better Sprinting)提供的非原版特性。#可于服务器禁止此模组时启用。
+bs.autoJump.info=原版特性，可在遇到阻碍时自动跳跃。
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
 
