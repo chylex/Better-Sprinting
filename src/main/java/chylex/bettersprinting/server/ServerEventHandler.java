@@ -18,7 +18,8 @@ public final class ServerEventHandler{
 		if (ServerSettings.disableClientMod){
 			PacketPipeline.sendToPlayer(ServerNetwork.writeDisableMod(true),e.player);
 		}
-		else if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
+		
+		if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
 			PacketPipeline.sendToPlayer(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs),e.player);
 		}
 	}
