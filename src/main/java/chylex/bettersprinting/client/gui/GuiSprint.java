@@ -59,7 +59,7 @@ public class GuiSprint extends GuiScreen{
 	    int left = getLeftColumnX(), top = height/6;
 	
 	    for(int a = 0; a < sprintBindings.length; a++){
-			GuiOptionButton btn = new GuiOptionButton(a,left+160*a%2,top+24*a/2,70,20,getKeyCodeString(a));
+			GuiOptionButton btn = new GuiOptionButton(a,left+160*(a%2),top+24*(a/2),70,20,getKeyCodeString(a));
 			buttonList.add(btn);
 			
 			if ((a == 1 || a == 2) && ClientModManager.isModDisabled()){
