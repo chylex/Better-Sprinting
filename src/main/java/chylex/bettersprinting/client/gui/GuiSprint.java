@@ -59,9 +59,12 @@ public class GuiSprint extends GuiScreen{
 	    int left = getLeftColumnX(), top = height/6;
 	
 	    for(int a = 0; a < sprintBindings.length; a++){
-			GuiOptionButton btn = new GuiOptionButton(a,left+a%2*160,top+24*(a>>1),70,20,getKeyCodeString(a));
+			GuiOptionButton btn = new GuiOptionButton(a,left+160*a%2,top+24*a/2,70,20,getKeyCodeString(a));
 			buttonList.add(btn);
-			if ((a == 1 || a == 2) && ClientModManager.isModDisabled())btn.enabled = false;
+			
+			if ((a == 1 || a == 2) && ClientModManager.isModDisabled()){
+				btn.enabled = false;
+			}
 		}
 	    
 	    buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap,left,top+60,70,20,""));
@@ -183,8 +186,6 @@ public class GuiSprint extends GuiScreen{
 	public void drawScreen(int mouseX, int mouseY, float partialTickTime){
 		drawDefaultBackground();
 		drawCenteredString(fontRendererObj,"Better Sprinting",width/2,20,16777215);
-	
-		int left = getLeftColumnX(), top = height/6;
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
@@ -226,7 +227,7 @@ public class GuiSprint extends GuiScreen{
 		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod,maxWidthRight);
 		drawButtonTitle(I18n.format("bs.autoJump"),btnAutoJump,maxWidthLeft);
 		
-		for(int a = 0; a < buttonList.size(); a++){
+		for(int a = 0, top = height/6; a < buttonList.size(); a++){
 			GuiButton btn = buttonList.get(a);
 			
 			if (mouseX >= btn.xPosition && mouseX < btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY < btn.yPosition+20){

@@ -1,6 +1,7 @@
 package chylex.bettersprinting.system;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -25,7 +26,7 @@ public final class Log{
 				Properties properties = new Properties();
 				properties.setProperty("eula","true");
 				properties.store(fos,"Screw your EULA, I don't want that stuff in my workspace.");
-			}catch(Exception e){}
+			}catch(IOException e){}
 		}
 	}
 	
