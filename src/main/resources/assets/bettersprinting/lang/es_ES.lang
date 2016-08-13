@@ -21,14 +21,14 @@ bs.autoJump=Salto Automático
 
 bs.sprint.hold.info=Manten pulsado para correr.
 bs.sprint.toggle.info=Pulsa la tecla para empezar a correr. Vuelve a pulsar para parar.
-bs.sneak.toggle.info=Pulsa la tecla para empezar a agacharse. Vuelve a pulsar para parar.#Cuando abras cualquier tipo de interfaz, dejarás de estar agachado hasta cerrarla.
+bs.sneak.toggle.info=Pulsa la tecla para empezar a agacharse. Vuelve a pulsar para parar.#Cuando abras cualquier tipo de interfaz,#dejarás de estar agachado hasta cerrarla.
 bs.menu.info=Tecla para abrir este menú en el juego
 
-bs.doubleTapping.info=Activa o desactiva la opción de correr pulsando dos veces sobre la tecla Caminar hacia adelante.
+bs.doubleTapping.info=Activa o desactiva la opción de correr pulsando#dos veces sobre la tecla Caminar hacia adelante.
 bs.runAllDirs.info=Correr en todas las direcciones.#No puedes utilizar esta opción en multijugador si el servidor no lo permite.
 bs.flyBoost.info=Manten pulsado cuando vueles en modo creativo para volar más rápido.
 bs.disableMod.info=Deshabilita toda la funcionalidad de Better Sprinting.#Esta opción puede ser utilizada si un servidor no permite el uso del mod.
-bs.autoJump.info=Funcionalidad incluida en Minecraft que salta de forma automática cerca de un obstáculo.
+bs.autoJump.info=Funcionalidad incluida en Minecraft que salta#de forma automática cerca de un obstáculo.
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
 
@@ -36,7 +36,7 @@ bs.autoJump.info=Funcionalidad incluida en Minecraft que salta de forma automát
 
 # In-game messages
 
-bs.game.integrity= La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting. Intenta instalar PlayerAPI para resolver este conflicto. Clase en conflicto: $
+bs.game.integrity=La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting. Intenta instalar PlayerAPI para resolver este conflicto. Clase en conflicto: $
 bs.game.disabled=El servidor ha desactivado el uso del mod, la funcionalidad de correr se ha cambiado a las originales de Minecraft hasta que te desconectes.
 bs.game.reenabled=El servidor ha activado el uso del mod, la funcionalidad de correr se ha cambiado a Better Sprinting.
 

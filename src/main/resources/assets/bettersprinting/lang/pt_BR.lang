@@ -36,13 +36,14 @@ bs.autoJump.info=Opção que faz você pular automáticamente perto de obstácul
 
 # In-game messages
 
-bs.game.integrity=Erro na verificação, outro mod está conflitando com Better Sprinting. Tente instalar PlayerAPI para resolver.
+bs.game.integrity=Erro na verificação, outro mod está conflitando com Better Sprinting: $. Tente instalar PlayerAPI para resolver.
 bs.game.disabled=O servidor pediu para desabilitar o mod, as mecânicas de corrida serão desabilitadas até você desconectar.
 bs.game.reenabled=O servidor reativou o mod, mecânicas ativadas.
 
 # Server messages (translated on client)
 
 bs.server.kick=O servidor não permite Better Sprinting. Novas versões do mod podem se desabilitar automaticamente sem te expulsar.
+
 bs.command.invalidSyntax=Sintaxe inválida, use /bettersprinting para uma lista de comandos.
 bs.command.info=Você pode usar o comando para desativar/ativar o mod, ou mudar configurações específicas. Estes irão persistir após reiniciar o servidor, e também vai afetar imediatamente os jogadores que já estão no servidor.
 bs.command.disableMod=Better sprinting será automaticamente desabilitado quando alguém entrar.
