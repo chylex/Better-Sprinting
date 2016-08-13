@@ -9,7 +9,7 @@ gui.unavailable=Não disponível
 bs.sprint.hold=Correr (Segure)
 bs.sprint.toggle=Correr (Ligar)
 bs.sneak.toggle=Agachar (Ligar)
-bs.menu=Menu de Corrida
+bs.menu=Menu
 
 bs.doubleTapping=Toque duplo
 bs.runAllDirs=Corra em todas direções
@@ -21,13 +21,13 @@ bs.autoJump=Pulo automático
 
 bs.sprint.hold.info=Segure para correr.
 bs.sprint.toggle.info=Pressione uma vez para iniciar ou parar de correr.
-bs.sneak.toggle.info=Pressione uma vez para iniciar ou parar de agachar.#When you open any GUI, you will stop sneaking until you close it.
-bs.menu.info=Tecla para abrir esse menu em jogo.
+bs.sneak.toggle.info=Pressione uma vez para iniciar ou parar de agachar.#Quando você abre um menu você para de agachar até fechá-lo.
+bs.menu.info=Tecla para abrir o em jogo.
 
-bs.doubleTapping.info=Habilite ou desabilite a corrida clicando duas tevez na tecla de avanço.
-bs.runAllDirs.info=Correr em todas direções.#You cannot use this in multiplayer unless the server allows it.
-bs.flyBoost.info=Segure no modo criativo para voar mais rápido.
-bs.disableMod.info=Desabilitar todas funcionalidades.#This option can be used if a server doesn't allow the mod.
+bs.doubleTapping.info=Habilite ou desabilite a corrida clicando duas vezes na tecla W.
+bs.runAllDirs.info=Correr em todas direções.#Você não pode usar isso no multiplayer, só se o servidor permitir.
+bs.flyBoost.info=Aperte no modo criativo para voar mais rápido.#Tecla padrão: control
+bs.disableMod.info=Desabilitar todas funcionalidades.#Essa opção pode ser usada se um servidor não permite o mod.
 bs.autoJump.info=Opção que faz você pular automáticamente perto de obstáculos.
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
@@ -43,7 +43,6 @@ bs.game.reenabled=O servidor reativou o mod, mecânicas ativadas.
 # Server messages (translated on client)
 
 bs.server.kick=O servidor não permite Better Sprinting. Novas versões do mod podem se desabilitar automaticamente sem te expulsar.
-
 bs.command.invalidSyntax=Sintaxe inválida, use /bettersprinting para uma lista de comandos.
 bs.command.info=Você pode usar o comando para desativar/ativar o mod, ou mudar configurações específicas. Estes irão persistir após reiniciar o servidor, e também vai afetar imediatamente os jogadores que já estão no servidor.
 bs.command.disableMod=Better sprinting será automaticamente desabilitado quando alguém entrar.
