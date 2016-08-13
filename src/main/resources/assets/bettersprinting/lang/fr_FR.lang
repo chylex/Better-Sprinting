@@ -28,6 +28,7 @@ bs.doubleTapping.info=Activez ou désactivez la course par la double-frappe de l
 bs.runAllDirs.info=Courez dans toutes les directions.#Vouc ne pouvez pas utiliser ceci en multijoueur tant que le serveur ne l'a pas autorisé.
 bs.flyBoost.info=Maintenez lors de vol en mode créatif pour voler plus vite.
 bs.disableMod.info=Désactive toutes les fonctionnalités non-vanilla de Better Sprinting.#Cette option peut être utilisée si un serveur n'autorise pas le mod.
+bs.autoJump.info=Fonctionnalité vanilla qui vous fait sauter automatiquement près des obstacles.
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
 
@@ -41,7 +42,7 @@ bs.game.reenabled=Le serveur a activé de nouveau le mod mod, Les mécanismes de
 
 # Server messages (translated on client)
 
-bs.server.kick=The server does not allow Better Sprinting. Newer versions of the mod can be disabled automatically without kicking.
+bs.server.kick=Le serveur n'autorise pas Better Sprinting, les versions plus récentes peuvent se désactiver automatiquement sans vous kicker.
 
 bs.command.invalidSyntax=Erreur de syntaxe, faites /bettersprinting pour la liste de commandes.
 bs.command.info=Vous pouvez utiliser la commande pour à la fois désactiver/activer le mod, ou changer les options pécifiques au mod. Elles persisteront après le redémmarage serveur, mais aussi affecteront immédiatement les joureurs qui sont déjà sur le serveur.

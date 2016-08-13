@@ -28,6 +28,7 @@ bs.doubleTapping.info=啟用或停用按兩次前進鍵開啟疾跑的功能。
 bs.runAllDirs.info=全方向疾跑。#只有在允許此功能的伺服器中才可使用此功能。
 bs.flyBoost.info=創造模式時按下按鍵可提升飛行速度。
 bs.disableMod.info=禁用疾跑增強(Better Sprinting)提供的非原版特性。#可用於禁止此模組的伺服器時。
+bs.autoJump.info=原版功能，能使你自動跳上障礙物。
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
 

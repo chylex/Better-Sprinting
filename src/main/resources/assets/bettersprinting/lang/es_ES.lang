@@ -27,7 +27,7 @@ bs.menu.info=Tecla para abrir este menú en el juego
 bs.doubleTapping.info=Activa o desactiva la opción de correr pulsando dos veces sobre la tecla Caminar hacia adelante.
 bs.runAllDirs.info=Correr en todas las direcciones.#No puedes utilizar esta opción en multijugador si el servidor no lo permite.
 bs.flyBoost.info=Manten pulsado cuando vueles en modo creativo para volar más rápido.
-bs.disableMod.info=Deshabilita toda la funcionalidad de Better Sprinting. #Esta opción puede ser utilizada si un servidor no permite el uso del mod.
+bs.disableMod.info=Deshabilita toda la funcionalidad de Better Sprinting.#Esta opción puede ser utilizada si un servidor no permite el uso del mod.
 bs.autoJump.info=Funcionalidad incluida en Minecraft que salta de forma automática cerca de un obstáculo.
 
 # If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
