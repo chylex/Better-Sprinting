@@ -47,16 +47,20 @@ public class BetterSprintingConfig{
 		this.currentCategory = newCategory;
 	}
 	
-	public void setComment(String name, String comment){
-		config.getCategory(currentCategory).get(name).setComment(comment);;
-	}
-	
 	public Property getBool(String name, boolean defValue){
 		return config.get(currentCategory,name,defValue,"");
 	}
 	
+	public Property getBool(String name, boolean defValue, String comment){
+		return config.get(currentCategory,name,defValue,comment);
+	}
+	
 	public Property getInt(String name, int defValue){
 		return config.get(currentCategory,name,defValue,"");
+	}
+	
+	public Property getInt(String name, int defValue, String comment){
+		return config.get(currentCategory,name,defValue,comment);
 	}
 	
 	public void setBool(String name, boolean value){

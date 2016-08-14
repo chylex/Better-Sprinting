@@ -1,9 +1,9 @@
 package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import chylex.bettersprinting.BetterSprintingConfig;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import chylex.bettersprinting.BetterSprintingConfig;
 
 @SideOnly(Side.CLIENT)
 public class ClientSettings{
@@ -33,11 +33,8 @@ public class ClientSettings{
 		enableAllDirs = config.getBool("enableAllDirs",enableAllDirs).setShowInGui(false).getBoolean();
 		disableMod = config.getBool("disableMod",disableMod).setShowInGui(false).getBoolean();
 		
-		enableUpdateNotifications = config.getBool("enableUpdateNotifications",enableUpdateNotifications).getBoolean();
-		enableBuildCheck = config.getBool("enableBuildCheck",enableBuildCheck).getBoolean();
-		
-		config.setComment("enableUpdateNotifications",I18n.format("bs.config.notifications"));
-		config.setComment("enableBuildCheck",I18n.format("bs.config.buildCheck"));
+		enableUpdateNotifications = config.getBool("enableUpdateNotifications",enableUpdateNotifications,I18n.format("bs.config.notifications")).getBoolean();
+		enableBuildCheck = config.getBool("enableBuildCheck",enableBuildCheck,I18n.format("bs.config.buildCheck")).getBoolean();
 		
 		ClientModManager.keyBindSprintHold.setKeyCode(keyCodeSprintHold);
 		ClientModManager.keyBindSprintToggle.setKeyCode(keyCodeSprintToggle);
