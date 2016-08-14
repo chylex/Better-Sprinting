@@ -26,7 +26,7 @@ bs.menu.info=Key to open this menu ingame.
 
 bs.doubleTapping.info=Enable or disable sprinting by double-tapping the forward key.
 bs.runAllDirs.info=Sprint in all directions.#You cannot use this in multiplayer unless the server allows it.
-bs.flyBoost.info=Hold when flying in creative mode to fly faster.
+bs.flyBoost.info=Use sprint key when flying in creative mode to fly faster.
 bs.disableMod.info=Disables all non-vanilla functionality of Better Sprinting.#This option can be used if a server doesn't allow the mod.
 bs.autoJump.info=Vanilla feature that makes you automatically jump near obstacles.
 
