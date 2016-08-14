@@ -2,7 +2,7 @@
 
 gui.enabled=Aktiviert
 gui.disabled=Deaktiviert
-gui.unavailable=Nicht verfügbar
+gui.unavailable=Kein Zugriff
 
 # Titles for controls
 
