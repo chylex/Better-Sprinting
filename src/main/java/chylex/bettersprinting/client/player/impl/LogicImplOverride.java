@@ -36,13 +36,13 @@ public final class LogicImplOverride{
 	public void onGuiOpen(GuiOpenEvent e){
 		if (e.getGui() != null && e.getGui().getClass() == GuiDownloadTerrain.class && Minecraft.getMinecraft().playerController.getClass() != PlayerControllerMPOverride.class){
 			Minecraft mc = Minecraft.getMinecraft();
-			mc.playerController = new PlayerControllerMPOverride(mc,(NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
+			mc.playerController = new PlayerControllerMPOverride(mc, (NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
 			EntityPlayerSP prevPlayer = mc.thePlayer;
 			mc.theWorld.removeEntity(prevPlayer);
 			
 			mc.setRenderViewEntity(null);
-			mc.thePlayer = mc.playerController.createClientPlayer(prevPlayer.worldObj,prevPlayer.getStatFileWriter());
+			mc.thePlayer = mc.playerController.createClientPlayer(prevPlayer.worldObj, prevPlayer.getStatFileWriter());
 			mc.thePlayer.getDataManager().setEntryValues(prevPlayer.getDataManager().getAll());
 			mc.thePlayer.dimension = prevPlayer.dimension;
 			mc.setRenderViewEntity(mc.thePlayer);
@@ -68,7 +68,7 @@ public final class LogicImplOverride{
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
-				mc.thePlayer.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$",controllerClass.getName())));
+				mc.thePlayer.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$", controllerClass.getName())));
 				stopChecking = true;
 			}
 		}
@@ -80,14 +80,14 @@ public final class LogicImplOverride{
 		private final NetHandlerPlayClient netHandler;
 		
 		public PlayerControllerMPOverride(Minecraft mc, NetHandlerPlayClient netHandler){
-			super(mc,netHandler);
+			super(mc, netHandler);
 			this.mc = mc;
 			this.netHandler = netHandler;
 		}
 		
 		@Override
 		public EntityPlayerSP createClientPlayer(World world, StatisticsManager statFile){
-			return new PlayerOverride(mc,world,netHandler,statFile);
+			return new PlayerOverride(mc, world, netHandler, statFile);
 		}
 	}
 }

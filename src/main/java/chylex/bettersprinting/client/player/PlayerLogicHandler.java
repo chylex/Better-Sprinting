@@ -33,7 +33,7 @@ public class PlayerLogicHandler{
 	public void updateMovementInput(){
 		wasMovingForward = player.movementInput.moveForward >= 0.8F;
 		wasSneaking = player.movementInput.sneak;
-		customMovementInput.update(mc,(MovementInputFromOptions)player.movementInput);
+		customMovementInput.update(mc, (MovementInputFromOptions)player.movementInput);
 	}
 	
 	public void updateLiving(){

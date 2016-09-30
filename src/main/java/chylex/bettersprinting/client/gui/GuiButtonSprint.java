@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiButtonSprint extends GuiButton{
 	public GuiButtonSprint(int id, int x, int y, int width, int height, String displayText){
-		super(id,x,y,width,height,displayText);
+		super(id, x, y, width, height, displayText);
 	}
 	
 	@Override

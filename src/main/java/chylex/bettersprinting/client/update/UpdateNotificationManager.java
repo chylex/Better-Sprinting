@@ -19,13 +19,13 @@ public final class UpdateNotificationManager{
 		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
 			long time = Calendar.getInstance().getTimeInMillis();
 			
-			if (time-globalData.getLong(prefKey,0L) > 86400000L){ // 24 hours
-				globalData.putLong(prefKey,time);
+			if (time-globalData.getLong(prefKey, 0L) > 86400000L){ // 24 hours
+				globalData.putLong(prefKey, time);
 				
 				try{
 					globalData.flush();
 				}catch(BackingStoreException ex){
-					Log.throwable(ex,"Could not update last update notification time, stopping the process to avoid excessive spamming.");
+					Log.throwable(ex, "Could not update last update notification time, stopping the process to avoid excessive spamming.");
 					return;
 				}
 				

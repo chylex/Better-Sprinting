@@ -23,18 +23,18 @@ public class ClientSettings{
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("client");
 		
-		keyCodeSprintHold = config.getInt("keySprintHold",keyCodeSprintHold).setShowInGui(false).getInt();
-		keyCodeSprintToggle = config.getInt("keySprintToggle",keyCodeSprintToggle).setShowInGui(false).getInt();
-		keyCodeSneakToggle = config.getInt("keySneakToggle",keyCodeSneakToggle).setShowInGui(false).getInt();
-		keyCodeOptionsMenu = config.getInt("keyOptionsMenu",keyCodeOptionsMenu).setShowInGui(false).getInt();
+		keyCodeSprintHold = config.getInt("keySprintHold", keyCodeSprintHold).setShowInGui(false).getInt();
+		keyCodeSprintToggle = config.getInt("keySprintToggle", keyCodeSprintToggle).setShowInGui(false).getInt();
+		keyCodeSneakToggle = config.getInt("keySneakToggle", keyCodeSneakToggle).setShowInGui(false).getInt();
+		keyCodeOptionsMenu = config.getInt("keyOptionsMenu", keyCodeOptionsMenu).setShowInGui(false).getInt();
 		
-		flySpeedBoost = (byte)config.getInt("flySpeedBoost",flySpeedBoost).setShowInGui(false).getInt();
-		enableDoubleTap = config.getBool("enableDoubleTap",enableDoubleTap).setShowInGui(false).getBoolean();
-		enableAllDirs = config.getBool("enableAllDirs",enableAllDirs).setShowInGui(false).getBoolean();
-		disableMod = config.getBool("disableMod",disableMod).setShowInGui(false).getBoolean();
+		flySpeedBoost = (byte)config.getInt("flySpeedBoost", flySpeedBoost).setShowInGui(false).getInt();
+		enableDoubleTap = config.getBool("enableDoubleTap", enableDoubleTap).setShowInGui(false).getBoolean();
+		enableAllDirs = config.getBool("enableAllDirs", enableAllDirs).setShowInGui(false).getBoolean();
+		disableMod = config.getBool("disableMod", disableMod).setShowInGui(false).getBoolean();
 		
-		enableUpdateNotifications = config.getBool("enableUpdateNotifications",enableUpdateNotifications,I18n.format("bs.config.notifications")).getBoolean();
-		enableBuildCheck = config.getBool("enableBuildCheck",enableBuildCheck,I18n.format("bs.config.buildCheck")).getBoolean();
+		enableUpdateNotifications = config.getBool("enableUpdateNotifications", enableUpdateNotifications, I18n.format("bs.config.notifications")).getBoolean();
+		enableBuildCheck = config.getBool("enableBuildCheck", enableBuildCheck, I18n.format("bs.config.buildCheck")).getBoolean();
 		
 		ClientModManager.keyBindSprintHold.setKeyCode(keyCodeSprintHold);
 		ClientModManager.keyBindSprintToggle.setKeyCode(keyCodeSprintToggle);
@@ -49,18 +49,18 @@ public class ClientSettings{
 	public static void update(BetterSprintingConfig config){
 		config.setCategory("client");
 		
-		config.setInt("keySprintHold",keyCodeSprintHold);
-		config.setInt("keySprintToggle",keyCodeSprintToggle);
-		config.setInt("keySneakToggle",keyCodeSneakToggle);
-		config.setInt("keyOptionsMenu",keyCodeOptionsMenu);
+		config.setInt("keySprintHold", keyCodeSprintHold);
+		config.setInt("keySprintToggle", keyCodeSprintToggle);
+		config.setInt("keySneakToggle", keyCodeSneakToggle);
+		config.setInt("keyOptionsMenu", keyCodeOptionsMenu);
 		
-		config.setInt("flySpeedBoost",flySpeedBoost);
-		config.setBool("enableDoubleTap",enableDoubleTap);
-		config.setBool("enableAllDirs",enableAllDirs);
-		config.setBool("disableMod",disableMod);
+		config.setInt("flySpeedBoost", flySpeedBoost);
+		config.setBool("enableDoubleTap", enableDoubleTap);
+		config.setBool("enableAllDirs", enableAllDirs);
+		config.setBool("disableMod", disableMod);
 		
-		config.setBool("enableUpdateNotifications",enableUpdateNotifications);
-		config.setBool("enableBuildCheck",enableBuildCheck);
+		config.setBool("enableUpdateNotifications", enableUpdateNotifications);
+		config.setBool("enableBuildCheck", enableBuildCheck);
 		
 		config.update();
 		

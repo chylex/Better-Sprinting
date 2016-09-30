@@ -16,11 +16,11 @@ public final class ServerEventHandler{
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent e){
 		if (ServerSettings.disableClientMod){
-			PacketPipeline.sendToPlayer(ServerNetwork.writeDisableMod(true),e.player);
+			PacketPipeline.sendToPlayer(ServerNetwork.writeDisableMod(true), e.player);
 		}
 		
 		if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
-			PacketPipeline.sendToPlayer(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost,ServerSettings.enableAllDirs),e.player);
+			PacketPipeline.sendToPlayer(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs), e.player);
 		}
 	}
 	

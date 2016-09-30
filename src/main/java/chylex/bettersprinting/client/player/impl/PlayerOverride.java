@@ -25,7 +25,7 @@ public class PlayerOverride extends EntityPlayerSP{
 	private int jumpTicks;
 	
 	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatisticsManager statFile){
-		super(mc,world,netHandler,statFile);
+		super(mc, world, netHandler, statFile);
 		logic = new PlayerLogicHandler();
 		logic.setPlayer(this);
 		
@@ -34,9 +34,9 @@ public class PlayerOverride extends EntityPlayerSP{
 	
 	@Override
 	public void onLivingUpdate(){
-		LivingUpdate.callPreSuper(this,mc,logic);
+		LivingUpdate.callPreSuper(this, mc, logic);
 		onLivingUpdate$EntityPlayer();
-		LivingUpdate.callPostSuper(this,mc,logic);
+		LivingUpdate.callPostSuper(this, mc, logic);
 	}
 	
 	private void onLivingUpdate$EntityPlayer(){
@@ -85,13 +85,13 @@ public class PlayerOverride extends EntityPlayerSP{
 			AxisAlignedBB aabb = null;
 
 			if (isRiding() && !getRidingEntity().isDead){
-				aabb = getEntityBoundingBox().union(getRidingEntity().getEntityBoundingBox()).expand(1D,0D,1D);
+				aabb = getEntityBoundingBox().union(getRidingEntity().getEntityBoundingBox()).expand(1D, 0D, 1D);
 			}
 			else{
-				aabb = getEntityBoundingBox().expand(1D,0.5D,1D);
+				aabb = getEntityBoundingBox().expand(1D, 0.5D, 1D);
 			}
 
-			for(Entity entity:worldObj.getEntitiesWithinAABBExcludingEntity(this,aabb)){
+			for(Entity entity:worldObj.getEntitiesWithinAABBExcludingEntity(this, aabb)){
 				if (!entity.isDead)entity.onCollideWithPlayer(this); // uses collideWithPlayer but it's private
 			}
 		}
@@ -107,8 +107,8 @@ public class PlayerOverride extends EntityPlayerSP{
 			rotationYaw = (float)(rotationYaw+MathHelper.wrapDegrees(interpTargetYaw-rotationYaw)/newPosRotationIncrements);
 			rotationPitch = (float)(rotationPitch+(interpTargetPitch-rotationPitch)/newPosRotationIncrements);
 			--newPosRotationIncrements;
-			setPosition(setPosX,setPosY,setPosZ);
-			setRotation(rotationYaw,rotationPitch);
+			setPosition(setPosX, setPosY, setPosZ);
+			setRotation(rotationYaw, rotationPitch);
 		}
 		else if (!isServerWorld()){
 			motionX *= 0.98D;
@@ -158,7 +158,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		moveForward *= 0.98F;
 		randomYawVelocity *= 0.9F;
 		updateElytra$EntityLivingBase();
-		moveEntityWithHeading(moveStrafing,moveForward);
+		moveEntityWithHeading(moveStrafing, moveForward);
 		
 		worldObj.theProfiler.endSection();
 		worldObj.theProfiler.startSection("push");
@@ -178,7 +178,7 @@ public class PlayerOverride extends EntityPlayerSP{
 				flag = true;
 				
 				if (!worldObj.isRemote && (ticksElytraFlying+1)%20 == 0){
-					is.damageItem(1,this);
+					is.damageItem(1, this);
 				}
 			}
 			else flag = false;
@@ -186,7 +186,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		else flag = false;
 		
 		if (!worldObj.isRemote){
-			setFlag(7,flag);
+			setFlag(7, flag);
 		}
 	}
 }

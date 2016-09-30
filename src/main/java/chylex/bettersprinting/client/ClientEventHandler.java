@@ -55,7 +55,7 @@ public final class ClientEventHandler{
 			gui.buttonList.stream().filter(btn -> btn.id == GameSettings.Options.AUTO_JUMP.returnEnumOrdinal()).findFirst().ifPresent(gui.buttonList::remove);
 			
 			if (!(((GuiControls)gui).parentScreen instanceof GuiSprint)){
-				gui.buttonList.add(0,new GuiButtonSprint(205,gui.width/2+5,18+24,150,20,"Better Sprinting"));
+				gui.buttonList.add(0, new GuiButtonSprint(205, gui.width/2+5, 18+24, 150, 20, "Better Sprinting"));
 			}
 		}
 	}

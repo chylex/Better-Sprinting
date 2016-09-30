@@ -35,7 +35,7 @@ public class UpdateThread extends Thread{
 		try{
 			Thread.sleep(1337L);
 			
-			JsonElement root = new JsonParser().parse(IOUtils.toString(new URL(url),StandardCharsets.UTF_8));
+			JsonElement root = new JsonParser().parse(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
 			
 			List<VersionEntry> versionList = Lists.newArrayList();
 			VersionEntry newestVersionForCurrentMC = null;
@@ -47,17 +47,17 @@ public class UpdateThread extends Thread{
 			
 			Log.debug("Detecting Better Sprinting updates...");
 			
-			for(Entry<String,JsonElement> entry:root.getAsJsonObject().entrySet()){
+			for(Entry<String, JsonElement> entry:root.getAsJsonObject().entrySet()){
 				if (entry.getKey().charAt(0) == '~'){
 					if (entry.getKey().substring(1).equals("URL"))downloadURL = entry.getValue().getAsString();
 				}
-				else versionList.add(new VersionEntry(entry.getKey(),entry.getValue().getAsJsonObject()));
+				else versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
 			}
 			
 			Collections.sort(versionList);
 			
 			for(VersionEntry version:versionList){
-				Log.debug("Reading update data: $0",version.versionIdentifier);
+				Log.debug("Reading update data: $0", version.versionIdentifier);
 				
 				if (version.isSupportedByMC(mcVersion)){
 					if (newestVersionForCurrentMC == null)newestVersionForCurrentMC = version;
@@ -99,7 +99,7 @@ public class UpdateThread extends Thread{
 		}
 		catch(UnknownHostException e){}
 		catch(Exception e){
-			Log.throwable(e,"Error detecting updates!");
+			Log.throwable(e, "Error detecting updates!");
 		}
 	}
 }

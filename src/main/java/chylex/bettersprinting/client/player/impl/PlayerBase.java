@@ -20,8 +20,8 @@ public class PlayerBase extends ClientPlayerBase{
 	@Override
 	public void onLivingUpdate(){
 		logic.setPlayer(player);
-		LivingUpdate.callPreSuper(player,mc,logic);
+		LivingUpdate.callPreSuper(player, mc, logic);
 		playerAPI.superOnLivingUpdate();
-		LivingUpdate.callPostSuper(player,mc,logic);
+		LivingUpdate.callPostSuper(player, mc, logic);
 	}
 }

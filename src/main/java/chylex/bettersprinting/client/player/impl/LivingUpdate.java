@@ -31,7 +31,7 @@ final class LivingUpdate{
 			}
 			
 			if (player.timeInPortal == 0F){
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER,player.getRNG().nextFloat()*0.4F+0.8F));
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER, player.getRNG().nextFloat()*0.4F+0.8F));
 			}
 			
 			player.timeInPortal += 0.0125F;
@@ -71,10 +71,10 @@ final class LivingUpdate{
 		}
 		
 		AxisAlignedBB playerBoundingBox = player.getEntityBoundingBox();
-		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ+player.width*0.35D);
-		pushOutOfBlocks(player,player.posX-player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ-player.width*0.35D);
-		pushOutOfBlocks(player,player.posX+player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ-player.width*0.35D);
-		pushOutOfBlocks(player,player.posX+player.width*0.35D,playerBoundingBox.minY+0.5D,player.posZ+player.width*0.35D);
+		pushOutOfBlocks(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
+		pushOutOfBlocks(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
+		pushOutOfBlocks(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
+		pushOutOfBlocks(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
 		
 		logic.updateLiving();
 		
@@ -101,7 +101,7 @@ final class LivingUpdate{
 			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
 			if (chestIS != null && chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
-				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_FALL_FLYING));
+				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_FALL_FLYING));
 			}
 		}
 		
@@ -129,7 +129,7 @@ final class LivingUpdate{
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
 				mount.setJumpPower(MathHelper.floor_float(player.getHorseJumpPower()*100F));
-				player.connection.sendPacket(new CPacketEntityAction(player,CPacketEntityAction.Action.START_RIDING_JUMP,(int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
+				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_RIDING_JUMP, (int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;
@@ -159,32 +159,32 @@ final class LivingUpdate{
 	protected static boolean pushOutOfBlocks(EntityPlayerSP player, double x, double y, double z){
 		if (player.noClip)return false;
 		
-		BlockPos pos = new BlockPos(x,y,z);
+		BlockPos pos = new BlockPos(x, y, z);
 		double xDiff = x-pos.getX();
 		double zDiff = z-pos.getZ();
 
-		int entHeight = Math.max((int)Math.ceil(player.height),1);
+		int entHeight = Math.max((int)Math.ceil(player.height), 1);
 		
-		if (!isHeadspaceFree(player,pos,entHeight)){
+		if (!isHeadspaceFree(player, pos, entHeight)){
 			int side = -1;
 			double limit = 9999D;
 
-			if (isHeadspaceFree(player,pos.west(),entHeight) && xDiff < limit){
+			if (isHeadspaceFree(player, pos.west(), entHeight) && xDiff < limit){
 				limit = xDiff;
 				side = 0;
 			}
 
-			if (isHeadspaceFree(player,pos.east(),entHeight) && 1D-xDiff < limit){
+			if (isHeadspaceFree(player, pos.east(), entHeight) && 1D-xDiff < limit){
 				limit = 1D-xDiff;
 				side = 1;
 			}
 
-			if (isHeadspaceFree(player,pos.north(),entHeight) && zDiff < limit){
+			if (isHeadspaceFree(player, pos.north(), entHeight) && zDiff < limit){
 				limit = zDiff;
 				side = 4;
 			}
 
-			if (isHeadspaceFree(player,pos.south(),entHeight) && 1D-zDiff < limit){
+			if (isHeadspaceFree(player, pos.south(), entHeight) && 1D-zDiff < limit){
 				limit = 1D-zDiff;
 				side = 5;
 			}
@@ -204,7 +204,7 @@ final class LivingUpdate{
 
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
 		for(int yOffset = 0; yOffset < height; yOffset++){
-			if (!isOpenBlockSpace(player,pos.add(0,yOffset,0)))return false;
+			if (!isOpenBlockSpace(player, pos.add(0, yOffset, 0)))return false;
 		}
 		
 		return true;

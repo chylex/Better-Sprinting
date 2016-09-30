@@ -29,14 +29,14 @@ final class VersionEntry implements Comparable<VersionEntry>{
 		String tmp = modVersion;
 		String[] idSplit = versionIdentifier.split(" - ");
 		
-		if (idSplit.length != 2)Log.error("Incorrect version identifier: $0",versionIdentifier);
+		if (idSplit.length != 2)Log.error("Incorrect version identifier: $0", versionIdentifier);
 		else{
 			tmp = idSplit[1];
 			
 			try{
 				i = Byte.parseByte(idSplit[0]);
 			}catch(NumberFormatException e){
-				Log.error("Incorrect version identifier: $0",versionIdentifier);
+				Log.error("Incorrect version identifier: $0", versionIdentifier);
 			}
 		}
 		

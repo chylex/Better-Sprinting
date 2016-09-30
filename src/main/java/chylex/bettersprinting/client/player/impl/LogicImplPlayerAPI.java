@@ -6,7 +6,7 @@ import api.player.client.ClientPlayerAPI;
 @SideOnly(Side.CLIENT)
 public final class LogicImplPlayerAPI{
 	public static void register(){
-		ClientPlayerAPI.register("BetterSprinting",PlayerBase.class);
+		ClientPlayerAPI.register("BetterSprinting", PlayerBase.class);
 	}
 	
 	private LogicImplPlayerAPI(){}

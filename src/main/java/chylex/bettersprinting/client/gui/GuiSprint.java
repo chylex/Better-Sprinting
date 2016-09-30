@@ -59,7 +59,7 @@ public class GuiSprint extends GuiScreen{
 	    int left = getLeftColumnX(), top = height/6;
 	
 	    for(int a = 0; a < sprintBindings.length; a++){
-			GuiOptionButton btn = new GuiOptionButton(a,left+160*(a%2),top+24*(a/2),70,20,getKeyCodeString(a));
+			GuiOptionButton btn = new GuiOptionButton(a, left+160*(a%2), top+24*(a/2), 70, 20, getKeyCodeString(a));
 			buttonList.add(btn);
 			
 			if ((a == 1 || a == 2) && ClientModManager.isModDisabled()){
@@ -67,21 +67,21 @@ public class GuiSprint extends GuiScreen{
 			}
 		}
 	    
-	    buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap,left,top+60,70,20,""));
-	    buttonList.add(btnAllDirs = new GuiButton(idAllDirs,left+160,top+60,70,20,""));
-	    buttonList.add(btnFlyBoost = new GuiButton(idFlyBoost,left,top+84,70,20,""));
-	    buttonList.add(btnDisableMod = new GuiButton(idDisableMod,left+160,top+84,70,20,""));
-	    buttonList.add(btnAutoJump = new GuiButton(idAutoJump,left,top+108,70,20,""));
+	    buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap, left, top+60, 70, 20, ""));
+	    buttonList.add(btnAllDirs = new GuiButton(idAllDirs, left+160, top+60, 70, 20, ""));
+	    buttonList.add(btnFlyBoost = new GuiButton(idFlyBoost, left, top+84, 70, 20, ""));
+	    buttonList.add(btnDisableMod = new GuiButton(idDisableMod, left+160, top+84, 70, 20, ""));
+	    buttonList.add(btnAutoJump = new GuiButton(idAutoJump, left, top+108, 70, 20, ""));
 	    
 	    if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled = false;
 	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled = false;
 	    if (!(mc.thePlayer == null && mc.theWorld == null))btnDisableMod.enabled = false;
 	    
-	    buttonList.add(new GuiButton(idDone,width/2-100,top+168,parentScreen == null ? 98 : 200,20,I18n.format("gui.done")));
+	    buttonList.add(new GuiButton(idDone, width/2-100, top+168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done")));
 	    
 	    if (parentScreen == null){
-	    	buttonList.add(new GuiButton(idControls,width/2+2,top+168,98,20,I18n.format("options.controls")));
+	    	buttonList.add(new GuiButton(idControls, width/2+2, top+168, 98, 20, I18n.format("options.controls")));
 	    }
 	    
 	    updateButtons();
@@ -103,7 +103,7 @@ public class GuiSprint extends GuiScreen{
 	
 		switch(btn.id){
 			case idControls:
-				mc.displayGuiScreen(new GuiControls(this,mc.gameSettings));
+				mc.displayGuiScreen(new GuiControls(this, mc.gameSettings));
 				break;
 				
 			case idAutoJump:
@@ -157,12 +157,12 @@ public class GuiSprint extends GuiScreen{
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
-		if (!handleInput(button-100))super.mouseClicked(mouseX,mouseY,button);
+		if (!handleInput(button-100))super.mouseClicked(mouseX, mouseY, button);
 	}
 	
 	@Override
 	protected void keyTyped(char keyChar, int keyCode) throws IOException{
-		if (!handleInput(keyCode))super.keyTyped(keyChar,keyCode);
+		if (!handleInput(keyCode))super.keyTyped(keyChar, keyCode);
 	}
 	
 	private boolean handleInput(int keyId){
@@ -185,7 +185,7 @@ public class GuiSprint extends GuiScreen{
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTickTime){
 		drawDefaultBackground();
-		drawCenteredString(fontRendererObj,"Better Sprinting",width/2,20,16777215);
+		drawCenteredString(fontRendererObj, "Better Sprinting", width/2, 20, 16777215);
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
@@ -215,17 +215,17 @@ public class GuiSprint extends GuiScreen{
 				else if (alreadyUsed)buttonList.get(a).displayString = "\u00a7c"+getKeyCodeString(a);
 				else buttonList.get(a).displayString = getKeyCodeString(a);
 				
-				drawButtonTitle(I18n.format(sprintBindings[a].getKeyDescription()),buttonList.get(a),a%2 == 0 ? maxWidthLeft : maxWidthRight);
+				drawButtonTitle(I18n.format(sprintBindings[a].getKeyDescription()), buttonList.get(a), a%2 == 0 ? maxWidthLeft : maxWidthRight);
 				a++;
 				break;
 			}
 		}
 	
-		drawButtonTitle(I18n.format("bs.doubleTapping"),btnDoubleTap,maxWidthLeft);
-		drawButtonTitle(I18n.format("bs.runAllDirs"),btnAllDirs,maxWidthRight);
-		drawButtonTitle(I18n.format("bs.flyBoost"),btnFlyBoost,maxWidthLeft);
-		drawButtonTitle(I18n.format("bs.disableMod"),btnDisableMod,maxWidthRight);
-		drawButtonTitle(I18n.format("bs.autoJump"),btnAutoJump,maxWidthLeft);
+		drawButtonTitle(I18n.format("bs.doubleTapping"), btnDoubleTap, maxWidthLeft);
+		drawButtonTitle(I18n.format("bs.runAllDirs"), btnAllDirs, maxWidthRight);
+		drawButtonTitle(I18n.format("bs.flyBoost"), btnFlyBoost, maxWidthLeft);
+		drawButtonTitle(I18n.format("bs.disableMod"), btnDisableMod, maxWidthRight);
+		drawButtonTitle(I18n.format("bs.autoJump"), btnAutoJump, maxWidthLeft);
 		
 		for(int a = 0, top = height/6; a < buttonList.size(); a++){
 			GuiButton btn = buttonList.get(a);
@@ -235,14 +235,14 @@ public class GuiSprint extends GuiScreen{
 				String[] spl = I18n.format(info).split("#");
 				
 				for(int line = 0; line < spl.length; line++){
-					drawCenteredString(fontRendererObj,spl[line],width/2,top+148+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2),-1);
+					drawCenteredString(fontRendererObj, spl[line], width/2, top+148+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2), -1);
 				}
 				
 				break;
 			}
 		}
 		
-		super.drawScreen(mouseX,mouseY,partialTickTime);
+		super.drawScreen(mouseX, mouseY, partialTickTime);
 	}
 	
 	private int getLeftColumnX(){
@@ -254,7 +254,7 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	private void drawButtonTitle(String title, GuiButton btn, int maxWidth){
-		int lines = fontRendererObj.listFormattedStringToWidth(title,maxWidth).size();
-		fontRendererObj.drawSplitString(title,btn.xPosition+76,btn.yPosition+7-5*(lines-1),maxWidth,-1);
+		int lines = fontRendererObj.listFormattedStringToWidth(title, maxWidth).size();
+		fontRendererObj.drawSplitString(title, btn.xPosition+76, btn.yPosition+7-5*(lines-1), maxWidth, -1);
 	}
 }

@@ -35,12 +35,12 @@ public class PacketPipeline{
 	
 	@SubscribeEvent
 	public void onClientPacket(ClientCustomPacketEvent e){
-		handler.onPacket(Side.CLIENT,e.getPacket().payload(),getClientPlayer());
+		handler.onPacket(Side.CLIENT, e.getPacket().payload(), getClientPlayer());
 	}
 	
 	@SubscribeEvent
 	public void onServerPacket(ServerCustomPacketEvent e){
-		handler.onPacket(Side.SERVER,e.getPacket().payload(),((NetHandlerPlayServer)e.getHandler()).playerEntity);
+		handler.onPacket(Side.SERVER, e.getPacket().payload(), ((NetHandlerPlayServer)e.getHandler()).playerEntity);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -53,15 +53,15 @@ public class PacketPipeline{
 	}
 	
 	public static void sendToAll(PacketBuffer buffer){
-		instance.channel.sendToAll(new FMLProxyPacket(buffer,channelName));
+		instance.channel.sendToAll(new FMLProxyPacket(buffer, channelName));
 	}
 	
 	public static void sendToPlayer(PacketBuffer buffer, EntityPlayer player){
-		instance.channel.sendTo(new FMLProxyPacket(buffer,channelName),(EntityPlayerMP)player);
+		instance.channel.sendTo(new FMLProxyPacket(buffer, channelName), (EntityPlayerMP)player);
 	}
 	
 	public static void sendToServer(PacketBuffer buffer){
-		instance.channel.sendToServer(new FMLProxyPacket(buffer,channelName));
+		instance.channel.sendToServer(new FMLProxyPacket(buffer, channelName));
 	}
 	
 	public static interface INetworkHandler{

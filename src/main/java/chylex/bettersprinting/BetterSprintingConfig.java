@@ -48,26 +48,26 @@ public class BetterSprintingConfig{
 	}
 	
 	public Property getBool(String name, boolean defValue){
-		return config.get(currentCategory,name,defValue,"");
+		return config.get(currentCategory, name, defValue, "");
 	}
 	
 	public Property getBool(String name, boolean defValue, String comment){
-		return config.get(currentCategory,name,defValue,comment);
+		return config.get(currentCategory, name, defValue, comment);
 	}
 	
 	public Property getInt(String name, int defValue){
-		return config.get(currentCategory,name,defValue,"");
+		return config.get(currentCategory, name, defValue, "");
 	}
 	
 	public Property getInt(String name, int defValue, String comment){
-		return config.get(currentCategory,name,defValue,comment);
+		return config.get(currentCategory, name, defValue, comment);
 	}
 	
 	public void setBool(String name, boolean value){
-		config.get(currentCategory,name,value).set(value);
+		config.get(currentCategory, name, value).set(value);
 	}
 	
 	public void setInt(String name, int value){
-		config.get(currentCategory,name,value).set(value);
+		config.get(currentCategory, name, value).set(value);
 	}
 }
