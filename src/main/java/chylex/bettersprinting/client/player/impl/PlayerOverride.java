@@ -29,7 +29,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		logic = new PlayerLogicHandler();
 		logic.setPlayer(this);
 		
-		entityUniqueID = mc.thePlayer.getUniqueID();
+		entityUniqueID = mc.player.getUniqueID();
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class PlayerOverride extends EntityPlayerSP{
 	private void onLivingUpdate$EntityPlayer(){
 		if (flyToggleTimer > 0)--flyToggleTimer;
 		
-		if (worldObj.getDifficulty() == EnumDifficulty.PEACEFUL && worldObj.getGameRules().getBoolean("naturalRegeneration")){
+		if (world.getDifficulty() == EnumDifficulty.PEACEFUL && world.getGameRules().getBoolean("naturalRegeneration")){
 			if (getHealth() < getMaxHealth() && ticksExisted%20 == 0){
 				heal(1F);
 			}
@@ -59,7 +59,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		
 		IAttributeInstance speedAttr = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		if (!worldObj.isRemote){
+		if (!world.isRemote){
 			speedAttr.setBaseValue(capabilities.getWalkSpeed());
 		}
 
@@ -70,7 +70,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		}
 
 		setAIMoveSpeed((float)speedAttr.getAttributeValue());
-		float moveDist = MathHelper.sqrt_double(motionX*motionX+motionZ*motionZ);
+		float moveDist = MathHelper.sqrt(motionX*motionX+motionZ*motionZ);
 		float motYFactor = (float)(Math.atan(-motionY*0.2D)*15D);
 
 		if (moveDist > 0.1F)moveDist = 0.1F;
@@ -91,7 +91,7 @@ public class PlayerOverride extends EntityPlayerSP{
 				aabb = getEntityBoundingBox().expand(1D, 0.5D, 1D);
 			}
 
-			for(Entity entity:worldObj.getEntitiesWithinAABBExcludingEntity(this, aabb)){
+			for(Entity entity:world.getEntitiesWithinAABBExcludingEntity(this, aabb)){
 				if (!entity.isDead)entity.onCollideWithPlayer(this); // uses collideWithPlayer but it's private
 			}
 		}
@@ -120,7 +120,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (Math.abs(motionY) < 0.003D)motionY = 0D;
 		if (Math.abs(motionZ) < 0.003D)motionZ = 0D;
 		
-		worldObj.theProfiler.startSection("ai");
+		world.theProfiler.startSection("ai");
 
 		if (isMovementBlocked()){
 			isJumping = false;
@@ -129,13 +129,13 @@ public class PlayerOverride extends EntityPlayerSP{
 			randomYawVelocity = 0F;
 		}
 		else if (isServerWorld()){ // isAIEnabled is false
-			worldObj.theProfiler.startSection("newAi");
+			world.theProfiler.startSection("newAi");
             updateEntityActionState();
-            worldObj.theProfiler.endSection();
+            world.theProfiler.endSection();
 		}
 
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("jump");
+		world.theProfiler.endSection();
+		world.theProfiler.startSection("jump");
 
 		if (isJumping){
 			if (isInWater()){
@@ -151,8 +151,8 @@ public class PlayerOverride extends EntityPlayerSP{
 		}
 		else jumpTicks = 0;
 
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("travel");
+		world.theProfiler.endSection();
+		world.theProfiler.startSection("travel");
 		
 		moveStrafing *= 0.98F;
 		moveForward *= 0.98F;
@@ -160,12 +160,12 @@ public class PlayerOverride extends EntityPlayerSP{
 		updateElytra$EntityLivingBase();
 		moveEntityWithHeading(moveStrafing, moveForward);
 		
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("push");
+		world.theProfiler.endSection();
+		world.theProfiler.startSection("push");
 		
 		collideWithNearbyEntities();
 		
-		worldObj.theProfiler.endSection();
+		world.theProfiler.endSection();
 	}
 	
 	private void updateElytra$EntityLivingBase(){
@@ -177,7 +177,7 @@ public class PlayerOverride extends EntityPlayerSP{
 			if (is != null && is.getItem() == Items.ELYTRA && ItemElytra.isBroken(is)){
 				flag = true;
 				
-				if (!worldObj.isRemote && (ticksElytraFlying+1)%20 == 0){
+				if (!world.isRemote && (ticksElytraFlying+1)%20 == 0){
 					is.damageItem(1, this);
 				}
 			}
@@ -185,7 +185,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		}
 		else flag = false;
 		
-		if (!worldObj.isRemote){
+		if (!world.isRemote){
 			setFlag(7, flag);
 		}
 	}

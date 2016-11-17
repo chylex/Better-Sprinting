@@ -76,7 +76,7 @@ public class GuiSprint extends GuiScreen{
 	    if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled = false;
 	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled = false;
-	    if (!(mc.thePlayer == null && mc.theWorld == null))btnDisableMod.enabled = false;
+	    if (!(mc.player == null && mc.world == null))btnDisableMod.enabled = false;
 	    
 	    buttonList.add(new GuiButton(idDone, width/2-100, top+168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done")));
 	    
@@ -92,7 +92,7 @@ public class GuiSprint extends GuiScreen{
 		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying(mc) ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "gui.unavailable");
 		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs(mc) ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
-		btnAutoJump.displayString = I18n.format(mc.gameSettings.field_189989_R ? "gui.yes" : "gui.no");
+		btnAutoJump.displayString = I18n.format(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
 	}
 	
 	@Override
@@ -107,7 +107,7 @@ public class GuiSprint extends GuiScreen{
 				break;
 				
 			case idAutoJump:
-				mc.gameSettings.field_189989_R = !mc.gameSettings.field_189989_R;
+				mc.gameSettings.autoJump = !mc.gameSettings.autoJump;
 				mc.gameSettings.saveOptions();
 				break;
 				

@@ -38,22 +38,22 @@ public final class LogicImplOverride{
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.playerController = new PlayerControllerMPOverride(mc, (NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
-			EntityPlayerSP prevPlayer = mc.thePlayer;
-			mc.theWorld.removeEntity(prevPlayer);
+			EntityPlayerSP prevPlayer = mc.player;
+			mc.world.removeEntity(prevPlayer);
 			
 			mc.setRenderViewEntity(null);
-			mc.thePlayer = mc.playerController.createClientPlayer(prevPlayer.worldObj, prevPlayer.getStatFileWriter());
-			mc.thePlayer.getDataManager().setEntryValues(prevPlayer.getDataManager().getAll());
-			mc.thePlayer.dimension = prevPlayer.dimension;
-			mc.setRenderViewEntity(mc.thePlayer);
-			mc.thePlayer.preparePlayerToSpawn();
-			mc.thePlayer.setServerBrand(prevPlayer.getServerBrand());
-			mc.theWorld.spawnEntityInWorld(mc.thePlayer);
-			mc.playerController.flipPlayer(mc.thePlayer);
-			mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
-			mc.thePlayer.setEntityId(prevPlayer.getEntityId());
-			mc.playerController.setPlayerCapabilities(mc.thePlayer);
-			mc.thePlayer.setReducedDebug(prevPlayer.hasReducedDebug());
+			mc.player = mc.playerController.createClientPlayer(prevPlayer.world, prevPlayer.getStatFileWriter());
+			mc.player.getDataManager().setEntryValues(prevPlayer.getDataManager().getAll());
+			mc.player.dimension = prevPlayer.dimension;
+			mc.setRenderViewEntity(mc.player);
+			mc.player.preparePlayerToSpawn();
+			mc.player.setServerBrand(prevPlayer.getServerBrand());
+			mc.world.spawnEntityInWorld(mc.player);
+			mc.playerController.flipPlayer(mc.player);
+			mc.player.movementInput = new MovementInputFromOptions(mc.gameSettings);
+			mc.player.setEntityId(prevPlayer.getEntityId());
+			mc.playerController.setPlayerCapabilities(mc.player);
+			mc.player.setReducedDebug(prevPlayer.hasReducedDebug());
 			
 			// Minecraft.setDimensionAndSpawnPlayer
 		}
@@ -61,14 +61,14 @@ public final class LogicImplOverride{
 
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent e){
-		if (e.phase == Phase.END || mc.thePlayer == null || mc.playerController == null)return;
+		if (e.phase == Phase.END || mc.player == null || mc.playerController == null)return;
 		
 		if (!stopChecking && --checkTimer < -125){
 			checkTimer = 120;
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
-				mc.thePlayer.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$", controllerClass.getName())));
+				mc.player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$", controllerClass.getName())));
 				stopChecking = true;
 			}
 		}
