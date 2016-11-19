@@ -23,7 +23,9 @@ public class BetterSprintingConfig{
 	
 	@SubscribeEvent
 	public void onConfigChanged(OnConfigChangedEvent e){
-		if (e.getModID().equals("BetterSprinting"))reload();
+		if (e.getModID().equals(BetterSprintingMod.modId)){
+			reload();
+		}
 	}
 	
 	private void reload(){

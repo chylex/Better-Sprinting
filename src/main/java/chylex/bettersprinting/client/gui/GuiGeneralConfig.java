@@ -8,6 +8,6 @@ import chylex.bettersprinting.BetterSprintingMod;
 @SideOnly(Side.CLIENT)
 public class GuiGeneralConfig extends GuiConfig{
 	public GuiGeneralConfig(GuiScreen parent){
-		super(parent, BetterSprintingMod.config.getClientGuiElements("client"), "BetterSprinting", false, false, GuiConfig.getAbridgedConfigPath(BetterSprintingMod.config.getFileName()));
+		super(parent, BetterSprintingMod.config.getClientGuiElements("client"), BetterSprintingMod.modId, false, false, GuiConfig.getAbridgedConfigPath(BetterSprintingMod.config.getFileName()));
 	}
 }

@@ -8,9 +8,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import chylex.bettersprinting.system.Log;
 
-@Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*", updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
+@Mod(modid = BetterSprintingMod.modId, name = "Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*", updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
 public class BetterSprintingMod{
-	@Instance("BetterSprinting")
+	@Instance(BetterSprintingMod.modId)
 	public static BetterSprintingMod instance;
 	
 	@SidedProxy(clientSide="chylex.bettersprinting.client.ClientProxy", serverSide="chylex.bettersprinting.server.ServerProxy")
@@ -18,6 +18,7 @@ public class BetterSprintingMod{
 	
 	public static BetterSprintingConfig config;
 	
+	public static final String modId = "bettersprinting";
 	public static final String buildId = "14-08-2016-0";
 	public static String modVersion;
 	
