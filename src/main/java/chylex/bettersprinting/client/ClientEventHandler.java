@@ -32,7 +32,7 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
-		if (stopChecking || e.getEntity() != mc.thePlayer)return;
+		if (stopChecking || e.getEntity() != mc.player)return;
 		
 		stopChecking = true;
 		
