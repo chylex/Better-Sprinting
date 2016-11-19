@@ -13,13 +13,13 @@ public class BetterSprintingMod{
 	@Instance(BetterSprintingMod.modId)
 	public static BetterSprintingMod instance;
 	
-	@SidedProxy(clientSide="chylex.bettersprinting.client.ClientProxy", serverSide="chylex.bettersprinting.server.ServerProxy")
+	@SidedProxy(clientSide = "chylex.bettersprinting.client.ClientProxy", serverSide = "chylex.bettersprinting.server.ServerProxy")
 	public static BetterSprintingProxy proxy;
 	
 	public static BetterSprintingConfig config;
 	
 	public static final String modId = "bettersprinting";
-	public static final String buildId = "14-08-2016-0";
+	public static final String buildId = "19-11-2016-0";
 	public static String modVersion;
 	
 	@EventHandler
