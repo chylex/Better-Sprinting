@@ -11,14 +11,15 @@ import net.minecraft.util.text.translation.I18n;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.system.PacketPipeline;
 
+@SuppressWarnings("deprecation")
 public class ServerCommandConfig extends CommandBase{
 	@Override
-	public String getCommandName(){
+	public String getName(){
 		return "bettersprinting";
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender){
+	public String getUsage(ICommandSender sender){
 		return "/bettersprinting [...]";
 	}
 	
@@ -70,15 +71,15 @@ public class ServerCommandConfig extends CommandBase{
 	}
 	
 	private void sendMessage(ICommandSender sender, String text){
-		sender.addChatMessage(new TextComponentString(text));
+		sender.sendMessage(new TextComponentString(text));
 	}
 	
 	private void sendMessageTranslated(ICommandSender sender, String translationName){
 		if (sender instanceof EntityPlayer && !ServerNetwork.hasBetterSprinting((EntityPlayer)sender)){
-			sender.addChatMessage(new TextComponentString(I18n.translateToLocal(translationName)));
+			sender.sendMessage(new TextComponentString(I18n.translateToLocal(translationName)));
 		}
 		else{
-			sender.addChatMessage(new TextComponentTranslation(translationName));
+			sender.sendMessage(new TextComponentTranslation(translationName));
 		}
 	}
 	

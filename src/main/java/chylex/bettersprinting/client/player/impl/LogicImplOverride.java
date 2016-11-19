@@ -48,7 +48,7 @@ public final class LogicImplOverride{
 			mc.setRenderViewEntity(mc.player);
 			mc.player.preparePlayerToSpawn();
 			mc.player.setServerBrand(prevPlayer.getServerBrand());
-			mc.world.spawnEntityInWorld(mc.player);
+			mc.world.spawnEntity(mc.player);
 			mc.playerController.flipPlayer(mc.player);
 			mc.player.movementInput = new MovementInputFromOptions(mc.gameSettings);
 			mc.player.setEntityId(prevPlayer.getEntityId());
@@ -68,7 +68,7 @@ public final class LogicImplOverride{
 			Class<?> controllerClass = mc.playerController.getClass();
 			
 			if (controllerClass != PlayerControllerMPOverride.class){
-				mc.player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$", controllerClass.getName())));
+				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity").replace("$", controllerClass.getName())));
 				stopChecking = true;
 			}
 		}

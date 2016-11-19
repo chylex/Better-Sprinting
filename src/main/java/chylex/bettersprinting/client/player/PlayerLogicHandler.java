@@ -116,9 +116,7 @@ public class PlayerLogicHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			if (ClientModManager.isModDisabledByServer())player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.disabled")));
-			else player.addChatMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.reenabled")));
-			
+			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
 			showDisableWarningWhenPossible = false;
 		}
 	}
