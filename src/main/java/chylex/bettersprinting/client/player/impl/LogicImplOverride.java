@@ -35,6 +35,7 @@ public final class LogicImplOverride{
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent e){
 		if (e.getGui() != null && e.getGui().getClass() == GuiDownloadTerrain.class && Minecraft.getMinecraft().playerController.getClass() != PlayerControllerMPOverride.class){
+			// UPDATE | Minecraft.setDimensionAndSpawnPlayer | 1.10.2
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.playerController = new PlayerControllerMPOverride(mc, (NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
@@ -54,8 +55,6 @@ public final class LogicImplOverride{
 			mc.player.setEntityId(prevPlayer.getEntityId());
 			mc.playerController.setPlayerCapabilities(mc.player);
 			mc.player.setReducedDebug(prevPlayer.hasReducedDebug());
-			
-			// Minecraft.setDimensionAndSpawnPlayer
 		}
 	}
 

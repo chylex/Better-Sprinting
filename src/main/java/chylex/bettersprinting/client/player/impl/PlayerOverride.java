@@ -39,6 +39,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		LivingUpdate.callPostSuper(this, mc, logic);
 	}
 	
+	// UPDATE | EntityPlayer.onLivingUpdate | 1.10.2
 	private void onLivingUpdate$EntityPlayer(){
 		if (flyToggleTimer > 0)--flyToggleTimer;
 		
@@ -97,6 +98,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		}
 	}
 	
+	// UPDATE | EntityLivingBase.onLivingUpdate | 1.10.2
 	private void onLivingUpdate$EntityLivingBase(){
 		if (jumpTicks > 0)--jumpTicks;
 
@@ -168,6 +170,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		world.theProfiler.endSection();
 	}
 	
+	// UPDATE | EntityLivingBase.updateElytra | 1.10.2
 	private void updateElytra$EntityLivingBase(){
 		boolean flag = getFlag(7);
 		

@@ -30,12 +30,14 @@ public class PlayerLogicHandler{
 		this.player = player;
 	}
 	
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.10.2
 	public void updateMovementInput(){
 		wasMovingForward = player.movementInput.moveForward >= 0.8F;
 		wasSneaking = player.movementInput.sneak;
 		customMovementInput.update(mc, (MovementInputFromOptions)player.movementInput);
 	}
 	
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.10.2
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		

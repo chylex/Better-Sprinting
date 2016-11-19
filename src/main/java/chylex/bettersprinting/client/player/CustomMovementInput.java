@@ -9,6 +9,7 @@ public class CustomMovementInput{
 	public int stoptime = 0;
 	public boolean sprint, sprintToggle, sneakToggle, hasToggledSprint, hasToggledSneak;
 	
+	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.10.2
 	public void update(Minecraft mc, MovementInputFromOptions options){
 		options.moveStrafe = 0F;
 		options.moveForward = 0F;
