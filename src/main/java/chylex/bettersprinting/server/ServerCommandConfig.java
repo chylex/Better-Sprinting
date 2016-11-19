@@ -9,7 +9,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import chylex.bettersprinting.BetterSprintingMod;
-import chylex.bettersprinting.system.PacketPipeline;
 
 @SuppressWarnings("deprecation")
 public class ServerCommandConfig extends CommandBase{
@@ -43,8 +42,9 @@ public class ServerCommandConfig extends CommandBase{
 			if (isValidBool(args, 1)){
 				ServerSettings.disableClientMod = getBool(args, 1);
 				ServerSettings.update(BetterSprintingMod.config);
+				
 				sendMessageTranslated(sender, ServerSettings.disableClientMod ? "bs.command.disableMod" : "bs.command.enableMod");
-				PacketPipeline.sendToAll(ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
+				ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
 			}
 			else sendMessageTranslated(sender, "bs.command.invalidSyntax");
 		}
@@ -56,14 +56,16 @@ public class ServerCommandConfig extends CommandBase{
 				if (args[1].equalsIgnoreCase("survivalFlyBoost")){
 					ServerSettings.enableSurvivalFlyBoost = getBool(args, 2);
 					ServerSettings.update(BetterSprintingMod.config);
+					
 					sendMessageTranslated(sender, ServerSettings.enableSurvivalFlyBoost ? "bs.command.enableFlyBoost" : "bs.command.disableFlyBoost");
-					PacketPipeline.sendToAll(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
+					ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
 				}
 				else if (args[1].equalsIgnoreCase("runInAllDirs")){
 					ServerSettings.enableAllDirs = getBool(args, 2);
 					ServerSettings.update(BetterSprintingMod.config);
+					
 					sendMessageTranslated(sender, ServerSettings.enableAllDirs ? "bs.command.enableAllDirs" : "bs.command.disableAllDirs");
-					PacketPipeline.sendToAll(ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
+					ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
 				}
 			}
 		}

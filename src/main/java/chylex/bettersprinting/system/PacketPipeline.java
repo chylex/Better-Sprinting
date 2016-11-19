@@ -52,10 +52,6 @@ public class PacketPipeline{
 		return new PacketBuffer(Unpooled.buffer());
 	}
 	
-	public static void sendToAll(PacketBuffer buffer){
-		instance.channel.sendToAll(new FMLProxyPacket(buffer, channelName));
-	}
-	
 	public static void sendToPlayer(PacketBuffer buffer, EntityPlayer player){
 		instance.channel.sendTo(new FMLProxyPacket(buffer, channelName), (EntityPlayerMP)player);
 	}

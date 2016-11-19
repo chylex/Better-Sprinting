@@ -1,6 +1,7 @@
 package chylex.bettersprinting.server;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,15 +70,34 @@ public class ServerNetwork implements INetworkHandler{
 		return buffer;
 	}
 	
+	public static void sendToPlayer(EntityPlayer player, PacketBuffer packet){
+		if (hasBetterSprinting(player)){
+			PacketPipeline.sendToPlayer(packet, player);
+		}
+	}
+	
+	public static void sendToAll(List<? extends EntityPlayer> players, PacketBuffer packet){
+		for(EntityPlayer player:players){
+			sendToPlayer(player, packet);
+		}
+	}
+	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
 		players.add(player.getUniqueID());
 		
+		if (ServerSettings.disableClientMod){
+			sendToPlayer(player, writeDisableMod(true));
+		}
+		
+		if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
+			sendToPlayer(player, writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
+		}
+		
 		/*byte type = data.readByte();
 		
 		if (type == 0){
-			// might be useful later; maybe keep a list of players with the mod installed
-			// setting packet is sent in the login event
+			// might be useful later
 		}*/
 	}
 }
