@@ -19,10 +19,13 @@ import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 final class LivingUpdate{
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.10.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11
 	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
 		++player.sprintingTicksLeft;
-		if (player.sprintToggleTimer > 0)--player.sprintToggleTimer;
+		
+		if (player.sprintToggleTimer > 0){
+			--player.sprintToggleTimer;
+		}
 		
 		player.prevTimeInPortal = player.timeInPortal;
 		
@@ -45,14 +48,19 @@ final class LivingUpdate{
 		}
 		else if (player.isPotionActive(MobEffects.NAUSEA) && player.getActivePotionEffect(MobEffects.NAUSEA).getDuration() > 60){
 			player.timeInPortal += 0.006666667F;
-			if (player.timeInPortal > 1F)player.timeInPortal = 1F;
+			
+			if (player.timeInPortal > 1F){
+				player.timeInPortal = 1F;
+			}
 		}
 		else{
 			if (player.timeInPortal > 0F)player.timeInPortal -= 0.05F;
 			if (player.timeInPortal < 0F)player.timeInPortal = 0F;
 		}
 		
-		if (player.timeUntilPortal > 0)--player.timeUntilPortal;
+		if (player.timeUntilPortal > 0){
+			--player.timeUntilPortal;
+		}
 		
 		boolean wasJumping = player.movementInput.jump;
 		logic.updateMovementInput();
@@ -101,7 +109,7 @@ final class LivingUpdate{
 		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
 			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (chestIS != null && chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
+			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
 				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_FALL_FLYING));
 			}
 		}
@@ -145,10 +153,12 @@ final class LivingUpdate{
 				}
 			}
 		}
-		else player.horseJumpPower = 0F;
+		else{
+			player.horseJumpPower = 0F;
+		}
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.10.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11
 	public static void callPostSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
 		if (player.onGround && player.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			player.capabilities.isFlying = false;
@@ -156,9 +166,11 @@ final class LivingUpdate{
 		}
 	}
 	
-	// UPDATE | EntityPlayerSP.pushOutOfBlocks | 1.10.2
+	// UPDATE | EntityPlayerSP.pushOutOfBlocks | 1.11
 	protected static boolean pushOutOfBlocks(EntityPlayerSP player, double x, double y, double z){
-		if (player.noClip)return false;
+		if (player.noClip){
+			return false;
+		}
 		
 		BlockPos pos = new BlockPos(x, y, z);
 		double xDiff = x-pos.getX();
@@ -190,24 +202,25 @@ final class LivingUpdate{
 				side = 5;
 			}
 
-			if (side == 0)player.motionX = -0.1F;
-			if (side == 1)player.motionX = 0.1F;
-			if (side == 4)player.motionZ = -0.1F;
-			if (side == 5)player.motionZ = 0.1F;
+			if (side == 0)player.motionX = -0.1D;
+			else if (side == 1)player.motionX = 0.1D;
+			else if (side == 4)player.motionZ = -0.1D;
+			else if (side == 5)player.motionZ = 0.1D;
+			// added 'else' to the statements
 		}
 
 		return false;
 	}
 	
-	// UPDATE | EntityPlayerSP.isOpenBlockSpace | 1.10.2
+	// UPDATE | EntityPlayerSP.isOpenBlockSpace | 1.11
 	private static boolean isOpenBlockSpace(EntityPlayerSP player, BlockPos pos){
 		return !player.world.getBlockState(pos).isNormalCube();
 	}
 	
-	// UPDATE | EntityPlayerSP.isHeadspaceFree | 1.10.2
+	// UPDATE | EntityPlayerSP.isHeadspaceFree | 1.11
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
-		for(int yOffset = 0; yOffset < height; yOffset++){
-			if (!isOpenBlockSpace(player, pos.add(0, yOffset, 0)))return false;
+		for(int y = 0; y < height; y++){
+			if (!isOpenBlockSpace(player, pos.add(0, y, 0)))return false;
 		}
 		
 		return true;

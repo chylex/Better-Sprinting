@@ -30,14 +30,14 @@ public class PlayerLogicHandler{
 		this.player = player;
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.10.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11
 	public void updateMovementInput(){
 		wasMovingForward = player.movementInput.moveForward >= 0.8F;
 		wasSneaking = player.movementInput.sneak;
 		customMovementInput.update(mc, (MovementInputFromOptions)player.movementInput);
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.10.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		
@@ -61,7 +61,9 @@ public class PlayerLogicHandler{
 			boolean sprint = customMovementInput.sprint;
 			boolean dblTap = ClientSettings.enableDoubleTap;
 
-			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak)sprint = false;
+			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak){
+				sprint = false;
+			}
 			
 			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
 				player.setSprinting(sprint);
@@ -80,7 +82,9 @@ public class PlayerLogicHandler{
 			}
 			
 			if (dblTap){
-				if (prevHeld && !customMovementInput.held)customMovementInput.stoptime = 1;
+				if (prevHeld && !customMovementInput.held){
+					customMovementInput.stoptime = 1;
+				}
 				
 				if (customMovementInput.stoptime > 0){
 					customMovementInput.stoptime--;
@@ -105,7 +109,9 @@ public class PlayerLogicHandler{
 			else if (player.capabilities.getFlySpeed() > 0.05F)player.capabilities.setFlySpeed(0.05F);
 		}
 
-		if (ClientModManager.keyBindOptionsMenu.isKeyDown())mc.displayGuiScreen(new GuiSprint(null));
+		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
+			mc.displayGuiScreen(new GuiSprint(null));
+		}
 		
 		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying){
 			player.setSprinting(false);

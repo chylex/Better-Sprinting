@@ -22,6 +22,7 @@ import chylex.bettersprinting.client.player.PlayerLogicHandler;
 public class PlayerOverride extends EntityPlayerSP{
 	private final PlayerLogicHandler logic;
 	
+	// UPDATE | EntityLivingBase.jumpTicks | Check if still only used in onLivingUpdate | 1.11
 	private int jumpTicks;
 	
 	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatisticsManager statFile){
@@ -39,9 +40,11 @@ public class PlayerOverride extends EntityPlayerSP{
 		LivingUpdate.callPostSuper(this, mc, logic);
 	}
 	
-	// UPDATE | EntityPlayer.onLivingUpdate | 1.10.2
+	// UPDATE | EntityPlayer.onLivingUpdate | 1.11
 	private void onLivingUpdate$EntityPlayer(){
-		if (flyToggleTimer > 0)--flyToggleTimer;
+		if (flyToggleTimer > 0){
+			--flyToggleTimer;
+		}
 		
 		if (world.getDifficulty() == EnumDifficulty.PEACEFUL && world.getGameRules().getBoolean("naturalRegeneration")){
 			if (getHealth() < getMaxHealth() && ticksExisted%20 == 0){
@@ -74,7 +77,9 @@ public class PlayerOverride extends EntityPlayerSP{
 		float moveDist = MathHelper.sqrt(motionX*motionX+motionZ*motionZ);
 		float motYFactor = (float)(Math.atan(-motionY*0.2D)*15D);
 
-		if (moveDist > 0.1F)moveDist = 0.1F;
+		if (moveDist > 0.1F){
+			moveDist = 0.1F;
+		}
 
 		if (!onGround || getHealth() <= 0F)moveDist = 0F;
 		if (onGround || getHealth() <= 0F)motYFactor = 0F;
@@ -93,14 +98,18 @@ public class PlayerOverride extends EntityPlayerSP{
 			}
 
 			for(Entity entity:world.getEntitiesWithinAABBExcludingEntity(this, aabb)){
-				if (!entity.isDead)entity.onCollideWithPlayer(this); // uses collideWithPlayer but it's private
+				if (!entity.isDead){
+					entity.onCollideWithPlayer(this); // uses collideWithPlayer but it's private
+				}
 			}
 		}
 	}
 	
-	// UPDATE | EntityLivingBase.onLivingUpdate | 1.10.2
+	// UPDATE | EntityLivingBase.onLivingUpdate | 1.11
 	private void onLivingUpdate$EntityLivingBase(){
-		if (jumpTicks > 0)--jumpTicks;
+		if (jumpTicks > 0){
+			--jumpTicks;
+		}
 
 		if (newPosRotationIncrements > 0 && !canPassengerSteer()){
 			double setPosX = posX+(interpTargetX-posX)/newPosRotationIncrements;
@@ -151,7 +160,9 @@ public class PlayerOverride extends EntityPlayerSP{
 				jumpTicks = 10;
 			}
 		}
-		else jumpTicks = 0;
+		else{
+			jumpTicks = 0;
+		}
 
 		world.theProfiler.endSection();
 		world.theProfiler.startSection("travel");
@@ -170,23 +181,27 @@ public class PlayerOverride extends EntityPlayerSP{
 		world.theProfiler.endSection();
 	}
 	
-	// UPDATE | EntityLivingBase.updateElytra | 1.10.2
+	// UPDATE | EntityLivingBase.updateElytra | 1.11
 	private void updateElytra$EntityLivingBase(){
 		boolean flag = getFlag(7);
 		
 		if (flag && !onGround && !isRiding()){
 			ItemStack is = getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (is != null && is.getItem() == Items.ELYTRA && ItemElytra.isBroken(is)){
+			if (is.getItem() == Items.ELYTRA && ItemElytra.isBroken(is)){
 				flag = true;
 				
 				if (!world.isRemote && (ticksElytraFlying+1)%20 == 0){
 					is.damageItem(1, this);
 				}
 			}
-			else flag = false;
+			else{
+				flag = false;
+			}
 		}
-		else flag = false;
+		else{
+			flag = false;
+		}
 		
 		if (!world.isRemote){
 			setFlag(7, flag);

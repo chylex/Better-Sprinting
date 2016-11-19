@@ -9,36 +9,44 @@ public class CustomMovementInput{
 	public int stoptime = 0;
 	public boolean sprint, sprintToggle, sneakToggle, hasToggledSprint, hasToggledSneak;
 	
-	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.10.2
-	public void update(Minecraft mc, MovementInputFromOptions options){
-		options.moveStrafe = 0F;
-		options.moveForward = 0F;
-		
+	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.11
+	public void update(Minecraft mc, MovementInputFromOptions $this){
 		GameSettings settings = mc.gameSettings;
+		
+		$this.moveStrafe = 0F;
+		$this.moveForward = 0F;
 
 		if (settings.keyBindForward.isKeyDown()){
-			++options.moveForward;
-			options.forwardKeyDown = true;
+			++$this.moveForward;
+			$this.forwardKeyDown = true;
 		}
-		else options.forwardKeyDown = false;
+		else{
+			$this.forwardKeyDown = false;
+		}
 		
 		if (settings.keyBindBack.isKeyDown()){
-			--options.moveForward;
-			options.backKeyDown = true;
+			--$this.moveForward;
+			$this.backKeyDown = true;
 		}
-		else options.backKeyDown = false;
+		else{
+			$this.backKeyDown = false;
+		}
 		
 		if (settings.keyBindLeft.isKeyDown()){
-			++options.moveStrafe;
-			options.leftKeyDown = true;
+			++$this.moveStrafe;
+			$this.leftKeyDown = true;
 		}
-		else options.leftKeyDown = false;
+		else{
+			$this.leftKeyDown = false;
+		}
 		
 		if (settings.keyBindRight.isKeyDown()){
-			--options.moveStrafe;
-			options.rightKeyDown = true;
+			--$this.moveStrafe;
+			$this.rightKeyDown = true;
 		}
-		else options.rightKeyDown = false;
+		else{
+			$this.rightKeyDown = false;
+		}
 		
 		// custom handling
 		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
@@ -56,10 +64,10 @@ public class CustomMovementInput{
 		}
 		else sprintToggle = false;
 		
-		options.jump = settings.keyBindJump.isKeyDown();
-		options.sneak = settings.keyBindSneak.isKeyDown();
+		$this.jump = settings.keyBindJump.isKeyDown();
+		$this.sneak = settings.keyBindSneak.isKeyDown();
 		
-		if (!options.sneak){
+		if (!$this.sneak){
 			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSneakToggle.isKeyDown()){
 				if (!hasToggledSneak){
 					sneakToggle = !sneakToggle;
@@ -68,12 +76,12 @@ public class CustomMovementInput{
 			}
 			else hasToggledSneak = false;
 			
-			options.sneak = sneakToggle;
+			$this.sneak = sneakToggle;
 		}
 		
-		if (options.sneak){
-			options.moveStrafe = options.moveStrafe*0.3F;
-			options.moveForward = options.moveForward*0.3F;
+		if ($this.sneak){
+			$this.moveStrafe = $this.moveStrafe*0.3F;
+			$this.moveForward = $this.moveForward*0.3F;
 		}
 		
 		if (ClientModManager.isModDisabled()){
