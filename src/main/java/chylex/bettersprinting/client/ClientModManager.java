@@ -17,7 +17,7 @@ public final class ClientModManager{
 	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
     
     public static boolean inMenu(Minecraft mc){
-    	return mc.thePlayer == null || mc.theWorld == null;
+    	return mc.player == null || mc.world == null;
     }
     
     public static boolean canRunInAllDirs(Minecraft mc){
@@ -25,7 +25,7 @@ public final class ClientModManager{
     }
     
     public static boolean canBoostFlying(Minecraft mc){
-    	return !isModDisabled() && (inMenu(mc) || mc.isSingleplayer() || mc.thePlayer.capabilities.isCreativeMode || svSurvivalFlyingBoost);
+    	return !isModDisabled() && (inMenu(mc) || mc.isSingleplayer() || mc.player.capabilities.isCreativeMode || svSurvivalFlyingBoost);
     }
     
     public static boolean isModDisabled(){

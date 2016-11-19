@@ -64,8 +64,8 @@ final class LivingUpdate{
 		
 		boolean hasAutoJumped = false;
 		
-		if (player.field_189812_cs > 0){
-			--player.field_189812_cs;
+		if (player.autoJumpTime > 0){
+			--player.autoJumpTime;
 			hasAutoJumped = true;
 			player.movementInput.jump = true;
 		}
@@ -105,7 +105,7 @@ final class LivingUpdate{
 			}
 		}
 		
-		player.field_189813_ct = player.isElytraFlying();
+		player.wasFallFlying = player.isElytraFlying();
 
 		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){ // uses isCurrentViewEntity but it is protected
 			if (player.movementInput.sneak){
@@ -128,7 +128,7 @@ final class LivingUpdate{
 
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
-				mount.setJumpPower(MathHelper.floor_float(player.getHorseJumpPower()*100F));
+				mount.setJumpPower(MathHelper.floor(player.getHorseJumpPower()*100F));
 				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_RIDING_JUMP, (int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
 			}
 			else if (!wasJumping && player.movementInput.jump){
@@ -199,7 +199,7 @@ final class LivingUpdate{
 	}
 	
 	private static boolean isOpenBlockSpace(EntityPlayerSP player, BlockPos pos){
-		return !player.worldObj.getBlockState(pos).isNormalCube();
+		return !player.world.getBlockState(pos).isNormalCube();
 	}
 
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
