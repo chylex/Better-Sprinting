@@ -2,7 +2,7 @@
 {
   "modid": "bettersprinting",
   "name": "Better Sprinting",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "mcversion": "",
   "description": "New sprinting and sneaking functionality. Mod settings are configurable in Controls and in-game menu (default: 'O'), for internal settings (notifications) click Config button below.\n\nFind me on Twitter: https://twitter.com/chylexmc",
   "url": "https://bsprint.chylex.com",
