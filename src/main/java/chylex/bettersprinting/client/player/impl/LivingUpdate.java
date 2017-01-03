@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client.player.impl;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -19,7 +20,7 @@ import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 final class LivingUpdate{
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
 	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
 		++player.sprintingTicksLeft;
 		
@@ -158,7 +159,7 @@ final class LivingUpdate{
 		}
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
 	public static void callPostSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
 		if (player.onGround && player.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			player.capabilities.isFlying = false;
@@ -166,7 +167,7 @@ final class LivingUpdate{
 		}
 	}
 	
-	// UPDATE | EntityPlayerSP.pushOutOfBlocks | 1.11
+	// UPDATE | EntityPlayerSP.pushOutOfBlocks | 1.11.2
 	protected static boolean pushOutOfBlocks(EntityPlayerSP player, double x, double y, double z){
 		if (player.noClip){
 			return false;
@@ -212,12 +213,13 @@ final class LivingUpdate{
 		return false;
 	}
 	
-	// UPDATE | EntityPlayerSP.isOpenBlockSpace | 1.11
+	// UPDATE | EntityPlayerSP.isOpenBlockSpace | 1.11.2
 	private static boolean isOpenBlockSpace(EntityPlayerSP player, BlockPos pos){
-		return !player.world.getBlockState(pos).isNormalCube();
+		IBlockState state = player.world.getBlockState(pos);
+		return !state.getBlock().isNormalCube(state, player.world, pos);
 	}
 	
-	// UPDATE | EntityPlayerSP.isHeadspaceFree | 1.11
+	// UPDATE | EntityPlayerSP.isHeadspaceFree | 1.11.2
 	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
 		for(int y = 0; y < height; y++){
 			if (!isOpenBlockSpace(player, pos.add(0, y, 0)))return false;

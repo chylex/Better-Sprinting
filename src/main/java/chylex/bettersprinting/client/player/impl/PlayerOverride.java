@@ -40,7 +40,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		LivingUpdate.callPostSuper(this, mc, logic);
 	}
 	
-	// UPDATE | EntityPlayer.onLivingUpdate | 1.11
+	// UPDATE | EntityPlayer.onLivingUpdate | 1.11.2
 	private void onLivingUpdate$EntityPlayer(){
 		if (flyToggleTimer > 0){
 			--flyToggleTimer;

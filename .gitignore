@@ -4,6 +4,7 @@ eclipse/
 run/
 .gradle/
 .settings/
+.updateclasses/
 .classpath
 .project
 .DS_Store

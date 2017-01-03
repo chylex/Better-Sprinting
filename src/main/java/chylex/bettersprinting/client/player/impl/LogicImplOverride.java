@@ -37,7 +37,7 @@ public final class LogicImplOverride{
 		if (e.getGui() != null && e.getGui().getClass() == GuiDownloadTerrain.class && Minecraft.getMinecraft().playerController.getClass() != PlayerControllerMPOverride.class){
 			mc.playerController = new PlayerControllerMPOverride(mc, (NetHandlerPlayClient)FMLClientHandler.instance().getClientPlayHandler());
 			
-			// UPDATE | Minecraft.setDimensionAndSpawnPlayer | 1.11
+			// UPDATE | Minecraft.setDimensionAndSpawnPlayer | 1.11.2
 			EntityPlayerSP prevPlayer = mc.player;
 			mc.world.removeEntity(prevPlayer);
 			
