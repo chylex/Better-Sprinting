@@ -13,7 +13,7 @@ buildscript{
     }
     
     dependencies{
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
@@ -30,9 +30,9 @@ compileJava{
 }
 
 minecraft{
-    version = "1.11.2-13.20.0.2201"
+    version = "1.12-14.21.0.2322"
     runDir = "run"
-    mappings = "snapshot_20170103"
+    mappings = "snapshot_20170612"
     makeObfSourceJar = false
 }
 
