@@ -51,13 +51,13 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		InsnList instructions = new InsnList();
 		
 		instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/impl/LivingUpdate", "callPreSuper", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
+		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "callPreSuper", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
 
 		instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		instructions.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "net/minecraft/client/entity/AbstractClientPlayer", NAME_ONLIVINGUPDATE, DESC_ONLIVINGUPDATE, false));
 
 		instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/impl/LivingUpdate", "callPostSuper", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
+		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "callPostSuper", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
 		
 		instructions.add(new InsnNode(Opcodes.RETURN));
 		
