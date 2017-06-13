@@ -1,8 +1,11 @@
 package chylex.bettersprinting.client;
+import java.util.stream.IntStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
+import net.minecraft.client.gui.GuiKeyBindingList;
+import net.minecraft.client.gui.GuiKeyBindingList.KeyEntry;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.GameSettings.Options;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -11,6 +14,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
 import chylex.bettersprinting.client.gui.GuiButtonSprint;
 import chylex.bettersprinting.client.gui.GuiSprint;
 import chylex.bettersprinting.client.update.UpdateNotificationManager;
@@ -52,10 +56,21 @@ public final class ClientEventHandler{
 		GuiScreen gui = e.getGui();
 		
 		if (gui instanceof GuiControls){
-			gui.buttonList.stream().filter(btn -> btn.id == GameSettings.Options.AUTO_JUMP.returnEnumOrdinal()).findFirst().ifPresent(gui.buttonList::remove);
+			GuiControls controls = (GuiControls)gui;
+			GuiKeyBindingList keyList = controls.keyBindingList;
 			
-			if (!(((GuiControls)gui).parentScreen instanceof GuiSprint)){
-				gui.buttonList.add(0, new GuiButtonSprint(205, gui.width/2+5, 18+24, 150, 20, "Better Sprinting"));
+			controls.buttonList.removeIf(btn -> btn.id == Options.AUTO_JUMP.returnEnumOrdinal());
+			
+			int[] keyIndices = IntStream
+				.range(0, keyList.listEntries.length)
+				.filter(index -> keyList.listEntries[index] instanceof KeyEntry)
+				.filter(index -> ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)keyList.listEntries[index]).keybinding))
+				.toArray();
+			
+			keyList.listEntries = ArrayUtils.removeAll(keyList.listEntries, keyIndices);
+			
+			if (!(controls.parentScreen instanceof GuiSprint)){
+				controls.buttonList.add(0, new GuiButtonSprint(205, controls.width/2+5, 18+24, 150, 20, "Better Sprinting"));
 			}
 		}
 	}

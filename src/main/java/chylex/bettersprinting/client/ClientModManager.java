@@ -9,10 +9,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class ClientModManager{
 	public static final String chatPrefix = TextFormatting.GREEN+"[Better Sprinting]"+TextFormatting.RESET+" ";
 	
-	public static final KeyBinding keyBindSprintHold = new KeyBinding("bs.sprint.hold", 29, "key.categories.movement");
+	public static final KeyBinding keyBindSprintHold = Minecraft.getMinecraft().gameSettings.keyBindSprint;
     public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", 34, "key.categories.movement");
     public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", 21, "key.categories.movement");
     public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", 24, "key.categories.movement");
+    
+	public static final KeyBinding[] keyBindings = new KeyBinding[]{
+		keyBindSprintHold, keyBindSprintToggle, keyBindSneakToggle, keyBindOptionsMenu
+	};
     
 	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
     

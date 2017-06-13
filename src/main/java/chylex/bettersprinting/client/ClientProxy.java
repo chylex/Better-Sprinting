@@ -30,11 +30,20 @@ public class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void onInit(FMLInitializationEvent e){
 		GameSettings settings = Minecraft.getMinecraft().gameSettings;
-		settings.keyBindings = ArrayUtils.removeElement(settings.keyBindings, settings.keyBindSprint);
+		settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
+			ClientModManager.keyBindSprintToggle,
+			ClientModManager.keyBindSneakToggle,
+			ClientModManager.keyBindOptionsMenu,
+		});
+		
 		KeyBinding.resetKeyBindingArrayAndHash();
 		
-		if (Loader.isModLoaded("PlayerAPI"))LogicImplPlayerAPI.register();
-		else LogicImplOverride.register();
+		if (Loader.isModLoaded("PlayerAPI")){
+			LogicImplPlayerAPI.register();
+		}
+		else{
+			LogicImplOverride.register();
+		}
 	}
 	
 	@Override

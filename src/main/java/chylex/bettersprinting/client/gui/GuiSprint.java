@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -35,13 +36,6 @@ public class GuiSprint extends GuiScreen{
 		"bs.autoJump.info"
 	};
 	
-	private final KeyBinding[] sprintBindings = new KeyBinding[]{
-		ClientModManager.keyBindSprintHold,
-		ClientModManager.keyBindSprintToggle,
-		ClientModManager.keyBindSneakToggle,
-		ClientModManager.keyBindOptionsMenu
-	};
-	
 	private final GuiScreen parentScreen;
 	
 	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnAllDirs, btnDisableMod;
@@ -57,7 +51,7 @@ public class GuiSprint extends GuiScreen{
 		
 	    int left = getLeftColumnX(), top = height/6;
 	
-	    for(int a = 0; a < sprintBindings.length; a++){
+	    for(int a = 0; a < ClientModManager.keyBindings.length; a++){
 			GuiButton btn = new GuiButton(a, left+160*(a%2), top+24*(a/2), 70, 20, getKeyCodeString(a));
 			buttonList.add(btn);
 			
@@ -96,7 +90,7 @@ public class GuiSprint extends GuiScreen{
 	
 	@Override
 	protected void actionPerformed(GuiButton btn){
-		for(int a = 0; a < sprintBindings.length; a++){
+		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
 			buttonList.get(a).displayString = getKeyCodeString(a);
 		}
 	
@@ -166,7 +160,7 @@ public class GuiSprint extends GuiScreen{
 	
 	private boolean handleInput(int keyId){
 		if (buttonId >= 0 && buttonId < 180){
-			sprintBindings[buttonId].setKeyCode(keyId == Keyboard.KEY_ESCAPE ? 0 : keyId);
+			ClientModManager.keyBindings[buttonId].setKeyCode(keyId == Keyboard.KEY_ESCAPE ? 0 : keyId);
 			buttonList.get(buttonId).displayString = getKeyCodeString(buttonId);
 			buttonId = -1;
 			KeyBinding.resetKeyBindingArrayAndHash();
@@ -189,35 +183,33 @@ public class GuiSprint extends GuiScreen{
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
 		
-		for(int a = 0; a < sprintBindings.length;){
-			boolean alreadyUsed = false;
-			int b = 0;
-	
-			while(true){
-				if (b < sprintBindings.length){
-					if (b == a || sprintBindings[a].getKeyCode() != sprintBindings[b].getKeyCode() || sprintBindings[a].getKeyCode() == 0){
-						++b;
-						continue;
-					}
-					
-					alreadyUsed = true;
-				}
-				
-				for(KeyBinding binding:mc.gameSettings.keyBindings){
-					if (sprintBindings[a].getKeyCode() == binding.getKeyCode() && sprintBindings[a].getKeyCode() != 0){
-						alreadyUsed = true;
-						break;
+		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
+			KeyBinding binding = ClientModManager.keyBindings[a];
+			
+			boolean hasConflict = false;
+			boolean hasOnlyModifierConflict = true;
+			
+			if (binding.getKeyCode() != 0){
+				for(KeyBinding other:mc.gameSettings.keyBindings){
+					if (binding != other && binding.conflicts(other)){
+						hasConflict = true;
+						hasOnlyModifierConflict &= binding.hasKeyCodeModifierConflict(other);
 					}
 				}
-	
-				if (buttonId == a)buttonList.get(a).displayString = "\u00a7f> \u00a7e??? \u00a7f<";
-				else if (alreadyUsed)buttonList.get(a).displayString = "\u00a7c"+getKeyCodeString(a);
-				else buttonList.get(a).displayString = getKeyCodeString(a);
-				
-				drawButtonTitle(I18n.format(sprintBindings[a].getKeyDescription()), buttonList.get(a), a%2 == 0 ? maxWidthLeft : maxWidthRight);
-				a++;
-				break;
 			}
+			
+			if (buttonId == a){
+				buttonList.get(a).displayString = TextFormatting.WHITE+"> "+TextFormatting.YELLOW+"??? "+TextFormatting.WHITE+"<";
+			}
+			else if (hasConflict){
+				buttonList.get(a).displayString = (hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED)+getKeyCodeString(a);
+			}
+			else{
+				buttonList.get(a).displayString = getKeyCodeString(a);
+			}
+			
+			String desc = (binding == mc.gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
+			drawButtonTitle(I18n.format(desc), buttonList.get(a), a%2 == 0 ? maxWidthLeft : maxWidthRight);
 		}
 	
 		drawButtonTitle(I18n.format("bs.doubleTapping"), btnDoubleTap, maxWidthLeft);
@@ -249,7 +241,7 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	private String getKeyCodeString(int i){
-		return GameSettings.getKeyDisplayString(sprintBindings[i].getKeyCode());
+		return GameSettings.getKeyDisplayString(ClientModManager.keyBindings[i].getKeyCode());
 	}
 	
 	private void drawButtonTitle(String title, GuiButton btn, int maxWidth){

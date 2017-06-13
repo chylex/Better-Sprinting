@@ -1,5 +1,4 @@
 package chylex.bettersprinting.client;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,8 +41,6 @@ public class ClientSettings{
 		ClientModManager.keyBindOptionsMenu.setKeyCode(keyCodeOptionsMenu);
 		
 		config.update();
-		
-		Minecraft.getMinecraft().gameSettings.keyBindSprint.setKeyCode(ClientSettings.keyCodeSprintHold);
 	}
 	
 	public static void update(BetterSprintingConfig config){
@@ -63,7 +60,5 @@ public class ClientSettings{
 		config.setBool("enableBuildCheck", enableBuildCheck);
 		
 		config.update();
-		
-		Minecraft.getMinecraft().gameSettings.keyBindSprint.setKeyCode(ClientSettings.keyCodeSprintHold);
 	}
 }
