@@ -17,24 +17,37 @@ The project is under the All Rights Reserved license, which means that redistrib
 2. You are allowed to study the source code and learn from it, but don't just copy large portions of it into your project.
 3. Official terms of use apply, thus you cannot redistribute any part of the mod or claim it as your own. Forking is the only exception to the redistribution rule.
 
-### I want to use part of the mod in my own project
+### I want to use a piece of code in my own project
 
-If you find something handy in the source code, I don't mind if you use it in your project (don't copy everything you see though, that's not how you learn to mod). Giving credit is only required if your project has publicly visible source, in that case use javadoc and link back to the original source.
+If you find some useful code in this repository, I don't mind if you use it in your own project, as long as you don't just copy entire files or don't take the time to learn how the code you want to use works. Crediting the original source is appreciated.
 
-### I want to modify something in Better Sprinting
+### I want to contribute to the code or assets
 
-It would be best to contact me first, because not everything can be added into the mod and I wouldn't want you to waste your time with a PR that will not get accepted.
+If you want to do any large changes, please contact me first (open an [Issue](https://github.com/chylex/Better-Sprinting/issues)) with detail about what you want to do. I wouldn't want you to waste your time with a large Pull Request that will not get accepted.
 
-When modifying the files, please try to follow my code formatting style. I don't autoformat because Eclipse doesn't let me customize the style exactly the way I want it, and for that reason I also cannot give you any preference file you could import.
+When creating a Pull Request, please follow these guidelines:
 
-I'm also a huge derp and don't really get how most of this Git thing works. Don't do anything big because if there's any problem accepting a PR, it will most likely not be accepted.
+- Always target the `master` branch which contains the most recent code
+- Follow my code formatting style; most of it should be easy to pick up, here are a couple details:
+  - Use tabs for indentation
+  - Import order is `io, java, net, org, api, chylex, com` for some reason
+  - No space between right parenthesis and left bracket: `void method(){`
+- When updating the mod to a new Minecraft version, all vanilla code in methods marked with `// UPDATE` must be rewritten to keep feature consistency with vanilla code
 
 ### I want to create an addon
 
-Keep in mind that addons depend on the parent mod, but don't contain any part of it - otherwise it's a modification!
-
-You are welcome to create and distribute any addon. If you let me know about it, I might add it to a list of supported addons too. :)
+You are welcome to create and distribute an addon that depends on Better Sprinting, as long as it does not contain any of the original Better Sprinting code or assets.
 
 ### I want to create a modification
 
-The terms say that you cannot redistribute the mod or modifications of the mod. You can play around with the code if you fork the project, but if you want to distribute it, you need my explicit permission. I haven't been in this situation yet, so if you create a modification, let me know and we'll figure something out.
+If you create your own version of Better Sprinting, you have to ask for my explicit permission to distribute it. (Better Sprinting is not open source!)
+
+## Project setup guide
+
+In order to setup your own workspace to play around with the source code, first clone this repository using your Git client (make sure to select the correct branch, they are named by Minecraft versions; master is always the latest work in progress version).
+
+Once you cloned the repository, follow the [Getting Started with Forge](https://mcforge.readthedocs.io/en/latest/gettingstarted) tutorial. You can skip the first 3 steps, the repository already comes with the Gradle build system.
+
+To run Better Sprinting, make sure you add `-Dfml.coreMods.load=chylex.bettersprinting.system.core.BetterSprintingCore` to your startup VM arguments.
+
+
