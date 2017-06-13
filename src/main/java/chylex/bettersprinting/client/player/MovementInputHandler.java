@@ -4,7 +4,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInput;
 import chylex.bettersprinting.client.ClientModManager;
 
-public class CustomMovementInput{
+final class MovementInputHandler{
 	public boolean held = false;
 	public int stoptime = 0;
 	public boolean sprint, sprintToggle, sneakToggle, hasToggledSprint, hasToggledSneak;

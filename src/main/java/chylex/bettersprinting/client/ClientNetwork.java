@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.client.player.PlayerLogicHandler;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
@@ -26,11 +25,11 @@ public class ClientNetwork implements INetworkHandler{
 		}
 		else if (type == 1 && !ClientSettings.disableMod){
 			ClientModManager.svDisableMod = true;
-			PlayerLogicHandler.showDisableWarningWhenPossible = true;
+			ClientModManager.showDisableWarningWhenPossible = true;
 		}
 		else if (type == 2 && !ClientSettings.disableMod){
 			ClientModManager.svDisableMod = false;
-			PlayerLogicHandler.showDisableWarningWhenPossible = true;
+			ClientModManager.showDisableWarningWhenPossible = true;
 		}
 	}
 }

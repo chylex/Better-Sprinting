@@ -1,4 +1,4 @@
-package chylex.bettersprinting.client.player.impl;
+package chylex.bettersprinting.client.player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
@@ -16,16 +16,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 public final class LivingUpdate{
-	private static final Minecraft mc = Minecraft.getMinecraft();
-	private static PlayerLogicHandler currentHandler; // TODO rewrite
-	
+	private static final Minecraft mc;
 	private static final MethodHandle mPushOutOfBlocks;
+	private static PlayerLogicHandler currentHandler;
 	
 	static{
+		mc = Minecraft.getMinecraft();
+		
 		try{
 			mPushOutOfBlocks = MethodHandles.lookup().unreflect(EntityPlayerSP.class.getMethod("_bsm_pushOutOfBlocks", double.class, double.class, double.class));
 		}catch(Exception e){
@@ -33,21 +33,12 @@ public final class LivingUpdate{
 		}
 	}
 	
-	public static void callPreSuper(EntityPlayerSP player){
-		if (currentHandler == null || currentHandler.getPlayer() != player){
-			currentHandler = new PlayerLogicHandler();
-			currentHandler.setPlayer(player);
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
+	public static void callPreSuper(EntityPlayerSP $this){
+		if (currentHandler == null || currentHandler.getPlayer() != $this){
+			currentHandler = new PlayerLogicHandler($this);
 		}
 		
-		callPreSuper(player, currentHandler);
-	}
-	
-	public static void callPostSuper(EntityPlayerSP player){
-		callPostSuper(player, currentHandler);
-	}
-	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
-	public static void callPreSuper(EntityPlayerSP $this, PlayerLogicHandler logic){
 		// VANILLA
 		++$this.sprintingTicksLeft;
 		
@@ -96,7 +87,7 @@ public final class LivingUpdate{
 		}
 		
 		boolean wasJumping = $this.movementInput.jump;
-		logic.updateMovementInput();
+		currentHandler.updateMovementInput();
 		
 		if ($this.isHandActive() && !$this.isRiding()){
 			$this.movementInput.moveStrafe *= 0.2F;
@@ -124,7 +115,7 @@ public final class LivingUpdate{
 		}
 		
 		// CUSTOM
-		logic.updateLiving();
+		currentHandler.updateLiving();
 		
 		// VANILLA
 		if ($this.capabilities.allowFlying){
@@ -199,7 +190,7 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
-	public static void callPostSuper(EntityPlayerSP $this, PlayerLogicHandler logic){
+	public static void callPostSuper(EntityPlayerSP $this){
 		if ($this.onGround && $this.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			$this.capabilities.isFlying = false;
 			$this.sendPlayerAbilities();

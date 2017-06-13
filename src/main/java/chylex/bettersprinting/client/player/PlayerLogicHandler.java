@@ -10,24 +10,19 @@ import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
 
-public class PlayerLogicHandler{
-	public static boolean showDisableWarningWhenPossible;
-	
-	private final Minecraft mc;
-	private final CustomMovementInput customMovementInput;
-	private EntityPlayerSP player;
+final class PlayerLogicHandler{
+	private static final Minecraft mc = Minecraft.getMinecraft();
+
+	private final EntityPlayerSP player;
+	private final MovementInputHandler customMovementInput;
 	
 	private boolean wasMovingForward;
 	private boolean wasSneaking;
 	private boolean shouldRestoreSneakToggle;
 	
-	public PlayerLogicHandler(){
-		mc = Minecraft.getMinecraft();
-		customMovementInput = new CustomMovementInput();
-	}
-	
-	public void setPlayer(EntityPlayerSP player){
+	public PlayerLogicHandler(EntityPlayerSP player){
 		this.player = player;
+		this.customMovementInput = new MovementInputHandler();
 	}
 	
 	public EntityPlayerSP getPlayer(){
@@ -45,9 +40,10 @@ public class PlayerLogicHandler{
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
+		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(MobEffects.BLINDNESS);
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.field_192832_b >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
+			if (player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.field_192832_b >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown()){
 					player.sprintToggleTimer = 7;
 				}
@@ -56,7 +52,7 @@ public class PlayerLogicHandler{
 				}
 			}
 
-			if (!player.isSprinting() && player.movementInput.field_192832_b >= 0.8F && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS) && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.field_192832_b >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -70,13 +66,13 @@ public class PlayerLogicHandler{
 				sprint = false;
 			}
 			
-			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
+			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !isSprintBlocked){
 				player.setSprinting(sprint);
 			}
 			
 			customMovementInput.held = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.field_192832_b >= 0.8F && !player.isSprinting() && enoughHunger && !player.isHandActive() && !player.isPotionActive(MobEffects.BLINDNESS)){
+			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.field_192832_b >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer == 0){
 					player.sprintToggleTimer = 7;
 				}
@@ -132,9 +128,9 @@ public class PlayerLogicHandler{
 			}
 		}
 		
-		if (showDisableWarningWhenPossible){
+		if (ClientModManager.showDisableWarningWhenPossible){
 			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
-			showDisableWarningWhenPossible = false;
+			ClientModManager.showDisableWarningWhenPossible = false;
 		}
 	}
 	
