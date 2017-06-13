@@ -1,7 +1,7 @@
 package chylex.bettersprinting.client.player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.util.MovementInput;
 import chylex.bettersprinting.client.ClientModManager;
 
 public class CustomMovementInput{
@@ -9,10 +9,11 @@ public class CustomMovementInput{
 	public int stoptime = 0;
 	public boolean sprint, sprintToggle, sneakToggle, hasToggledSprint, hasToggledSneak;
 	
-	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.11.2
-	public void update(Minecraft mc, MovementInputFromOptions $this){
+	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.12
+	public void update(Minecraft mc, MovementInput $this){
 		GameSettings settings = mc.gameSettings;
 		
+		// VANILLA
 		$this.moveStrafe = 0F;
 		$this.field_192832_b = 0F;
 
@@ -48,7 +49,7 @@ public class CustomMovementInput{
 			$this.rightKeyDown = false;
 		}
 		
-		// custom handling
+		// CUSTOM
 		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		
 		if (!sprint){
@@ -58,15 +59,21 @@ public class CustomMovementInput{
 					hasToggledSprint = true;
 				}
 			}
-			else hasToggledSprint = false;
-
+			else{
+				hasToggledSprint = false;
+			}
+			
 			sprint = sprintToggle;
 		}
-		else sprintToggle = false;
+		else{
+			sprintToggle = false;
+		}
 		
+		// VANILLA
 		$this.jump = settings.keyBindJump.isKeyDown();
 		$this.sneak = settings.keyBindSneak.isKeyDown();
 		
+		// CUSTOM
 		if (!$this.sneak){
 			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSneakToggle.isKeyDown()){
 				if (!hasToggledSneak){
@@ -74,16 +81,20 @@ public class CustomMovementInput{
 					hasToggledSneak = true;
 				}
 			}
-			else hasToggledSneak = false;
+			else{
+				hasToggledSneak = false;
+			}
 			
 			$this.sneak = sneakToggle;
 		}
 		
+		// VANILLA
 		if ($this.sneak){
 			$this.moveStrafe = $this.moveStrafe*0.3F;
 			$this.field_192832_b = $this.field_192832_b*0.3F;
 		}
 		
+		// CUSTOM
 		if (ClientModManager.isModDisabled()){
 			sneakToggle = sprintToggle = false;
 		}

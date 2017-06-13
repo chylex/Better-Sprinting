@@ -34,14 +34,15 @@ public class PlayerLogicHandler{
 		return player;
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public void updateMovementInput(){
-		wasMovingForward = player.movementInput.field_192832_b >= 0.8F;
 		wasSneaking = player.movementInput.sneak;
-		customMovementInput.update(mc, (MovementInputFromOptions)player.movementInput);
+		wasMovingForward = player.movementInput.field_192832_b >= 0.8F;
+		customMovementInput.update(mc, player.movementInput);
+		mc.func_193032_ao().func_193293_a(player.movementInput);
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		
@@ -95,7 +96,7 @@ public class PlayerLogicHandler{
 					player.setSprinting(false);
 				}
 			}
-
+			
 			if (ClientSettings.flySpeedBoost > 0){
 				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying()){
 					player.capabilities.setFlySpeed(0.05F*(1+ClientSettings.flySpeedBoost));
@@ -103,14 +104,18 @@ public class PlayerLogicHandler{
 					if (player.movementInput.sneak){
 						player.motionY -= 0.15D*ClientSettings.flySpeedBoost;
 					}
-
+					
 					if (player.movementInput.jump){
 						player.motionY += 0.15D*ClientSettings.flySpeedBoost;
 					}
 				}
-				else player.capabilities.setFlySpeed(0.05F);
+				else{
+					player.capabilities.setFlySpeed(0.05F);
+				}
 			}
-			else if (player.capabilities.getFlySpeed() > 0.05F)player.capabilities.setFlySpeed(0.05F);
+			else if (player.capabilities.getFlySpeed() > 0.05F){
+				player.capabilities.setFlySpeed(0.05F);
+			}
 		}
 
 		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){

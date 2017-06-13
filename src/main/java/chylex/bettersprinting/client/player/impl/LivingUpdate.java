@@ -46,8 +46,9 @@ public final class LivingUpdate{
 		callPostSuper(player, currentHandler);
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public static void callPreSuper(EntityPlayerSP player, PlayerLogicHandler logic){
+		// VANILLA
 		++player.sprintingTicksLeft;
 		
 		if (player.sprintToggleTimer > 0){
@@ -66,7 +67,7 @@ public final class LivingUpdate{
 			}
 			
 			player.timeInPortal += 0.0125F;
-
+			
 			if (player.timeInPortal >= 1F){
 				player.timeInPortal = 1F;
 			}
@@ -81,8 +82,13 @@ public final class LivingUpdate{
 			}
 		}
 		else{
-			if (player.timeInPortal > 0F)player.timeInPortal -= 0.05F;
-			if (player.timeInPortal < 0F)player.timeInPortal = 0F;
+			if (player.timeInPortal > 0F){
+				player.timeInPortal -= 0.05F;
+			}
+			
+			if (player.timeInPortal < 0F){
+				player.timeInPortal = 0F;
+			}
 		}
 		
 		if (player.timeUntilPortal > 0){
@@ -117,8 +123,10 @@ public final class LivingUpdate{
 			throw new RuntimeException(e);
 		}
 		
+		// CUSTOM
 		logic.updateLiving();
 		
+		// VANILLA
 		if (player.capabilities.allowFlying){
 			if (mc.playerController.isSpectatorMode()){
 				if (!player.capabilities.isFlying){
@@ -148,7 +156,7 @@ public final class LivingUpdate{
 		
 		player.wasFallFlying = player.isElytraFlying();
 
-		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){ // uses isCurrentViewEntity but it is protected
+		if (player.capabilities.isFlying && callIsCurrentViewEntity(player)){
 			if (player.movementInput.sneak){
 				player.movementInput.moveStrafe = player.movementInput.moveStrafe/0.3F;
 				player.movementInput.field_192832_b = player.movementInput.field_192832_b/0.3F;
@@ -170,7 +178,7 @@ public final class LivingUpdate{
 			if (wasJumping && !player.movementInput.jump){
 				player.horseJumpPowerCounter = -10;
 				mount.setJumpPower(MathHelper.floor(player.getHorseJumpPower()*100F));
-				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_RIDING_JUMP, (int)(player.getHorseJumpPower()*100F))); // uses sendHorseJump but it is protected
+				callSendHorseJump(player);
 			}
 			else if (!wasJumping && player.movementInput.jump){
 				player.horseJumpPowerCounter = 0;
@@ -190,12 +198,22 @@ public final class LivingUpdate{
 		}
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public static void callPostSuper(EntityPlayerSP player, PlayerLogicHandler logic){
 		if (player.onGround && player.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			player.capabilities.isFlying = false;
 			player.sendPlayerAbilities();
 		}
+	}
+	
+	// UPDATE | EntityPlayerSP.isCurrentViewEntity | 1.12
+	private static boolean callIsCurrentViewEntity(EntityPlayerSP player){
+		return mc.getRenderViewEntity() == player;
+	}
+	
+	// UPDATE | EntityPlayerSP.sendHorseJump | 1.12
+	private static void callSendHorseJump(EntityPlayerSP player){
+		player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_RIDING_JUMP, (int)(player.getHorseJumpPower()*100F)));
 	}
 	
 	private LivingUpdate(){}
