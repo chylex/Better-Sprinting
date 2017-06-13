@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.player.impl;
-import net.minecraft.block.state.IBlockState;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -12,7 +13,6 @@ import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +20,18 @@ import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 public final class LivingUpdate{
+	private static final Minecraft mc = Minecraft.getMinecraft();
 	private static PlayerLogicHandler currentHandler; // TODO rewrite
+	
+	private static final MethodHandle mPushOutOfBlocks;
+	
+	static{
+		try{
+			mPushOutOfBlocks = MethodHandles.lookup().unreflect(EntityPlayerSP.class.getMethod("_bsm_pushOutOfBlocks", double.class, double.class, double.class));
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public static void callPreSuper(EntityPlayerSP player){
 		if (currentHandler == null || currentHandler.getPlayer() != player){
@@ -28,15 +39,15 @@ public final class LivingUpdate{
 			currentHandler.setPlayer(player);
 		}
 		
-		callPreSuper(player, Minecraft.getMinecraft(), currentHandler);
+		callPreSuper(player, currentHandler);
 	}
 	
 	public static void callPostSuper(EntityPlayerSP player){
-		callPostSuper(player, Minecraft.getMinecraft(), currentHandler);
+		callPostSuper(player, currentHandler);
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
-	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
+	public static void callPreSuper(EntityPlayerSP player, PlayerLogicHandler logic){
 		++player.sprintingTicksLeft;
 		
 		if (player.sprintToggleTimer > 0){
@@ -96,10 +107,15 @@ public final class LivingUpdate{
 		}
 		
 		AxisAlignedBB playerBoundingBox = player.getEntityBoundingBox();
-		pushOutOfBlocks(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
-		pushOutOfBlocks(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
-		pushOutOfBlocks(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
-		pushOutOfBlocks(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
+		
+		try{
+			mPushOutOfBlocks.invokeExact(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
+			mPushOutOfBlocks.invokeExact(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
+			mPushOutOfBlocks.invokeExact(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
+			mPushOutOfBlocks.invokeExact(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
+		}catch(Throwable e){
+			throw new RuntimeException(e);
+		}
 		
 		logic.updateLiving();
 		
@@ -175,72 +191,11 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
-	public static void callPostSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
+	public static void callPostSuper(EntityPlayerSP player, PlayerLogicHandler logic){
 		if (player.onGround && player.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			player.capabilities.isFlying = false;
 			player.sendPlayerAbilities();
 		}
-	}
-	
-	// UPDATE | EntityPlayerSP.pushOutOfBlocks | 1.11.2
-	protected static boolean pushOutOfBlocks(EntityPlayerSP player, double x, double y, double z){
-		if (player.noClip){
-			return false;
-		}
-		
-		BlockPos pos = new BlockPos(x, y, z);
-		double xDiff = x-pos.getX();
-		double zDiff = z-pos.getZ();
-
-		int entHeight = Math.max((int)Math.ceil(player.height), 1);
-		
-		if (!isHeadspaceFree(player, pos, entHeight)){
-			int side = -1;
-			double limit = 9999D;
-
-			if (isHeadspaceFree(player, pos.west(), entHeight) && xDiff < limit){
-				limit = xDiff;
-				side = 0;
-			}
-
-			if (isHeadspaceFree(player, pos.east(), entHeight) && 1D-xDiff < limit){
-				limit = 1D-xDiff;
-				side = 1;
-			}
-
-			if (isHeadspaceFree(player, pos.north(), entHeight) && zDiff < limit){
-				limit = zDiff;
-				side = 4;
-			}
-
-			if (isHeadspaceFree(player, pos.south(), entHeight) && 1D-zDiff < limit){
-				limit = 1D-zDiff;
-				side = 5;
-			}
-
-			if (side == 0)player.motionX = -0.1D;
-			else if (side == 1)player.motionX = 0.1D;
-			else if (side == 4)player.motionZ = -0.1D;
-			else if (side == 5)player.motionZ = 0.1D;
-			// added 'else' to the statements
-		}
-
-		return false;
-	}
-	
-	// UPDATE | EntityPlayerSP.isOpenBlockSpace | 1.11.2
-	private static boolean isOpenBlockSpace(EntityPlayerSP player, BlockPos pos){
-		IBlockState state = player.world.getBlockState(pos);
-		return !state.getBlock().isNormalCube(state, player.world, pos);
-	}
-	
-	// UPDATE | EntityPlayerSP.isHeadspaceFree | 1.11.2
-	private static boolean isHeadspaceFree(EntityPlayerSP player, BlockPos pos, int height){
-		for(int y = 0; y < height; y++){
-			if (!isOpenBlockSpace(player, pos.add(0, y, 0)))return false;
-		}
-		
-		return true;
 	}
 	
 	private LivingUpdate(){}

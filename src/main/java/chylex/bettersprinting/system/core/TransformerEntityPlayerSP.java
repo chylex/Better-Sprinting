@@ -14,6 +14,9 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	private static final String NAME_ONLIVINGUPDATE = BetterSprintingCore.isObfuscated ? "func_70636_d" : "onLivingUpdate";
 	private static final String DESC_ONLIVINGUPDATE = "()V";
 	
+	private static final String NAME_PUSHOUTOFBLOCKS = BetterSprintingCore.isObfuscated ? "func_145771_j" : "pushOutOfBlocks";
+	private static final String DESC_PUSHOUTOFBLOCKS = "(DDD)Z";
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes){
 		if (transformedName.equals("net.minecraft.client.entity.EntityPlayerSP")){
@@ -40,6 +43,8 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 				}
 			}
 		}
+		
+		node.methods.add(createPushOutOfBlocks());
 	}
 	
 	private void transformOnLivingUpdate(MethodNode method){
@@ -57,5 +62,19 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		instructions.add(new InsnNode(Opcodes.RETURN));
 		
 		method.instructions.insertBefore(method.instructions.getFirst(), instructions);
+	}
+	
+	private MethodNode createPushOutOfBlocks(){
+		MethodNode m = new MethodNode(Opcodes.ACC_PUBLIC, "_bsm_pushOutOfBlocks", "(DDD)V", null, null);
+		
+		m.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+		m.instructions.add(new VarInsnNode(Opcodes.DLOAD, 1));
+		m.instructions.add(new VarInsnNode(Opcodes.DLOAD, 3));
+		m.instructions.add(new VarInsnNode(Opcodes.DLOAD, 5));
+		m.instructions.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/client/entity/EntityPlayerSP", NAME_PUSHOUTOFBLOCKS, DESC_PUSHOUTOFBLOCKS, false));
+		m.instructions.add(new InsnNode(Opcodes.POP));
+		m.instructions.add(new InsnNode(Opcodes.RETURN));
+		
+		return m;
 	}
 }
