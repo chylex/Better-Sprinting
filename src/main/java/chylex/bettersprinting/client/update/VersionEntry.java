@@ -1,6 +1,8 @@
 package chylex.bettersprinting.client.update;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import chylex.bettersprinting.system.Log;
-import com.google.gson.JsonArray;
+import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -15,13 +17,9 @@ final class VersionEntry implements Comparable<VersionEntry>{
 	
 	VersionEntry(String versionIdentifier, JsonObject node){
 		this.versionIdentifier = versionIdentifier;
+		
 		modVersion = node.get("modVersion").getAsString();
-		
-		JsonArray array = node.get("mcVersions").getAsJsonArray();
-		mcVersions = new String[array.size()];
-		int a = -1;
-		for(JsonElement mcVersionNode:array)mcVersions[++a] = mcVersionNode.getAsString();
-		
+		mcVersions = Streams.stream(node.get("mcVersions").getAsJsonArray()).map(JsonElement::getAsString).toArray(String[]::new);
 		buildId = node.has("buildId") ? node.get("buildId").getAsString() : "";
 		releaseDate = node.get("releaseDate").getAsString();
 		
@@ -29,13 +27,14 @@ final class VersionEntry implements Comparable<VersionEntry>{
 		String tmp = modVersion;
 		String[] idSplit = versionIdentifier.split(" - ");
 		
-		if (idSplit.length != 2)Log.error("Incorrect version identifier: $0", versionIdentifier);
+		if (idSplit.length != 2){
+			Log.error("Incorrect version identifier: $0", versionIdentifier);
+		}
 		else{
 			tmp = idSplit[1];
+			i = NumberUtils.toByte(idSplit[0], (byte)0);
 			
-			try{
-				i = Byte.parseByte(idSplit[0]);
-			}catch(NumberFormatException e){
+			if (i == 0){
 				Log.error("Incorrect version identifier: $0", versionIdentifier);
 			}
 		}
@@ -45,10 +44,7 @@ final class VersionEntry implements Comparable<VersionEntry>{
 	}
 	
 	public boolean isSupportedByMC(String mcVersion){
-		for(String version:mcVersions){
-			if (version.equals(mcVersion))return true;
-		}
-		return false;
+		return ArrayUtils.contains(mcVersions, mcVersion);
 	}
 
 	@Override

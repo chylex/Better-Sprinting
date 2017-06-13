@@ -49,7 +49,9 @@ public class UpdateThread extends Thread{
 			
 			for(Entry<String, JsonElement> entry:root.getAsJsonObject().entrySet()){
 				if (entry.getKey().charAt(0) == '~'){
-					if (entry.getKey().substring(1).equals("URL"))downloadURL = entry.getValue().getAsString();
+					if (entry.getKey().substring(1).equals("URL")){
+						downloadURL = entry.getValue().getAsString();
+					}
 				}
 				else versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
 			}
@@ -94,7 +96,10 @@ public class UpdateThread extends Thread{
 			
 			if (message != null){
 				message.append("\n ").append(TextFormatting.GOLD).append("Click to download: ").append(downloadURL);
-				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+				
+				for(String s:message.toString().split("\n")){
+					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+				}
 			}
 		}
 		catch(UnknownHostException e){}
