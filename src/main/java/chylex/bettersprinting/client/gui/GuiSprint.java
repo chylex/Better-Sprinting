@@ -49,9 +49,9 @@ public class GuiSprint extends GuiScreen{
 	public void initGui(){
 		buttonList.clear();
 		
-	    int left = getLeftColumnX(), top = height/6;
-	
-	    for(int a = 0; a < ClientModManager.keyBindings.length; a++){
+		int left = getLeftColumnX(), top = height/6;
+		
+		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
 			GuiButton btn = new GuiButton(a, left+160*(a%2), top+24*(a/2), 70, 20, getKeyCodeString(a));
 			buttonList.add(btn);
 			
@@ -59,25 +59,25 @@ public class GuiSprint extends GuiScreen{
 				btn.enabled = false;
 			}
 		}
-	    
-	    buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap, left, top+60, 70, 20, ""));
-	    buttonList.add(btnAllDirs = new GuiButton(idAllDirs, left+160, top+60, 70, 20, ""));
-	    buttonList.add(btnFlyBoost = new GuiButton(idFlyBoost, left, top+84, 70, 20, ""));
-	    buttonList.add(btnDisableMod = new GuiButton(idDisableMod, left+160, top+84, 70, 20, ""));
-	    buttonList.add(btnAutoJump = new GuiButton(idAutoJump, left, top+108, 70, 20, ""));
-	    
-	    if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
-	    if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
-	    if (!ClientModManager.canBoostFlying())btnFlyBoost.enabled = false;
-	    if (!(mc.player == null && mc.world == null))btnDisableMod.enabled = false;
-	    
-	    buttonList.add(new GuiButton(idDone, width/2-100, top+168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done")));
-	    
-	    if (parentScreen == null){
-	    	buttonList.add(new GuiButton(idControls, width/2+2, top+168, 98, 20, I18n.format("options.controls")));
-	    }
-	    
-	    updateButtons();
+		
+		buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap, left, top+60, 70, 20, ""));
+		buttonList.add(btnAllDirs = new GuiButton(idAllDirs, left+160, top+60, 70, 20, ""));
+		buttonList.add(btnFlyBoost = new GuiButton(idFlyBoost, left, top+84, 70, 20, ""));
+		buttonList.add(btnDisableMod = new GuiButton(idDisableMod, left+160, top+84, 70, 20, ""));
+		buttonList.add(btnAutoJump = new GuiButton(idAutoJump, left, top+108, 70, 20, ""));
+		
+		if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
+		if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
+		if (!ClientModManager.canBoostFlying())btnFlyBoost.enabled = false;
+		if (!ClientModManager.inMenu())btnDisableMod.enabled = false;
+		
+		buttonList.add(new GuiButton(idDone, width/2-100, top+168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done")));
+		
+		if (parentScreen == null){
+			buttonList.add(new GuiButton(idControls, width/2+2, top+168, 98, 20, I18n.format("options.controls")));
+		}
+		
+		updateButtons();
 	}
 	
 	private void updateButtons(){
@@ -237,7 +237,7 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	private int getLeftColumnX(){
-	    return width/2-155;
+		return width/2-155;
 	}
 	
 	private String getKeyCodeString(int i){
