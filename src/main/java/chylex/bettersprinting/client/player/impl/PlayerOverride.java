@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -25,8 +26,8 @@ public class PlayerOverride extends EntityPlayerSP{
 	// UPDATE | EntityLivingBase.jumpTicks | Check if still only used in onLivingUpdate | 1.11
 	private int jumpTicks;
 	
-	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatisticsManager statFile){
-		super(mc, world, netHandler, statFile);
+	public PlayerOverride(Minecraft mc, World world, NetHandlerPlayClient netHandler, StatisticsManager statFile, RecipeBook recipeBook){
+		super(mc, world, netHandler, statFile, recipeBook);
 		logic = new PlayerLogicHandler();
 		logic.setPlayer(this);
 		
@@ -131,7 +132,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (Math.abs(motionY) < 0.003D)motionY = 0D;
 		if (Math.abs(motionZ) < 0.003D)motionZ = 0D;
 		
-		world.theProfiler.startSection("ai");
+		world.profiler.startSection("ai");
 
 		if (isMovementBlocked()){
 			isJumping = false;
@@ -140,13 +141,13 @@ public class PlayerOverride extends EntityPlayerSP{
 			randomYawVelocity = 0F;
 		}
 		else if (isServerWorld()){ // isAIEnabled is false
-			world.theProfiler.startSection("newAi");
+			world.profiler.startSection("newAi");
             updateEntityActionState();
-            world.theProfiler.endSection();
+            world.profiler.endSection();
 		}
 
-		world.theProfiler.endSection();
-		world.theProfiler.startSection("jump");
+		world.profiler.endSection();
+		world.profiler.startSection("jump");
 
 		if (isJumping){
 			if (isInWater()){
@@ -164,21 +165,21 @@ public class PlayerOverride extends EntityPlayerSP{
 			jumpTicks = 0;
 		}
 
-		world.theProfiler.endSection();
-		world.theProfiler.startSection("travel");
+		world.profiler.endSection();
+		world.profiler.startSection("travel");
 		
 		moveStrafing *= 0.98F;
 		moveForward *= 0.98F;
 		randomYawVelocity *= 0.9F;
 		updateElytra$EntityLivingBase();
-		moveEntityWithHeading(moveStrafing, moveForward);
+		func_191986_a(moveStrafing, moveForward, field_191988_bg);
 		
-		world.theProfiler.endSection();
-		world.theProfiler.startSection("push");
+		world.profiler.endSection();
+		world.profiler.startSection("push");
 		
 		collideWithNearbyEntities();
 		
-		world.theProfiler.endSection();
+		world.profiler.endSection();
 	}
 	
 	// UPDATE | EntityLivingBase.updateElytra | 1.11
@@ -188,7 +189,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (flag && !onGround && !isRiding()){
 			ItemStack is = getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (is.getItem() == Items.ELYTRA && ItemElytra.isBroken(is)){
+			if (is.getItem() == Items.ELYTRA && ItemElytra.isUsable(is)){
 				flag = true;
 				
 				if (!world.isRemote && (ticksElytraFlying+1)%20 == 0){

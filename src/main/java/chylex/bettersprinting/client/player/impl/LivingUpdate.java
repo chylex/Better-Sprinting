@@ -68,7 +68,7 @@ final class LivingUpdate{
 		
 		if (player.isHandActive() && !player.isRiding()){
 			player.movementInput.moveStrafe *= 0.2F;
-			player.movementInput.moveForward *= 0.2F;
+			player.movementInput.field_192832_b *= 0.2F;
 			player.sprintToggleTimer = 0;
 		}
 		
@@ -110,7 +110,7 @@ final class LivingUpdate{
 		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
 			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
+			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isUsable(chestIS)){
 				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_FALL_FLYING));
 			}
 		}
@@ -120,7 +120,7 @@ final class LivingUpdate{
 		if (player.capabilities.isFlying && mc.getRenderViewEntity() == player){ // uses isCurrentViewEntity but it is protected
 			if (player.movementInput.sneak){
 				player.movementInput.moveStrafe = player.movementInput.moveStrafe/0.3F;
-				player.movementInput.moveForward = player.movementInput.moveForward/0.3F;
+				player.movementInput.field_192832_b = player.movementInput.field_192832_b/0.3F;
 				player.motionY -= 0.15D; // ignore capabilities.getFlySpeed()
 			}
 

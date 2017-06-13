@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.text.TextComponentString;
@@ -42,7 +43,7 @@ public final class LogicImplOverride{
 			mc.world.removeEntity(prevPlayer);
 			
 			mc.setRenderViewEntity(null);
-			mc.player = mc.playerController.createClientPlayer(prevPlayer.world, prevPlayer.getStatFileWriter());
+			mc.player = mc.playerController.func_192830_a(prevPlayer.world, prevPlayer.getStatFileWriter(), prevPlayer.func_192035_E());
 			mc.player.getDataManager().setEntryValues(prevPlayer.getDataManager().getAll());
 			mc.player.dimension = prevPlayer.dimension;
 			mc.setRenderViewEntity(mc.player);
@@ -84,8 +85,8 @@ public final class LogicImplOverride{
 		}
 		
 		@Override
-		public EntityPlayerSP createClientPlayer(World world, StatisticsManager statFile){
-			return new PlayerOverride(mc, world, netHandler, statFile);
+		public EntityPlayerSP func_192830_a(World world, StatisticsManager statFile, RecipeBook recipeBook){
+			return new PlayerOverride(mc, world, netHandler, statFile, recipeBook);
 		}
 	}
 }

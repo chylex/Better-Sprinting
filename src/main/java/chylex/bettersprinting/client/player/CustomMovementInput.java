@@ -14,10 +14,10 @@ public class CustomMovementInput{
 		GameSettings settings = mc.gameSettings;
 		
 		$this.moveStrafe = 0F;
-		$this.moveForward = 0F;
+		$this.field_192832_b = 0F;
 
 		if (settings.keyBindForward.isKeyDown()){
-			++$this.moveForward;
+			++$this.field_192832_b;
 			$this.forwardKeyDown = true;
 		}
 		else{
@@ -25,7 +25,7 @@ public class CustomMovementInput{
 		}
 		
 		if (settings.keyBindBack.isKeyDown()){
-			--$this.moveForward;
+			--$this.field_192832_b;
 			$this.backKeyDown = true;
 		}
 		else{
@@ -81,7 +81,7 @@ public class CustomMovementInput{
 		
 		if ($this.sneak){
 			$this.moveStrafe = $this.moveStrafe*0.3F;
-			$this.moveForward = $this.moveForward*0.3F;
+			$this.field_192832_b = $this.field_192832_b*0.3F;
 		}
 		
 		if (ClientModManager.isModDisabled()){
