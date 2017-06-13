@@ -47,78 +47,78 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
-	public static void callPreSuper(EntityPlayerSP player, PlayerLogicHandler logic){
+	public static void callPreSuper(EntityPlayerSP $this, PlayerLogicHandler logic){
 		// VANILLA
-		++player.sprintingTicksLeft;
+		++$this.sprintingTicksLeft;
 		
-		if (player.sprintToggleTimer > 0){
-			--player.sprintToggleTimer;
+		if ($this.sprintToggleTimer > 0){
+			--$this.sprintToggleTimer;
 		}
 		
-		player.prevTimeInPortal = player.timeInPortal;
+		$this.prevTimeInPortal = $this.timeInPortal;
 		
-		if (player.inPortal){
+		if ($this.inPortal){
 			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame()){
 				mc.displayGuiScreen(null);
 			}
 			
-			if (player.timeInPortal == 0F){
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER, player.getRNG().nextFloat()*0.4F+0.8F));
+			if ($this.timeInPortal == 0F){
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER, $this.getRNG().nextFloat()*0.4F+0.8F));
 			}
 			
-			player.timeInPortal += 0.0125F;
+			$this.timeInPortal += 0.0125F;
 			
-			if (player.timeInPortal >= 1F){
-				player.timeInPortal = 1F;
+			if ($this.timeInPortal >= 1F){
+				$this.timeInPortal = 1F;
 			}
 			
-			player.inPortal = false;
+			$this.inPortal = false;
 		}
-		else if (player.isPotionActive(MobEffects.NAUSEA) && player.getActivePotionEffect(MobEffects.NAUSEA).getDuration() > 60){
-			player.timeInPortal += 0.006666667F;
+		else if ($this.isPotionActive(MobEffects.NAUSEA) && $this.getActivePotionEffect(MobEffects.NAUSEA).getDuration() > 60){
+			$this.timeInPortal += 0.006666667F;
 			
-			if (player.timeInPortal > 1F){
-				player.timeInPortal = 1F;
+			if ($this.timeInPortal > 1F){
+				$this.timeInPortal = 1F;
 			}
 		}
 		else{
-			if (player.timeInPortal > 0F){
-				player.timeInPortal -= 0.05F;
+			if ($this.timeInPortal > 0F){
+				$this.timeInPortal -= 0.05F;
 			}
 			
-			if (player.timeInPortal < 0F){
-				player.timeInPortal = 0F;
+			if ($this.timeInPortal < 0F){
+				$this.timeInPortal = 0F;
 			}
 		}
 		
-		if (player.timeUntilPortal > 0){
-			--player.timeUntilPortal;
+		if ($this.timeUntilPortal > 0){
+			--$this.timeUntilPortal;
 		}
 		
-		boolean wasJumping = player.movementInput.jump;
+		boolean wasJumping = $this.movementInput.jump;
 		logic.updateMovementInput();
 		
-		if (player.isHandActive() && !player.isRiding()){
-			player.movementInput.moveStrafe *= 0.2F;
-			player.movementInput.field_192832_b *= 0.2F;
-			player.sprintToggleTimer = 0;
+		if ($this.isHandActive() && !$this.isRiding()){
+			$this.movementInput.moveStrafe *= 0.2F;
+			$this.movementInput.field_192832_b *= 0.2F;
+			$this.sprintToggleTimer = 0;
 		}
 		
 		boolean hasAutoJumped = false;
 		
-		if (player.autoJumpTime > 0){
-			--player.autoJumpTime;
+		if ($this.autoJumpTime > 0){
+			--$this.autoJumpTime;
 			hasAutoJumped = true;
-			player.movementInput.jump = true;
+			$this.movementInput.jump = true;
 		}
 		
-		AxisAlignedBB playerBoundingBox = player.getEntityBoundingBox();
+		AxisAlignedBB playerBoundingBox = $this.getEntityBoundingBox();
 		
 		try{
-			mPushOutOfBlocks.invokeExact(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
-			mPushOutOfBlocks.invokeExact(player, player.posX-player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
-			mPushOutOfBlocks.invokeExact(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ-player.width*0.35D);
-			mPushOutOfBlocks.invokeExact(player, player.posX+player.width*0.35D, playerBoundingBox.minY+0.5D, player.posZ+player.width*0.35D);
+			mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
+			mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
+			mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
+			mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
 		}catch(Throwable e){
 			throw new RuntimeException(e);
 		}
@@ -127,93 +127,93 @@ public final class LivingUpdate{
 		logic.updateLiving();
 		
 		// VANILLA
-		if (player.capabilities.allowFlying){
+		if ($this.capabilities.allowFlying){
 			if (mc.playerController.isSpectatorMode()){
-				if (!player.capabilities.isFlying){
-					player.capabilities.isFlying = true;
-					player.sendPlayerAbilities();
+				if (!$this.capabilities.isFlying){
+					$this.capabilities.isFlying = true;
+					$this.sendPlayerAbilities();
 				}
 			}
-			else if (!wasJumping && player.movementInput.jump && !hasAutoJumped){
-				if (player.flyToggleTimer == 0){
-					player.flyToggleTimer = 7;
+			else if (!wasJumping && $this.movementInput.jump && !hasAutoJumped){
+				if ($this.flyToggleTimer == 0){
+					$this.flyToggleTimer = 7;
 				}
 				else{
-					player.capabilities.isFlying = !player.capabilities.isFlying;
-					player.sendPlayerAbilities();
-					player.flyToggleTimer = 0;
+					$this.capabilities.isFlying = !$this.capabilities.isFlying;
+					$this.sendPlayerAbilities();
+					$this.flyToggleTimer = 0;
 				}
 			}
 		}
 		
-		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
-			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if ($this.movementInput.jump && !wasJumping && !$this.onGround && $this.motionY < 0D && !$this.isElytraFlying() && !$this.capabilities.isFlying){
+			ItemStack chestIS = $this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
 			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isUsable(chestIS)){
-				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_FALL_FLYING));
+				$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_FALL_FLYING));
 			}
 		}
 		
-		player.wasFallFlying = player.isElytraFlying();
+		$this.wasFallFlying = $this.isElytraFlying();
 
-		if (player.capabilities.isFlying && callIsCurrentViewEntity(player)){
-			if (player.movementInput.sneak){
-				player.movementInput.moveStrafe = player.movementInput.moveStrafe/0.3F;
-				player.movementInput.field_192832_b = player.movementInput.field_192832_b/0.3F;
-				player.motionY -= 0.15D; // ignore capabilities.getFlySpeed()
+		if ($this.capabilities.isFlying && callIsCurrentViewEntity($this)){
+			if ($this.movementInput.sneak){
+				$this.movementInput.moveStrafe = $this.movementInput.moveStrafe/0.3F;
+				$this.movementInput.field_192832_b = $this.movementInput.field_192832_b/0.3F;
+				$this.motionY -= 0.15D; // ignore capabilities.getFlySpeed()
 			}
 
-			if (player.movementInput.jump){
-				player.motionY += 0.15D; // ignore capabilities.getFlySpeed()
+			if ($this.movementInput.jump){
+				$this.motionY += 0.15D; // ignore capabilities.getFlySpeed()
 			}
 		}
 
-		if (player.isRidingHorse()){
-			IJumpingMount mount = (IJumpingMount)player.getRidingEntity();
+		if ($this.isRidingHorse()){
+			IJumpingMount mount = (IJumpingMount)$this.getRidingEntity();
 			
-			if (player.horseJumpPowerCounter < 0 && ++player.horseJumpPowerCounter == 0){
-				player.horseJumpPower = 0F;
+			if ($this.horseJumpPowerCounter < 0 && ++$this.horseJumpPowerCounter == 0){
+				$this.horseJumpPower = 0F;
 			}
 
-			if (wasJumping && !player.movementInput.jump){
-				player.horseJumpPowerCounter = -10;
-				mount.setJumpPower(MathHelper.floor(player.getHorseJumpPower()*100F));
-				callSendHorseJump(player);
+			if (wasJumping && !$this.movementInput.jump){
+				$this.horseJumpPowerCounter = -10;
+				mount.setJumpPower(MathHelper.floor($this.getHorseJumpPower()*100F));
+				callSendHorseJump($this);
 			}
-			else if (!wasJumping && player.movementInput.jump){
-				player.horseJumpPowerCounter = 0;
-				player.horseJumpPower = 0F;
+			else if (!wasJumping && $this.movementInput.jump){
+				$this.horseJumpPowerCounter = 0;
+				$this.horseJumpPower = 0F;
 			}
 			else if (wasJumping){
-				if (++player.horseJumpPowerCounter < 10){
-					player.horseJumpPower = player.horseJumpPowerCounter*0.1F;
+				if (++$this.horseJumpPowerCounter < 10){
+					$this.horseJumpPower = $this.horseJumpPowerCounter*0.1F;
 				}
 				else{
-					player.horseJumpPower = 0.8F+2.0F/(player.horseJumpPowerCounter-9)*0.1F;
+					$this.horseJumpPower = 0.8F+2.0F/($this.horseJumpPowerCounter-9)*0.1F;
 				}
 			}
 		}
 		else{
-			player.horseJumpPower = 0F;
+			$this.horseJumpPower = 0F;
 		}
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
-	public static void callPostSuper(EntityPlayerSP player, PlayerLogicHandler logic){
-		if (player.onGround && player.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
-			player.capabilities.isFlying = false;
-			player.sendPlayerAbilities();
+	public static void callPostSuper(EntityPlayerSP $this, PlayerLogicHandler logic){
+		if ($this.onGround && $this.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
+			$this.capabilities.isFlying = false;
+			$this.sendPlayerAbilities();
 		}
 	}
 	
 	// UPDATE | EntityPlayerSP.isCurrentViewEntity | 1.12
-	private static boolean callIsCurrentViewEntity(EntityPlayerSP player){
-		return mc.getRenderViewEntity() == player;
+	private static boolean callIsCurrentViewEntity(EntityPlayerSP $this){
+		return mc.getRenderViewEntity() == $this;
 	}
 	
 	// UPDATE | EntityPlayerSP.sendHorseJump | 1.12
-	private static void callSendHorseJump(EntityPlayerSP player){
-		player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_RIDING_JUMP, (int)(player.getHorseJumpPower()*100F)));
+	private static void callSendHorseJump(EntityPlayerSP $this){
+		$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_RIDING_JUMP, (int)($this.getHorseJumpPower()*100F)));
 	}
 	
 	private LivingUpdate(){}
