@@ -19,7 +19,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
-final class LivingUpdate{
+public final class LivingUpdate{
+	public static void callPreSuper(EntityPlayerSP player){
+		// TODO
+	}
+	
+	public static void callPostSuper(EntityPlayerSP player){
+		// TODO
+	}
+	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
 	public static void callPreSuper(EntityPlayerSP player, Minecraft mc, PlayerLogicHandler logic){
 		++player.sprintingTicksLeft;

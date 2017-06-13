@@ -63,6 +63,8 @@ jar{
     }
     
     manifest{
+        attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.TransformerEntityPlayerSP'
+        attributes 'FMLCorePluginContainsMod': 'true'
         attributes 'FMLAT': 'bs_at.cfg'
         attributes 'TweakClass': 'bsm.javacheck.Java8Checker'
     }
