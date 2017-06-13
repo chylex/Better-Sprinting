@@ -30,6 +30,10 @@ public class PlayerLogicHandler{
 		this.player = player;
 	}
 	
+	public EntityPlayerSP getPlayer(){
+		return player;
+	}
+	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
 	public void updateMovementInput(){
 		wasMovingForward = player.movementInput.field_192832_b >= 0.8F;

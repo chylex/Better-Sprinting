@@ -20,12 +20,19 @@ import chylex.bettersprinting.client.player.PlayerLogicHandler;
 
 @SideOnly(Side.CLIENT)
 public final class LivingUpdate{
+	private static PlayerLogicHandler currentHandler; // TODO rewrite
+	
 	public static void callPreSuper(EntityPlayerSP player){
-		// TODO
+		if (currentHandler == null || currentHandler.getPlayer() != player){
+			currentHandler = new PlayerLogicHandler();
+			currentHandler.setPlayer(player);
+		}
+		
+		callPreSuper(player, Minecraft.getMinecraft(), currentHandler);
 	}
 	
 	public static void callPostSuper(EntityPlayerSP player){
-		// TODO
+		callPostSuper(player, Minecraft.getMinecraft(), currentHandler);
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.11.2
