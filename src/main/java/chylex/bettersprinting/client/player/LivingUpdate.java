@@ -22,6 +22,7 @@ public final class LivingUpdate{
 	private static final Minecraft mc;
 	private static final MethodHandle mPushOutOfBlocks;
 	private static PlayerLogicHandler currentHandler;
+	private static boolean hasTriggered;
 	
 	static{
 		mc = Minecraft.getMinecraft();
@@ -33,10 +34,20 @@ public final class LivingUpdate{
 		}
 	}
 	
+	public static boolean checkIntegrity(){
+		return hasTriggered;
+	}
+	
+	public static void cleanup(){
+		currentHandler = null;
+		hasTriggered = false;
+	}
+	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public static void callPreSuper(EntityPlayerSP $this){
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
 			currentHandler = new PlayerLogicHandler($this);
+			hasTriggered = true;
 		}
 		
 		// VANILLA

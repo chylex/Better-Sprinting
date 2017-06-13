@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
-import chylex.bettersprinting.client.player.impl.LogicImplOverride;
 import chylex.bettersprinting.client.player.impl.LogicImplPlayerAPI;
 import chylex.bettersprinting.system.Log;
 import chylex.bettersprinting.system.PacketPipeline;
@@ -40,9 +39,6 @@ public class ClientProxy extends BetterSprintingProxy{
 		
 		if (Loader.isModLoaded("PlayerAPI")){
 			LogicImplPlayerAPI.register();
-		}
-		else{
-			LogicImplOverride.register();
 		}
 	}
 	
