@@ -7,9 +7,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class ClientModManager{
+	private static final Minecraft mc = Minecraft.getMinecraft();
 	public static final String chatPrefix = TextFormatting.GREEN+"[Better Sprinting]"+TextFormatting.RESET+" ";
 	
-	public static final KeyBinding keyBindSprintHold = Minecraft.getMinecraft().gameSettings.keyBindSprint;
+	public static final KeyBinding keyBindSprintHold = mc.gameSettings.keyBindSprint;
     public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", 34, "key.categories.movement");
     public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", 21, "key.categories.movement");
     public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", 24, "key.categories.movement");
@@ -20,16 +21,16 @@ public final class ClientModManager{
     
 	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
     
-    public static boolean inMenu(Minecraft mc){
+    public static boolean inMenu(){
     	return mc.player == null || mc.world == null;
     }
     
-    public static boolean canRunInAllDirs(Minecraft mc){
-    	return !isModDisabled() && (inMenu(mc) || mc.isSingleplayer() || svRunInAllDirs);
+    public static boolean canRunInAllDirs(){
+    	return !isModDisabled() && (inMenu() || mc.isSingleplayer() || svRunInAllDirs);
     }
     
-    public static boolean canBoostFlying(Minecraft mc){
-    	return !isModDisabled() && (inMenu(mc) || mc.isSingleplayer() || mc.player.capabilities.isCreativeMode || svSurvivalFlyingBoost);
+    public static boolean canBoostFlying(){
+    	return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.capabilities.isCreativeMode || svSurvivalFlyingBoost);
     }
     
     public static boolean isModDisabled(){

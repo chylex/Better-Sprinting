@@ -97,7 +97,7 @@ public class PlayerLogicHandler{
 			}
 
 			if (ClientSettings.flySpeedBoost > 0){
-				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying(mc)){
+				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying()){
 					player.capabilities.setFlySpeed(0.05F*(1+ClientSettings.flySpeedBoost));
 					
 					if (player.movementInput.sneak){
@@ -122,7 +122,7 @@ public class PlayerLogicHandler{
 		}
 
 		if (player.isSprinting() && (player.movementInput.field_192832_b < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
-			if ((ClientModManager.canRunInAllDirs(mc) && ClientSettings.enableAllDirs) == false || (player.movementInput.field_192832_b == 0F && player.movementInput.moveStrafe == 0F)){
+			if ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) == false || (player.movementInput.field_192832_b == 0F && player.movementInput.moveStrafe == 0F)){
 				player.setSprinting(false);
 			}
 		}

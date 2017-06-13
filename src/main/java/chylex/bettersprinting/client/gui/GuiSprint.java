@@ -67,8 +67,8 @@ public class GuiSprint extends GuiScreen{
 	    buttonList.add(btnAutoJump = new GuiButton(idAutoJump, left, top+108, 70, 20, ""));
 	    
 	    if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
-	    if (!ClientModManager.canRunInAllDirs(mc))btnAllDirs.enabled = false;
-	    if (!ClientModManager.canBoostFlying(mc))btnFlyBoost.enabled = false;
+	    if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
+	    if (!ClientModManager.canBoostFlying())btnFlyBoost.enabled = false;
 	    if (!(mc.player == null && mc.world == null))btnDisableMod.enabled = false;
 	    
 	    buttonList.add(new GuiButton(idDone, width/2-100, top+168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done")));
@@ -82,8 +82,8 @@ public class GuiSprint extends GuiScreen{
 	
 	private void updateButtons(){
 		btnDoubleTap.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap ? "gui.enabled" : "gui.disabled"));
-		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying(mc) ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "gui.unavailable");
-		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs(mc) ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
+		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "gui.unavailable");
+		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs() ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
 		btnAutoJump.displayString = I18n.format(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
 	}
@@ -105,7 +105,7 @@ public class GuiSprint extends GuiScreen{
 				break;
 				
 			case idDisableMod:
-				if (ClientModManager.inMenu(mc)){
+				if (ClientModManager.inMenu()){
 					ClientSettings.disableMod = !ClientSettings.disableMod;
 					initGui();
 				}
@@ -113,14 +113,14 @@ public class GuiSprint extends GuiScreen{
 				break;
 				
 			case idFlyBoost:
-				if (ClientModManager.canBoostFlying(mc) && ++ClientSettings.flySpeedBoost == 8){
+				if (ClientModManager.canBoostFlying() && ++ClientSettings.flySpeedBoost == 8){
 					ClientSettings.flySpeedBoost = 0;
 				}
 				
 				break;
 				
 			case idAllDirs:
-				if (ClientModManager.canRunInAllDirs(mc)){
+				if (ClientModManager.canRunInAllDirs()){
 					ClientSettings.enableAllDirs = !ClientSettings.enableAllDirs;
 				}
 				
