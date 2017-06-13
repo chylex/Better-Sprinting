@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.MCVersion("1.12")
 public final class BetterSprintingCore implements IFMLLoadingPlugin{
 	static boolean isObfuscated;
-	static boolean allowTransform;
+	static boolean transformOnLivingUpdate;
 	
 	@Override
 	public String[] getASMTransformerClass(){
@@ -26,7 +26,7 @@ public final class BetterSprintingCore implements IFMLLoadingPlugin{
 	@Override
 	public void injectData(Map<String, Object> data){
 		isObfuscated = (Boolean)data.get("runtimeDeobfuscationEnabled");
-		allowTransform = !((List)data.get("coremodList")).stream().anyMatch(o -> o.toString().startsWith("PlayerAPIPlugin"));
+		transformOnLivingUpdate = !((List)data.get("coremodList")).stream().anyMatch(o -> o.toString().startsWith("PlayerAPIPlugin"));
 	}
 
 	@Override
