@@ -111,8 +111,7 @@ public class ServerCommandConfig extends CommandBase{
 	}
 	
 	private boolean isValidBool(String[] args, int index){
-		if (index >= args.length)return false;
-		return args[index].equalsIgnoreCase("true") || args[index].equalsIgnoreCase("false");
+		return index < args.length && (args[index].equalsIgnoreCase("true") || args[index].equalsIgnoreCase("false"));
 	}
 	
 	private boolean getBool(String[] args, int index){

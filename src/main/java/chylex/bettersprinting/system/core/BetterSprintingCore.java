@@ -8,6 +8,10 @@ public final class BetterSprintingCore implements IFMLLoadingPlugin{
 	static boolean isObfuscated;
 	static boolean transformOnLivingUpdate;
 	
+	public static boolean usePlayerAPI(){
+		return !transformOnLivingUpdate;
+	}
+	
 	@Override
 	public String[] getASMTransformerClass(){
 		return new String[]{ TransformerEntityPlayerSP.class.getName() };

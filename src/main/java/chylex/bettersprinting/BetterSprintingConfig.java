@@ -33,7 +33,9 @@ public class BetterSprintingConfig{
 	}
 	
 	public void update(){
-		if (config.hasChanged())config.save();
+		if (config.hasChanged()){
+			config.save();
+		}
 	}
 	
 	public String getFileName(){

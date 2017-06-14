@@ -2,7 +2,6 @@ package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -12,6 +11,7 @@ import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.client.player.impl.CompatPlayerAPI;
 import chylex.bettersprinting.system.Log;
 import chylex.bettersprinting.system.PacketPipeline;
+import chylex.bettersprinting.system.core.BetterSprintingCore;
 
 public class ClientProxy extends BetterSprintingProxy{
 	@Override
@@ -29,6 +29,7 @@ public class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void onInit(FMLInitializationEvent e){
 		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+		
 		settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
 			ClientModManager.keyBindSprintToggle,
 			ClientModManager.keyBindSneakToggle,
@@ -37,7 +38,7 @@ public class ClientProxy extends BetterSprintingProxy{
 		
 		KeyBinding.resetKeyBindingArrayAndHash();
 		
-		if (Loader.isModLoaded("PlayerAPI")){
+		if (BetterSprintingCore.usePlayerAPI()){
 			CompatPlayerAPI.register();
 		}
 	}
