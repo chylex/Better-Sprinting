@@ -7,7 +7,7 @@ import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.player.LivingUpdate;
 
 @SideOnly(Side.CLIENT)
-public final class LogicImplPlayerAPI{
+public final class CompatPlayerAPI{
 	public static void register(){
 		ClientPlayerAPI.register(BetterSprintingMod.modId, PlayerBase.class);
 	}
