@@ -36,7 +36,7 @@ bs.autoJump.info=Funkce Minecraftu která umožní automaticky skákat poblíž 
 
 # In-game messages
 
-bs.game.integrity=Kontrola integrity selhala, nalezen konflikt s dalším módem. Zkuste nainstalovat PlayerAPI pro vyřešení problému. Konfliktní třída: $
+bs.game.integrity=Kontrola integrity selhala, nalezen konflikt s dalším módem. Zkuste nainstalovat PlayerAPI pro vyřešení problému.
 bs.game.disabled=Server vyžádal vypnutí módu, všechny mechaniky módu budou vypnuty po dobu hraní na serveru.
 bs.game.reenabled=Server povolil mód, všechny mechaniky módu jsou opět zapnuty.
 

@@ -36,7 +36,7 @@ bs.autoJump.info=原版功能，能使你自動跳上障礙物。
 
 # In-game messages
 
-bs.game.integrity=相容性檢查失敗，因有其它模組與疾跑增強(Better Sprinting)存在衝突。請嘗試安裝PlayerAPI以解決。衝突種類： $
+bs.game.integrity=相容性檢查失敗，因有其它模組與疾跑增強(Better Sprinting)存在衝突。請嘗試安裝PlayerAPI以解決。
 bs.game.disabled=伺服器限制此模組，目前此模組功能已停用，從伺服器斷開後會恢復用戶設定值。
 bs.game.reenabled=伺服器允許使用此模組，原版疾跑機制已替換為疾跑增強(Better Sprinting)的機制。
 

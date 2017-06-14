@@ -40,7 +40,6 @@ public final class IntegrityCheck{
 				initialPlayerPos = mc.player.getPositionVector();
 			}
 			else if (mc.player.getPositionVector().distanceTo(initialPlayerPos) > 1D){
-				// TODO fix bs.game.integrity
 				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity")));
 				unregister();
 			}
