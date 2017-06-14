@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.gui;
 import java.io.IOException;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiScreen;
@@ -7,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -40,6 +42,7 @@ public class GuiSprint extends GuiScreen{
 	
 	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnAllDirs, btnDisableMod;
 	private int buttonId = -1;
+	private long pressTime;
 	
 	public GuiSprint(GuiScreen parentScreen){
 		this.parentScreen = parentScreen;
@@ -52,7 +55,7 @@ public class GuiSprint extends GuiScreen{
 		int left = getLeftColumnX(), top = height/6;
 		
 		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
-			GuiButton btn = new GuiButton(a, left+160*(a%2), top+24*(a/2), 70, 20, getKeyCodeString(a));
+			GuiButton btn = new GuiButton(a, left+160*(a%2), top+24*(a/2), 70, 20, ClientModManager.keyBindings[a].getDisplayName());
 			buttonList.add(btn);
 			
 			if ((a == 1 || a == 2) && ClientModManager.isModDisabled()){
@@ -91,7 +94,7 @@ public class GuiSprint extends GuiScreen{
 	@Override
 	protected void actionPerformed(GuiButton btn){
 		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
-			buttonList.get(a).displayString = getKeyCodeString(a);
+			buttonList.get(a).displayString = ClientModManager.keyBindings[a].getDisplayName();
 		}
 	
 		switch(btn.id){
@@ -149,27 +152,68 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	@Override
+	public void handleKeyboardInput() throws IOException{
+		char chr = Keyboard.getEventCharacter();
+		
+		if (Keyboard.getEventKey() == 0 && chr >= ' ' || Keyboard.getEventKeyState()){
+			keyTyped(chr, Keyboard.getEventKey());
+		}
+		
+		int key = Keyboard.getEventKey() == 0 ? chr+256 : Keyboard.getEventKey();
+		
+		if (key != 0 && !Keyboard.isRepeatEvent() && pressTime <= Minecraft.getSystemTime()-20L && !Keyboard.getEventKeyState()){
+			buttonId = -1;
+		}
+		
+		mc.dispatchKeypresses();
+	}
+	
+	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
-		if (!handleInput(button-100))super.mouseClicked(mouseX, mouseY, button);
+		if (!handleInput(button-100)){
+			super.mouseClicked(mouseX, mouseY, button);
+		}
 	}
 	
 	@Override
 	protected void keyTyped(char keyChar, int keyCode) throws IOException{
-		if (!handleInput(keyCode))super.keyTyped(keyChar, keyCode);
+		if (!handleInput(keyCode)){
+			super.keyTyped(keyChar, keyCode);
+		}
 	}
 	
 	private boolean handleInput(int keyId){
 		if (buttonId >= 0 && buttonId < 180){
-			ClientModManager.keyBindings[buttonId].setKeyCode(keyId == Keyboard.KEY_ESCAPE ? 0 : keyId);
-			buttonList.get(buttonId).displayString = getKeyCodeString(buttonId);
-			buttonId = -1;
+			KeyBinding binding = ClientModManager.keyBindings[buttonId];
+			
+			if (keyId == Keyboard.KEY_ESCAPE){
+				binding.setKeyModifierAndCode(KeyModifier.NONE, 0);
+			}
+			else{
+				binding.setKeyModifierAndCode(KeyModifier.getActiveModifier(), keyId);
+			}
+			
+			buttonList.get(buttonId).displayString = binding.getDisplayName();
+			
+			if (!KeyModifier.isKeyCodeModifier(keyId)){
+				buttonId = -1;
+			}
+			
 			KeyBinding.resetKeyBindingArrayAndHash();
 			
 			ClientSettings.keyCodeSprintHold = ClientModManager.keyBindSprintHold.getKeyCode();
 			ClientSettings.keyCodeSprintToggle = ClientModManager.keyBindSprintToggle.getKeyCode();
 			ClientSettings.keyCodeSneakToggle = ClientModManager.keyBindSneakToggle.getKeyCode();
 			ClientSettings.keyCodeOptionsMenu = ClientModManager.keyBindOptionsMenu.getKeyCode();
+			
+			ClientSettings.keyModSprintHold = ClientModManager.keyBindSprintHold.getKeyModifier();
+			ClientSettings.keyModSprintToggle = ClientModManager.keyBindSprintToggle.getKeyModifier();
+			ClientSettings.keyModSneakToggle = ClientModManager.keyBindSneakToggle.getKeyModifier();
+			ClientSettings.keyModOptionsMenu = ClientModManager.keyBindOptionsMenu.getKeyModifier();
+			
 			ClientSettings.update(BetterSprintingMod.config);
+			
+			pressTime = Minecraft.getSystemTime();
 			return true;
 		}
 		else return false;
@@ -199,13 +243,13 @@ public class GuiSprint extends GuiScreen{
 			}
 			
 			if (buttonId == a){
-				buttonList.get(a).displayString = TextFormatting.WHITE+"> "+TextFormatting.YELLOW+"??? "+TextFormatting.WHITE+"<";
+				buttonList.get(a).displayString = TextFormatting.WHITE+"> "+TextFormatting.YELLOW+binding.getDisplayName()+TextFormatting.WHITE+" <";
 			}
 			else if (hasConflict){
-				buttonList.get(a).displayString = (hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED)+getKeyCodeString(a);
+				buttonList.get(a).displayString = (hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED)+binding.getDisplayName();
 			}
 			else{
-				buttonList.get(a).displayString = getKeyCodeString(a);
+				buttonList.get(a).displayString = binding.getDisplayName();
 			}
 			
 			String desc = (binding == mc.gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
@@ -238,10 +282,6 @@ public class GuiSprint extends GuiScreen{
 	
 	private int getLeftColumnX(){
 		return width/2-155;
-	}
-	
-	private String getKeyCodeString(int i){
-		return GameSettings.getKeyDisplayString(ClientModManager.keyBindings[i].getKeyCode());
 	}
 	
 	private void drawButtonTitle(String title, GuiButton btn, int maxWidth){

@@ -65,11 +65,23 @@ public class BetterSprintingConfig{
 		return config.get(currentCategory, name, defValue, comment);
 	}
 	
+	public Property getString(String name, String defValue){
+		return config.get(currentCategory, name, defValue, "");
+	}
+	
+	public Property getString(String name, String defValue, String comment){
+		return config.get(currentCategory, name, defValue, comment);
+	}
+	
 	public void setBool(String name, boolean value){
 		config.get(currentCategory, name, value).set(value);
 	}
 	
 	public void setInt(String name, int value){
+		config.get(currentCategory, name, value).set(value);
+	}
+	
+	public void setString(String name, String value){
 		config.get(currentCategory, name, value).set(value);
 	}
 }

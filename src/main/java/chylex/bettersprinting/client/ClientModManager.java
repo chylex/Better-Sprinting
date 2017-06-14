@@ -2,6 +2,7 @@ package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,6 +21,12 @@ public final class ClientModManager{
 	public static final KeyBinding[] keyBindings = new KeyBinding[]{
 		keyBindSprintHold, keyBindSprintToggle, keyBindSneakToggle, keyBindOptionsMenu
 	};
+	
+	static{
+		for(KeyBinding binding:keyBindings){
+			binding.setKeyConflictContext(KeyConflictContext.IN_GAME);
+		}
+	}
 	
 	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
 	
