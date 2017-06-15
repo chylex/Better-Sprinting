@@ -1,8 +1,3 @@
-configurations{
-    shade
-    compile.extendsFrom shade
-}
-
 buildscript{
     repositories{
         jcenter()
@@ -15,10 +10,6 @@ buildscript{
     dependencies{
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
-}
-
-dependencies{
-    shade files('libs/JavaCheckerShade  MC-UNIVERSAL  v2.0.jar')
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -47,25 +38,12 @@ processResources{
     modver = data.version
 }
 
-reobf{
-    jar{
-        extraLines "PK: chylex/javacheck bsm/javacheck"
-    }
-}
-
 jar{
     archiveName = modname+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
-    
-    configurations.shade.each{ dep ->
-        from(project.zipTree(dep)){
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
     
     manifest{
         attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.TransformerEntityPlayerSP'
         attributes 'FMLCorePluginContainsMod': 'true'
         attributes 'FMLAT': 'bs_at.cfg'
-        attributes 'TweakClass': 'bsm.javacheck.Java8Checker'
     }
 }
