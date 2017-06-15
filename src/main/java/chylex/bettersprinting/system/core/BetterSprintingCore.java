@@ -4,8 +4,8 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.12")
+@IFMLLoadingPlugin.SortingIndex(1000)
 public final class BetterSprintingCore implements IFMLLoadingPlugin{
-	static boolean isObfuscated;
 	static boolean transformOnLivingUpdate;
 	
 	public static boolean usePlayerAPI(){
@@ -29,7 +29,6 @@ public final class BetterSprintingCore implements IFMLLoadingPlugin{
 
 	@Override
 	public void injectData(Map<String, Object> data){
-		isObfuscated = (Boolean)data.get("runtimeDeobfuscationEnabled");
 		transformOnLivingUpdate = !((List)data.get("coremodList")).stream().anyMatch(o -> o.toString().startsWith("PlayerAPIPlugin"));
 	}
 
