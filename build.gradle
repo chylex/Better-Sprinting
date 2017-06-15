@@ -42,8 +42,8 @@ jar{
     archiveName = modname+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
     
     manifest{
-        attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.TransformerEntityPlayerSP'
-        attributes 'FMLCorePluginContainsMod': 'true'
+        attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.BetterSprintingCore'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
         attributes 'FMLAT': 'bs_at.cfg'
     }
 }
