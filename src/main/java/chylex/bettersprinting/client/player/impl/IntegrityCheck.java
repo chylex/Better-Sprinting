@@ -1,6 +1,7 @@
 package chylex.bettersprinting.client.player.impl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,12 +38,17 @@ public final class IntegrityCheck{
 				unregister();
 			}
 			else if (initialPlayerPos.equals(Vec3d.ZERO)){
-				initialPlayerPos = mc.player.getPositionVector();
+				initialPlayerPos = getPlayerPosXZ(mc.player);
 			}
-			else if (mc.player.getPositionVector().distanceTo(initialPlayerPos) > 1D){
+			else if (getPlayerPosXZ(mc.player).squareDistanceTo(initialPlayerPos) > 1D){
 				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity")));
 				unregister();
 			}
 		}
+	}
+	
+	private static Vec3d getPlayerPosXZ(EntityPlayer player){
+		Vec3d vec = player.getPositionVector();
+		return new Vec3d(vec.x, 0D, vec.z);
 	}
 }
