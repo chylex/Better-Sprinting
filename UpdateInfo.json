@@ -2,8 +2,8 @@
   "homepage": "https://bsprint.chylex.com",
   
   "promos": {
-    "1.12-latest": "2.0.0",
-    "1.12-recommended": "2.0.0",
+    "1.12-latest": "2.0.1",
+    "1.12-recommended": "2.0.1",
     "1.11.2-latest": "1.1.9",
     "1.11.2-recommended": "1.1.9",
     "1.11-latest": "1.1.8",
@@ -23,6 +23,7 @@
   },
   
   "1.12": {
+    "2.0.1": "Updated to latest Forge",
     "2.0.0": "Rewritten and updated to Minecraft 1.12, fixed several issues"
   },
   
