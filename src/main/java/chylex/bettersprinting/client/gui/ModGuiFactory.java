@@ -18,20 +18,8 @@ public class ModGuiFactory implements IModGuiFactory{
 		return new GuiGeneralConfig(parentScreen);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass(){
-		return GuiGeneralConfig.class;
-	}
-
 	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories(){
-		return null;
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element){
 		return null;
 	}
 }

@@ -32,9 +32,9 @@ final class PlayerLogicHandler{
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
 	public void updateMovementInput(){
 		wasSneaking = player.movementInput.sneak;
-		wasMovingForward = player.movementInput.field_192832_b >= 0.8F;
+		wasMovingForward = player.movementInput.moveForward >= 0.8F;
 		customMovementInput.update(mc, player.movementInput);
-		mc.func_193032_ao().func_193293_a(player.movementInput);
+		mc.getTutorial().handleMovement(player.movementInput);
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
@@ -43,7 +43,7 @@ final class PlayerLogicHandler{
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(MobEffects.BLINDNESS);
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.field_192832_b >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if (player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown()){
 					player.sprintToggleTimer = 7;
 				}
@@ -52,7 +52,7 @@ final class PlayerLogicHandler{
 				}
 			}
 
-			if (!player.isSprinting() && player.movementInput.field_192832_b >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -72,7 +72,7 @@ final class PlayerLogicHandler{
 			
 			customMovementInput.held = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.field_192832_b >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer == 0){
 					player.sprintToggleTimer = 7;
 				}
@@ -122,8 +122,8 @@ final class PlayerLogicHandler{
 			player.setSprinting(false);
 		}
 
-		if (player.isSprinting() && (player.movementInput.field_192832_b < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
-			if ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) == false || (player.movementInput.field_192832_b == 0F && player.movementInput.moveStrafe == 0F)){
+		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
+			if ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F)){
 				player.setSprinting(false);
 			}
 		}

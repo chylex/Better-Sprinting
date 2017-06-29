@@ -15,10 +15,10 @@ final class MovementInputHandler{
 		
 		// VANILLA
 		$this.moveStrafe = 0F;
-		$this.field_192832_b = 0F;
+		$this.moveForward = 0F;
 
 		if (settings.keyBindForward.isKeyDown()){
-			++$this.field_192832_b;
+			++$this.moveForward;
 			$this.forwardKeyDown = true;
 		}
 		else{
@@ -26,7 +26,7 @@ final class MovementInputHandler{
 		}
 		
 		if (settings.keyBindBack.isKeyDown()){
-			--$this.field_192832_b;
+			--$this.moveForward;
 			$this.backKeyDown = true;
 		}
 		else{
@@ -91,7 +91,7 @@ final class MovementInputHandler{
 		// VANILLA
 		if ($this.sneak){
 			$this.moveStrafe = $this.moveStrafe*0.3F;
-			$this.field_192832_b = $this.field_192832_b*0.3F;
+			$this.moveForward = $this.moveForward*0.3F;
 		}
 		
 		// CUSTOM

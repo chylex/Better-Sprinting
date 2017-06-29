@@ -102,7 +102,7 @@ public final class LivingUpdate{
 		
 		if ($this.isHandActive() && !$this.isRiding()){
 			$this.movementInput.moveStrafe *= 0.2F;
-			$this.movementInput.field_192832_b *= 0.2F;
+			$this.movementInput.moveForward *= 0.2F;
 			$this.sprintToggleTimer = 0;
 		}
 		
@@ -161,7 +161,7 @@ public final class LivingUpdate{
 		if ($this.capabilities.isFlying && callIsCurrentViewEntity($this)){
 			if ($this.movementInput.sneak){
 				$this.movementInput.moveStrafe = $this.movementInput.moveStrafe/0.3F;
-				$this.movementInput.field_192832_b = $this.movementInput.field_192832_b/0.3F;
+				$this.movementInput.moveForward = $this.movementInput.moveForward/0.3F;
 				$this.motionY -= 0.15D; // ignore capabilities.getFlySpeed()
 			}
 
