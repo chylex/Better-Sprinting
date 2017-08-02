@@ -3,8 +3,11 @@ import java.util.stream.IntStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiKeyBindingList;
+import net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry;
 import net.minecraft.client.gui.GuiKeyBindingList.KeyEntry;
+import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings.Options;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,14 +65,15 @@ public final class ClientEventHandler{
 		
 		if (gui instanceof GuiControls){
 			GuiControls controls = (GuiControls)gui;
-			GuiKeyBindingList keyList = controls.keyBindingList;
-			
 			controls.buttonList.removeIf(btn -> btn.id == Options.AUTO_JUMP.returnEnumOrdinal());
 			
+			GuiKeyBindingList keyList = controls.keyBindingList;
+			IGuiListEntry[] entries = keyList.listEntries;
+			
 			int[] keyIndices = IntStream
-				.range(0, keyList.listEntries.length)
-				.filter(index -> keyList.listEntries[index] instanceof KeyEntry)
-				.filter(index -> ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)keyList.listEntries[index]).keybinding))
+				.range(0, entries.length)
+				.filter(index -> (entries[index] instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entries[index]).keybinding)) ||
+				                 (entries[index] instanceof CategoryEntry && ((CategoryEntry)entries[index]).labelText.equals(I18n.format(ClientModManager.categoryName))))
 				.toArray();
 			
 			keyList.listEntries = ArrayUtils.removeAll(keyList.listEntries, keyIndices);

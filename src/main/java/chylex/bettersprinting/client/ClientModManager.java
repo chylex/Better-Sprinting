@@ -10,19 +10,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class ClientModManager{
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	public static final String chatPrefix = TextFormatting.GREEN+"[Better Sprinting]"+TextFormatting.RESET+" ";
+	public static final String categoryName = "key.categories.bettersprinting.hidden";
 	
 	public static boolean showDisableWarningWhenPossible;
 	
 	public static final KeyBinding keyBindSprintHold = mc.gameSettings.keyBindSprint;
-	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", 34, "key.categories.movement");
-	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", 21, "key.categories.movement");
-	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", 24, "key.categories.movement");
+	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", 34, categoryName);
+	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", 21, categoryName);
+	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", 24, categoryName);
 	
 	public static final KeyBinding[] keyBindings = new KeyBinding[]{
 		keyBindSprintHold, keyBindSprintToggle, keyBindSneakToggle, keyBindOptionsMenu
 	};
 	
 	static{
+		keyBindSprintHold.keyCategory = categoryName;
+		
 		for(KeyBinding binding:keyBindings){
 			binding.setKeyConflictContext(KeyConflictContext.IN_GAME);
 		}
