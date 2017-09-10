@@ -3,9 +3,11 @@ import java.util.List;
 import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-@IFMLLoadingPlugin.MCVersion("1.12.1")
+@IFMLLoadingPlugin.MCVersion(BetterSprintingCore.supportedMinecraftVersion)
 @IFMLLoadingPlugin.SortingIndex(1000)
 public final class BetterSprintingCore implements IFMLLoadingPlugin{
+	public static final String supportedMinecraftVersion = "1.12.1";
+	
 	static boolean transformOnLivingUpdate;
 	
 	public static boolean usePlayerAPI(){

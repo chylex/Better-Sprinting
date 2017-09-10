@@ -13,11 +13,13 @@ import org.objectweb.asm.tree.VarInsnNode;
 import chylex.bettersprinting.system.Log;
 
 public final class TransformerEntityPlayerSP implements IClassTransformer{
-	private static final String[] NAMES_ONLIVINGUPDATE = new String[]{ "n", "onLivingUpdate" }; // func_70636_d
+	private static final String[] NAMES_ONLIVINGUPDATE = new String[]{ "n", "onLivingUpdate" };
 	private static final String DESC_ONLIVINGUPDATE = "()V";
+	private static final String SRG_ONLIVINGUPDATE = "func_70636_d";
 	
-	private static final String[] NAMES_PUSHOUTOFBLOCKS = new String[]{ "i", "pushOutOfBlocks" }; // func_145771_j
+	private static final String[] NAMES_PUSHOUTOFBLOCKS = new String[]{ "i", "pushOutOfBlocks" };
 	private static final String DESC_PUSHOUTOFBLOCKS = "(DDD)Z";
+	private static final String SRG_PUSHOUTOFBLOCKS = "func_145771_j";
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes){
@@ -61,7 +63,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private void transformOnLivingUpdate(MethodNode method){
-		String targetName = method.name.equals("onLivingUpdate") ? method.name : "func_70636_d";
+		String targetName = method.name.equals("onLivingUpdate") ? method.name : SRG_ONLIVINGUPDATE;
 		InsnList instructions = new InsnList();
 		
 		instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -80,7 +82,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private MethodNode bridgePushOutOfBlocks(MethodNode target){
-		String targetName = target.name.equals("pushOutOfBlocks") ? target.name : "func_145771_j";
+		String targetName = target.name.equals("pushOutOfBlocks") ? target.name : SRG_PUSHOUTOFBLOCKS;
 		MethodNode m = new MethodNode(Opcodes.ACC_PUBLIC, "_bsm_pushOutOfBlocks", "(DDD)V", null, null);
 		
 		m.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));

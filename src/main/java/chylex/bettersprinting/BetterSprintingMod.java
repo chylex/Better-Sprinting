@@ -7,8 +7,15 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import chylex.bettersprinting.system.Log;
+import chylex.bettersprinting.system.core.BetterSprintingCore;
 
-@Mod(modid = BetterSprintingMod.modId, name = "Better Sprinting", useMetadata = true, dependencies = "required-after:forge@[14.21.1.2387,)", guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*", updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
+@Mod(modid = BetterSprintingMod.modId,
+     name = "Better Sprinting",
+     useMetadata = true,
+     guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory",
+     acceptedMinecraftVersions = BetterSprintingCore.supportedMinecraftVersion,
+     acceptableRemoteVersions = "*",
+     updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
 public class BetterSprintingMod{
 	@Instance(BetterSprintingMod.modId)
 	public static BetterSprintingMod instance;
