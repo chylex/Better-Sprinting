@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-@IFMLLoadingPlugin.MCVersion("1.12")
+@IFMLLoadingPlugin.MCVersion("1.12.1")
 @IFMLLoadingPlugin.SortingIndex(1000)
 public final class BetterSprintingCore implements IFMLLoadingPlugin{
 	static boolean transformOnLivingUpdate;

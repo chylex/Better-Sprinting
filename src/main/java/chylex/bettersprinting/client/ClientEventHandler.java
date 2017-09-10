@@ -65,7 +65,7 @@ public final class ClientEventHandler{
 		
 		if (gui instanceof GuiControls){
 			GuiControls controls = (GuiControls)gui;
-			controls.buttonList.removeIf(btn -> btn.id == Options.AUTO_JUMP.returnEnumOrdinal());
+			controls.buttonList.removeIf(btn -> btn.id == Options.AUTO_JUMP.getOrdinal());
 			
 			GuiKeyBindingList keyList = controls.keyBindingList;
 			IGuiListEntry[] entries = keyList.listEntries;
