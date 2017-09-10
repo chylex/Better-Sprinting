@@ -21,6 +21,10 @@ public class ClientProxy extends BetterSprintingProxy{
 	
 	@Override
 	public void onPreInit(FMLPreInitializationEvent e){
+		if (!BetterSprintingCore.wasInitialized()){ // Forge fucks with 'acceptedMinecraftVersions', so no, I'm not going to use that, thank you very much
+			throw new RuntimeException("This version of Better Sprinting only supports Minecraft "+BetterSprintingCore.supportedMinecraftVersion);
+		}
+		
 		Log.initializeDebug();
 		ClientEventHandler.register();
 		PacketPipeline.initialize(new ClientNetwork());
