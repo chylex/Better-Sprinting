@@ -104,9 +104,11 @@ public final class LivingUpdate{
 			--$this.timeUntilPortal;
 		}
 		
+		// CUSTOM
 		boolean wasJumping = $this.movementInput.jump;
 		currentHandler.updateMovementInput();
 		
+		// VANILLA
 		if ($this.isHandActive() && !$this.isRiding()){
 			$this.movementInput.moveStrafe *= 0.2F;
 			$this.movementInput.moveForward *= 0.2F;
@@ -167,7 +169,8 @@ public final class LivingUpdate{
 		}
 		
 		$this.wasFallFlying = $this.isElytraFlying();
-
+		
+		// CUSTOM
 		if ($this.capabilities.isFlying && callIsCurrentViewEntity($this)){
 			if ($this.movementInput.sneak){
 				$this.movementInput.moveStrafe = $this.movementInput.moveStrafe/0.3F;
@@ -179,7 +182,8 @@ public final class LivingUpdate{
 				$this.motionY += 0.15D; // ignore capabilities.getFlySpeed()
 			}
 		}
-
+		
+		// VANILLA
 		if ($this.isRidingHorse()){
 			IJumpingMount mount = (IJumpingMount)$this.getRidingEntity();
 			

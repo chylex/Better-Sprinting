@@ -88,15 +88,14 @@ final class MovementInputHandler{
 			$this.sneak = sneakToggle;
 		}
 		
+		if (ClientModManager.isModDisabled()){
+			sneakToggle = sprintToggle = false;
+		}
+		
 		// VANILLA
 		if ($this.sneak){
 			$this.moveStrafe = $this.moveStrafe*0.3F;
 			$this.moveForward = $this.moveForward*0.3F;
-		}
-		
-		// CUSTOM
-		if (ClientModManager.isModDisabled()){
-			sneakToggle = sprintToggle = false;
 		}
 	}
 }

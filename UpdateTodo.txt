@@ -1,7 +1,7 @@
 1. Update code
-   - Search for: UPDATE |
-   - Custom code is marked // CUSTOM, vanilla code is marked // VANILLA
-   - Make sure all instances of vanilla code match the updated code
+   - Search the repository for: // UPDATE
+   - When mixed, custom code is marked // CUSTOM, vanilla code is marked // VANILLA
+   - Make sure all instances of vanilla code match the updated code, and check custom code for subtle changes
    - Once done, update the Minecraft version in the comment
 
 2. Update version numbers
