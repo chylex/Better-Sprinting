@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.MCVersion(BetterSprintingCore.supportedMinecraftVersion)
 @IFMLLoadingPlugin.SortingIndex(1000)
 public final class BetterSprintingCore implements IFMLLoadingPlugin{
-	public static final String supportedMinecraftVersion = "1.12.1";
+	public static final String supportedMinecraftVersion = "1.12.2";
 	
 	static boolean wasInitialized;
 	static boolean transformOnLivingUpdate;

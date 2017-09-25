@@ -29,7 +29,7 @@ final class PlayerLogicHandler{
 		return player;
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public void updateMovementInput(){
 		wasSneaking = player.movementInput.sneak;
 		wasMovingForward = player.movementInput.moveForward >= 0.8F;
@@ -37,7 +37,7 @@ final class PlayerLogicHandler{
 		mc.getTutorial().handleMovement(player.movementInput);
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(MobEffects.BLINDNESS);
@@ -122,7 +122,7 @@ final class PlayerLogicHandler{
 			player.setSprinting(false);
 		}
 
-		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.isCollidedHorizontally || !enoughHunger)){
+		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.collidedHorizontally || !enoughHunger)){
 			if ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F)){
 				player.setSprinting(false);
 			}

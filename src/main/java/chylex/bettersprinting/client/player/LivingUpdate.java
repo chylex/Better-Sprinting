@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.IJumpingMount;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -14,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,7 +46,7 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public static void callPreSuper(EntityPlayerSP $this){
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
 			currentHandler = new PlayerLogicHandler($this);
@@ -61,6 +64,10 @@ public final class LivingUpdate{
 		
 		if ($this.inPortal){
 			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame()){
+				if (mc.currentScreen instanceof GuiContainer){
+					$this.closeScreen();
+				}
+				
 				mc.displayGuiScreen(null);
 			}
 			
@@ -115,15 +122,18 @@ public final class LivingUpdate{
 		}
 		
 		AxisAlignedBB playerBoundingBox = $this.getEntityBoundingBox();
+		PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
 		
-		try{
-			mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
-			mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
-			mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
-			mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
-		}catch(Throwable e){
-			throw new RuntimeException(e);
-		}
+        if (!MinecraftForge.EVENT_BUS.post(event)){
+			try{
+				mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
+			}catch(Throwable e){
+				throw new RuntimeException(e);
+			}
+        }
 		
 		// CUSTOM
 		currentHandler.updateLiving();
@@ -173,8 +183,12 @@ public final class LivingUpdate{
 		if ($this.isRidingHorse()){
 			IJumpingMount mount = (IJumpingMount)$this.getRidingEntity();
 			
-			if ($this.horseJumpPowerCounter < 0 && ++$this.horseJumpPowerCounter == 0){
-				$this.horseJumpPower = 0F;
+			if ($this.horseJumpPowerCounter < 0){
+				++$this.horseJumpPowerCounter;
+				
+				if ($this.horseJumpPowerCounter == 0){
+					$this.horseJumpPower = 0F;
+				}
 			}
 
 			if (wasJumping && !$this.movementInput.jump){
@@ -187,7 +201,9 @@ public final class LivingUpdate{
 				$this.horseJumpPower = 0F;
 			}
 			else if (wasJumping){
-				if (++$this.horseJumpPowerCounter < 10){
+				++$this.horseJumpPowerCounter;
+				
+				if ($this.horseJumpPowerCounter < 10){
 					$this.horseJumpPower = $this.horseJumpPowerCounter*0.1F;
 				}
 				else{
@@ -200,7 +216,7 @@ public final class LivingUpdate{
 		}
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public static void callPostSuper(EntityPlayerSP $this){
 		if ($this.onGround && $this.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
 			$this.capabilities.isFlying = false;
@@ -208,12 +224,12 @@ public final class LivingUpdate{
 		}
 	}
 	
-	// UPDATE | EntityPlayerSP.isCurrentViewEntity | 1.12
+	// UPDATE | EntityPlayerSP.isCurrentViewEntity | 1.12.2
 	private static boolean callIsCurrentViewEntity(EntityPlayerSP $this){
 		return mc.getRenderViewEntity() == $this;
 	}
 	
-	// UPDATE | EntityPlayerSP.sendHorseJump | 1.12
+	// UPDATE | EntityPlayerSP.sendHorseJump | 1.12.2
 	private static void callSendHorseJump(EntityPlayerSP $this){
 		$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_RIDING_JUMP, (int)($this.getHorseJumpPower()*100F)));
 	}
