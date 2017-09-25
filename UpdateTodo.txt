@@ -1,0 +1,22 @@
+1. Update code
+   - Search for: UPDATE |
+   - Custom code is marked // CUSTOM, vanilla code is marked // VANILLA
+   - Make sure all instances of vanilla code match the updated code
+   - Once done, update the Minecraft version in the comment
+
+2. Update version numbers
+   - mcmod.info > version  -  mod version
+   - BetterSprintingMod.buildId  -  unique build string for each release
+   - BetterSprintingCore.supportedMinecraftVersion  -  Minecraft version
+
+3. Make sure the mod is working
+   - Run a debug test to see if the coremod doesn't fail integrity check
+   - Test both SP and MP
+     - Make sure all control options work
+     - Test server-side commands with different locales
+     - Join a BSM server with vanilla client
+     - Join a vanilla server with BSM client
+
+4. Update version data
+   - UpdateInfo.json
+   - UpdateNotificationData.txt

@@ -32,7 +32,7 @@ When creating a Pull Request, please follow these guidelines:
   - Use tabs for indentation
   - Import order is `io, java, net, org, api, chylex, com` for some reason
   - No space between right parenthesis and left bracket: `void method(){`
-- When updating the mod to a new Minecraft version, all vanilla code in methods marked with `// UPDATE` must be rewritten to keep feature consistency with vanilla code
+- When updating the mod to a new Minecraft version, read `UpdateTodo.txt` for an overview of what needs to be done during each update
 
 ### I want to create an addon
 
@@ -48,6 +48,6 @@ In order to setup your own workspace to play around with the source code, first 
 
 Once you cloned the repository, follow the [Getting Started with Forge](https://mcforge.readthedocs.io/en/latest/gettingstarted) tutorial. You can skip the first 3 steps, the repository already comes with the Gradle build system.
 
-To run Better Sprinting, make sure you add `-Dfml.coreMods.load=chylex.bettersprinting.system.core.BetterSprintingCore` to your startup VM arguments.
+To run Better Sprinting, make sure you add the following entry to your startup VM arguments:
 
-
+`-Dfml.coreMods.load=chylex.bettersprinting.system.core.BetterSprintingCore`
