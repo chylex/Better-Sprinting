@@ -3,14 +3,12 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.IJumpingMount;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,16 +41,16 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
-	public static void callPreSuper(EntityPlayerSP $this){
+	public static void injectOnLivingUpdate(EntityPlayerSP $this){
 		/*
 		if (this.timeUntilPortal > 0){
 			--this.timeUntilPortal;
 		}
 		
-		<<< INSERTED HERE
-		
 		boolean flag = this.movementInput.jump;
 		boolean flag1 = this.movementInput.sneak;
+		float f = 0.8F;                                        <<< INSERTED HERE
+		boolean flag2 = this.movementInput.moveForward >= 0.8F;
 		 */
 		
 		// CUSTOM
@@ -139,50 +137,13 @@ public final class LivingUpdate{
 			}
 		}
 		
-		// VANILLA
-		if ($this.isRidingHorse()){
-			IJumpingMount mount = (IJumpingMount)$this.getRidingEntity();
-			
-			if ($this.horseJumpPowerCounter < 0){
-				++$this.horseJumpPowerCounter;
-				
-				if ($this.horseJumpPowerCounter == 0){
-					$this.horseJumpPower = 0F;
-				}
-			}
-
-			if (wasJumping && !$this.movementInput.jump){
-				$this.horseJumpPowerCounter = -10;
-				mount.setJumpPower(MathHelper.floor($this.getHorseJumpPower()*100F));
-				/* Inlined EntityPlayerSP.sendHorseJump */
-				$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_RIDING_JUMP, (int)($this.getHorseJumpPower()*100F)));
-			}
-			else if (!wasJumping && $this.movementInput.jump){
-				$this.horseJumpPowerCounter = 0;
-				$this.horseJumpPower = 0F;
-			}
-			else if (wasJumping){
-				++$this.horseJumpPowerCounter;
-				
-				if ($this.horseJumpPowerCounter < 10){
-					$this.horseJumpPower = $this.horseJumpPowerCounter*0.1F;
-				}
-				else{
-					$this.horseJumpPower = 0.8F+2.0F/($this.horseJumpPowerCounter-9)*0.1F;
-				}
-			}
+		/*
 		}
-		else{
-			$this.horseJumpPower = 0F;
-		}
-	}
-	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
-	public static void callPostSuper(EntityPlayerSP $this){
-		if ($this.onGround && $this.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
-			$this.capabilities.isFlying = false;
-			$this.sendPlayerAbilities();
-		}
+		                         <<< SKIPPED TO HERE
+		if (this.isRidingHorse())
+		{
+			IJumpingMount ijumpingmount = (IJumpingMount)this.getRidingEntity();
+		*/
 	}
 	
 	private LivingUpdate(){}

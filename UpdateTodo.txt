@@ -13,8 +13,15 @@
 3. Make sure the mod is working
    - Test coremod
      - Make sure the coremod doesn't fail integrity check on startup
-     - Test code in EntityPlayerSP.onLivingUpdate before and after the coremod insertion point
-       - Easy way is to make sure a chest instantly closes while inside a portal in survival mode, and that horse jumping works, but that may change with an update
+     - Debug EntityPlayerSP.onLivingUpdate to make sure the control flow is still fine
+       - 1. Put a breakpoint on the first line:
+            > ++this.sprintingTicksLeft;
+       - 2. Step over until this point:
+            > float f = 0.8F;
+       - 3. Now step into it, and you should jump into the first line of LivingUpdate.callPreSuper
+       - 4. Step return, step over, and you should jump back to EntityPlayerSP on this line:
+            > if (this.isRidingHorse())
+       - 5. If any of these steps fail, things are bork
    - Test both SP and MP
      - Make sure all control options work
      - Test server-side commands with different locales
