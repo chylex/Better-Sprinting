@@ -39,17 +39,15 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private void transformEntityPlayerSP(ClassNode node){
-		if (BetterSprintingCore.transformOnLivingUpdate){
-			transformOnLivingUpdate(node.methods
-				.stream()
-				.filter(method -> method.desc.equals(DESC_ONLIVINGUPDATE) && ArrayUtils.contains(NAMES_ONLIVINGUPDATE, method.name))
-				.findAny()
-				.<IllegalStateException>orElseThrow(() -> {
-					logMethods("onLivingUpdate", node);
-					return new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
-				})
-			);
-		}
+		transformOnLivingUpdate(node.methods
+			.stream()
+			.filter(method -> method.desc.equals(DESC_ONLIVINGUPDATE) && ArrayUtils.contains(NAMES_ONLIVINGUPDATE, method.name))
+			.findAny()
+			.<IllegalStateException>orElseThrow(() -> {
+				logMethods("onLivingUpdate", node);
+				return new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
+			})
+		);
 		
 		node.methods.add(bridgePushOutOfBlocks(node.methods
 			.stream()

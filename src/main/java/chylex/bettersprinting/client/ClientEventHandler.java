@@ -20,8 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
 import chylex.bettersprinting.client.gui.GuiButtonSprint;
 import chylex.bettersprinting.client.gui.GuiSprint;
+import chylex.bettersprinting.client.player.IntegrityCheck;
 import chylex.bettersprinting.client.player.LivingUpdate;
-import chylex.bettersprinting.client.player.impl.IntegrityCheck;
 import chylex.bettersprinting.client.update.UpdateNotificationManager;
 import chylex.bettersprinting.system.PacketPipeline;
 

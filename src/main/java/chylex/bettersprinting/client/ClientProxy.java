@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
-import chylex.bettersprinting.client.player.impl.CompatPlayerAPI;
 import chylex.bettersprinting.system.Log;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.core.BetterSprintingCore;
@@ -41,10 +40,6 @@ public class ClientProxy extends BetterSprintingProxy{
 		});
 		
 		KeyBinding.resetKeyBindingArrayAndHash();
-		
-		if (BetterSprintingCore.usePlayerAPI()){
-			CompatPlayerAPI.register();
-		}
 	}
 	
 	@Override

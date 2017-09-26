@@ -1,4 +1,4 @@
-package chylex.bettersprinting.client.player.impl;
+package chylex.bettersprinting.client.player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.player.LivingUpdate;
 
 @SideOnly(Side.CLIENT)
 public final class IntegrityCheck{
