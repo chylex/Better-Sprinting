@@ -128,7 +128,9 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			}
 		}
 		
-		logInstructions(method);
+		if (Log.isDeobfEnvironment){
+			logInstructions(method);
+		}
 	}
 	
 	private MethodNode bridgePushOutOfBlocks(MethodNode target){

@@ -126,8 +126,8 @@ public final class LivingUpdate{
 		
 		$this.wasFallFlying = $this.isElytraFlying();
 		
-		// CUSTOM
-		if ($this.capabilities.isFlying && callIsCurrentViewEntity($this)){
+		// VANILLA + CUSTOM
+		if ($this.capabilities.isFlying && /* Inlined EntityPlayerSP.isCurrentViewEntity */ mc.getRenderViewEntity() == $this){
 			if ($this.movementInput.sneak){
 				$this.movementInput.moveStrafe = $this.movementInput.moveStrafe/0.3F;
 				$this.movementInput.moveForward = $this.movementInput.moveForward/0.3F;
@@ -154,7 +154,8 @@ public final class LivingUpdate{
 			if (wasJumping && !$this.movementInput.jump){
 				$this.horseJumpPowerCounter = -10;
 				mount.setJumpPower(MathHelper.floor($this.getHorseJumpPower()*100F));
-				callSendHorseJump($this);
+				/* Inlined EntityPlayerSP.sendHorseJump */
+				$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_RIDING_JUMP, (int)($this.getHorseJumpPower()*100F)));
 			}
 			else if (!wasJumping && $this.movementInput.jump){
 				$this.horseJumpPowerCounter = 0;
@@ -182,16 +183,6 @@ public final class LivingUpdate{
 			$this.capabilities.isFlying = false;
 			$this.sendPlayerAbilities();
 		}
-	}
-	
-	// UPDATE | EntityPlayerSP.isCurrentViewEntity | 1.12.2
-	private static boolean callIsCurrentViewEntity(EntityPlayerSP $this){
-		return mc.getRenderViewEntity() == $this;
-	}
-	
-	// UPDATE | EntityPlayerSP.sendHorseJump | 1.12.2
-	private static void callSendHorseJump(EntityPlayerSP $this){
-		$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_RIDING_JUMP, (int)($this.getHorseJumpPower()*100F)));
 	}
 	
 	private LivingUpdate(){}
