@@ -3,11 +3,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemElytra;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,8 +43,8 @@ public final class LivingUpdate{
 		}
 		
 		boolean flag = this.movementInput.jump;
-		boolean flag1 = this.movementInput.sneak;
-		float f = 0.8F;                                        <<< INSERTED HERE
+		boolean flag1 = this.movementInput.sneak;    <<< INSERTED HERE
+		float f = 0.8F;
 		boolean flag2 = this.movementInput.moveForward >= 0.8F;
 		 */
 		
@@ -114,35 +109,12 @@ public final class LivingUpdate{
 			}
 		}
 		
-		if ($this.movementInput.jump && !wasJumping && !$this.onGround && $this.motionY < 0D && !$this.isElytraFlying() && !$this.capabilities.isFlying){
-			ItemStack chestIS = $this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			
-			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isUsable(chestIS)){
-				$this.connection.sendPacket(new CPacketEntityAction($this, CPacketEntityAction.Action.START_FALL_FLYING));
-			}
-		}
-		
-		$this.wasFallFlying = $this.isElytraFlying();
-		
-		// VANILLA + CUSTOM
-		if ($this.capabilities.isFlying && /* Inlined EntityPlayerSP.isCurrentViewEntity */ mc.getRenderViewEntity() == $this){
-			if ($this.movementInput.sneak){
-				$this.movementInput.moveStrafe = $this.movementInput.moveStrafe/0.3F;
-				$this.movementInput.moveForward = $this.movementInput.moveForward/0.3F;
-				$this.motionY -= 0.15D; // ignore capabilities.getFlySpeed()
-			}
-
-			if ($this.movementInput.jump){
-				$this.motionY += 0.15D; // ignore capabilities.getFlySpeed()
-			}
-		}
-		
 		/*
 		}
-		                         <<< SKIPPED TO HERE
-		if (this.isRidingHorse())
+		    <<< SKIPPED TO HERE
+		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.capabilities.isFlying)
 		{
-			IJumpingMount ijumpingmount = (IJumpingMount)this.getRidingEntity();
+			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		*/
 	}
 	

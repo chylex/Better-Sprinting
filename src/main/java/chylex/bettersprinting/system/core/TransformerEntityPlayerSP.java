@@ -60,12 +60,13 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private int findInsertionPointOnLivingUpdate(MethodNode method){
-		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput", true);
+		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
 		
 		for(int index = 0, count = method.instructions.size(); index < count; index++){
 			AbstractInsnNode node = method.instructions.get(index);
 			
 			if (node instanceof FieldInsnNode && ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)node).desc)){
+				while(++index < count && !(method.instructions.get(index) instanceof LabelNode));
 				while(++index < count && !(method.instructions.get(index) instanceof LabelNode));
 				return index;
 			}
@@ -78,19 +79,19 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private int findSkipPointOnLivingUpdate(MethodNode method, int insertionPoint){
-		String[] clsIJumpingMount = getClassNames("net/minecraft/entity/IJumpingMount", false);
+		String[] clsEntityEquipmentSlot = getClassNames("net/minecraft/inventory/EntityEquipmentSlot");
 		
 		for(int index = method.instructions.size()-1; index >= insertionPoint; index--){
 			AbstractInsnNode node = method.instructions.get(index);
 			
-			if (node instanceof TypeInsnNode && ArrayUtils.contains(clsIJumpingMount, ((TypeInsnNode)node).desc)){
+			if (node instanceof FieldInsnNode && ArrayUtils.contains(clsEntityEquipmentSlot, ((FieldInsnNode)node).desc)){
 				while(--index >= insertionPoint && !(method.instructions.get(index) instanceof LabelNode));
 				while(--index >= insertionPoint && !(method.instructions.get(index) instanceof LabelNode));
 				return index;
 			}
 		}
 		
-		Log.error("Finding skip point - $0", String.join(" / ", clsIJumpingMount));
+		Log.error("Finding skip point - $0", String.join(" / ", clsEntityEquipmentSlot));
 		logInstructions(method);
 		
 		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find a skip point in onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
@@ -100,7 +101,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		int insertionPoint = findInsertionPointOnLivingUpdate(method);
 		int skipPoint = findSkipPointOnLivingUpdate(method, insertionPoint);
 		
-		AbstractInsnNode insertTarget = method.instructions.get(insertionPoint+6);
+		AbstractInsnNode insertTarget = method.instructions.get(insertionPoint);
 		LabelNode skipTarget = (LabelNode)method.instructions.get(skipPoint);
 		
 		InsnList instructions = new InsnList();
@@ -109,7 +110,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
 		instructions.add(new JumpInsnNode(Opcodes.GOTO, skipTarget));
 		
-		method.instructions.insert(insertTarget, instructions);
+		method.instructions.insertBefore(insertTarget, instructions);
 	}
 	
 	private MethodNode bridgePushOutOfBlocks(MethodNode target){
@@ -127,12 +128,12 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		return m;
 	}
 	
-	private static String[] getClassNames(String name, boolean full){
+	private static String[] getClassNames(String name){
 		String obf = FMLDeobfuscatingRemapper.INSTANCE.unmap(name);
 		
 		return new String[]{
-			full ? "L"+name+";" : name,
-			full ? "L"+obf+";" : obf
+			"L"+name+";",
+			"L"+obf+";"
 		};
 	}
 	

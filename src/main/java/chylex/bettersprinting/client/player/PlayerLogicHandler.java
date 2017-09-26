@@ -95,15 +95,7 @@ final class PlayerLogicHandler{
 			
 			if (ClientSettings.flySpeedBoost > 0){
 				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying()){
-					player.capabilities.setFlySpeed(0.05F*(1+ClientSettings.flySpeedBoost));
-					
-					if (player.movementInput.sneak){
-						player.motionY -= 0.15D*ClientSettings.flySpeedBoost;
-					}
-					
-					if (player.movementInput.jump){
-						player.motionY += 0.15D*ClientSettings.flySpeedBoost;
-					}
+					player.capabilities.setFlySpeed(0.05F+0.075F*ClientSettings.flySpeedBoost);
 				}
 				else{
 					player.capabilities.setFlySpeed(0.05F);
