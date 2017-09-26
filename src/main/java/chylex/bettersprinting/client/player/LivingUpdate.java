@@ -2,13 +2,9 @@ package chylex.bettersprinting.client.player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.IJumpingMount;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
@@ -48,63 +44,23 @@ public final class LivingUpdate{
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public static void callPreSuper(EntityPlayerSP $this){
+		/*
+		if (this.timeUntilPortal > 0){
+			--this.timeUntilPortal;
+		}
+		
+		<<< INSERTED HERE
+		
+		boolean flag = this.movementInput.jump;
+		boolean flag1 = this.movementInput.sneak;
+		 */
+		
+		// CUSTOM
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
 			currentHandler = new PlayerLogicHandler($this);
 			hasTriggered = true;
 		}
 		
-		// VANILLA
-		++$this.sprintingTicksLeft;
-		
-		if ($this.sprintToggleTimer > 0){
-			--$this.sprintToggleTimer;
-		}
-		
-		$this.prevTimeInPortal = $this.timeInPortal;
-		
-		if ($this.inPortal){
-			if (mc.currentScreen != null && !mc.currentScreen.doesGuiPauseGame()){
-				if (mc.currentScreen instanceof GuiContainer){
-					$this.closeScreen();
-				}
-				
-				mc.displayGuiScreen(null);
-			}
-			
-			if ($this.timeInPortal == 0F){
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.BLOCK_PORTAL_TRIGGER, $this.getRNG().nextFloat()*0.4F+0.8F));
-			}
-			
-			$this.timeInPortal += 0.0125F;
-			
-			if ($this.timeInPortal >= 1F){
-				$this.timeInPortal = 1F;
-			}
-			
-			$this.inPortal = false;
-		}
-		else if ($this.isPotionActive(MobEffects.NAUSEA) && $this.getActivePotionEffect(MobEffects.NAUSEA).getDuration() > 60){
-			$this.timeInPortal += 0.006666667F;
-			
-			if ($this.timeInPortal > 1F){
-				$this.timeInPortal = 1F;
-			}
-		}
-		else{
-			if ($this.timeInPortal > 0F){
-				$this.timeInPortal -= 0.05F;
-			}
-			
-			if ($this.timeInPortal < 0F){
-				$this.timeInPortal = 0F;
-			}
-		}
-		
-		if ($this.timeUntilPortal > 0){
-			--$this.timeUntilPortal;
-		}
-		
-		// CUSTOM
 		boolean wasJumping = $this.movementInput.jump;
 		currentHandler.updateMovementInput();
 		

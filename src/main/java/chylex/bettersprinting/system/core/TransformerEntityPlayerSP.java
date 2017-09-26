@@ -1,15 +1,15 @@
 package chylex.bettersprinting.system.core;
+import java.util.Iterator;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceMethodVisitor;
 import chylex.bettersprinting.system.Log;
 
 public final class TransformerEntityPlayerSP implements IClassTransformer{
@@ -30,7 +30,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			
 			transformEntityPlayerSP(node);
 			
-			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 			node.accept(writer);
 			return writer.toByteArray();
 		}
@@ -62,7 +62,31 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		));
 	}
 	
+	private int findInsertionPointOnLivingUpdate(MethodNode method){
+		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
+		
+		for(int index = 0, count = method.instructions.size(), lastLabelIndex = -1; index < count; index++){
+			AbstractInsnNode node = method.instructions.get(index);
+			
+			if (node instanceof LabelNode){
+				lastLabelIndex = index;
+			}
+			else if (node instanceof FieldInsnNode){
+				if (ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)node).desc)){
+					return lastLabelIndex;
+				}
+			}
+		}
+		
+		Log.error("Finding insertion point - $0", String.join(" / ", clsMovementInput));
+		logInstructions(method);
+		
+		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find an insertion point into onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
+	}
+	
 	private void transformOnLivingUpdate(MethodNode method){
+		int insertionPoint = findInsertionPointOnLivingUpdate(method);
+		
 		String targetName = method.name.equals("onLivingUpdate") ? method.name : SRG_ONLIVINGUPDATE;
 		InsnList instructions = new InsnList();
 		
@@ -75,10 +99,19 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "callPostSuper", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
 		
-		instructions.add(new InsnNode(Opcodes.RETURN));
+		instructions.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode)method.instructions.getLast()));
 		
-		method.instructions.clear();
-		method.instructions.add(instructions);
+		method.instructions.insert(method.instructions.get(insertionPoint), instructions);
+		
+		for(int index = insertionPoint+instructions.size()+1; index < method.instructions.size(); index++){
+			AbstractInsnNode node = method.instructions.get(index);
+			
+			if (node instanceof LabelNode){
+				method.instructions.insert(node, new InsnNode(Opcodes.RETURN));
+			}
+		}
+		
+		logInstructions(method);
 	}
 	
 	private MethodNode bridgePushOutOfBlocks(MethodNode target){
@@ -96,11 +129,32 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		return m;
 	}
 	
+	private static String[] getClassNames(String name){
+		return new String[]{
+			"L"+name+";",
+			"L"+FMLDeobfuscatingRemapper.INSTANCE.unmap(name)+";"
+		};
+	}
+	
 	private static void logMethods(String missingMethod, ClassNode owner){
 		Log.error("Better Sprinting could not find EntityPlayerSP.$0, generating debug logs...", missingMethod);
 		
 		for(MethodNode method:owner.methods){
 			Log.error("> $0 .. $1", method.name, method.desc);
+		}
+	}
+	
+	private static void logInstructions(MethodNode method){
+		TraceMethodVisitor visitor = new TraceMethodVisitor(new Textifier());
+		
+		for(Iterator<AbstractInsnNode> iter = method.instructions.iterator(); iter.hasNext();){
+			iter.next().accept(visitor);
+		}
+		
+		int index = 0;
+		
+		for(Object obj:visitor.p.getText()){
+			Log.error("> $0: $1", ++index, StringUtils.stripEnd(obj.toString(), null));
 		}
 	}
 }

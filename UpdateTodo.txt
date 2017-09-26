@@ -1,6 +1,7 @@
 1. Update code
    - Search the repository for: // UPDATE
    - When mixed, custom code is marked // CUSTOM, vanilla code is marked // VANILLA
+   - In methods that are inserted into vanilla code by the coremod, make sure code around insertion point hasn't changed, otherwise update coremod
    - Make sure all instances of vanilla code match the updated code, and check custom code for subtle changes
    - Once done, update the Minecraft version in the comment
 
@@ -10,7 +11,10 @@
    - BetterSprintingCore.supportedMinecraftVersion  -  Minecraft version
 
 3. Make sure the mod is working
-   - Run a debug test to see if the coremod doesn't fail integrity check
+   - Test coremod
+     - Make sure the coremod doesn't fail integrity check on startup
+     - Test code in EntityPlayerSP.onLivingUpdate before and after the coremod insertion point
+       - Easy way is to make sure a chest instantly closes while inside a portal in survival mode, and that horse jumping works, but that may change with an update
    - Test both SP and MP
      - Make sure all control options work
      - Test server-side commands with different locales
