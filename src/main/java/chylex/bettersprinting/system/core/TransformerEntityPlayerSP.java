@@ -63,7 +63,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private int findInsertionPointOnLivingUpdate(MethodNode method){
-		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
+		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput", true);
 		
 		for(int index = 0, count = method.instructions.size(), lastLabelIndex = -1; index < count; index++){
 			AbstractInsnNode node = method.instructions.get(index);
@@ -71,10 +71,8 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			if (node instanceof LabelNode){
 				lastLabelIndex = index;
 			}
-			else if (node instanceof FieldInsnNode){
-				if (ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)node).desc)){
-					return lastLabelIndex;
-				}
+			else if (node instanceof FieldInsnNode && ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)node).desc)){
+				return lastLabelIndex;
 			}
 		}
 		
@@ -83,6 +81,25 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		
 		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find an insertion point into onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
 	}
+	
+	/*private int findSkipPointOnLivingUpdate(MethodNode method, int insertionPoint){
+		String[] clsIJumpingMount = getClassNames("net/minecraft/entity/IJumpingMount", false);
+		
+		for(int index = method.instructions.size()-1; index >= insertionPoint; index--){
+			AbstractInsnNode node = method.instructions.get(index);
+			
+			if (node instanceof TypeInsnNode && ArrayUtils.contains(clsIJumpingMount, ((TypeInsnNode)node).desc)){
+				while(--index >= insertionPoint && !(method.instructions.get(index) instanceof LabelNode));
+				while(--index >= insertionPoint && !(method.instructions.get(index) instanceof LabelNode));
+				return index;
+			}
+		}
+		
+		Log.error("Finding skip point - $0", String.join(" / ", clsIJumpingMount));
+		logInstructions(method);
+		
+		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find a skip point in onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
+	}*/
 	
 	private void transformOnLivingUpdate(MethodNode method){
 		int insertionPoint = findInsertionPointOnLivingUpdate(method);
@@ -129,10 +146,12 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		return m;
 	}
 	
-	private static String[] getClassNames(String name){
+	private static String[] getClassNames(String name, boolean full){
+		String obf = FMLDeobfuscatingRemapper.INSTANCE.unmap(name);
+		
 		return new String[]{
-			"L"+name+";",
-			"L"+FMLDeobfuscatingRemapper.INSTANCE.unmap(name)+";"
+			full ? "L"+name+";" : name,
+			full ? "L"+obf+";" : obf
 		};
 	}
 	
