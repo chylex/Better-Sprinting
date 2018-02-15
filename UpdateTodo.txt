@@ -22,7 +22,7 @@
             > float f = 0.8F;
        - 3. Now step into these statements, and one of them will jump into the first line of LivingUpdate.injectOnLivingUpdate
        - 4. Step return, step over, and you should jump back to EntityPlayerSP on this line:
-            > if (this.isRidingHorse())
+            > if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.capabilities.isFlying)
        - 5. If any of these steps fail, things are bork
             (if the first breakpoint doesn't trigger, breakpoint into injectOnLivingUpdate, remove all breakpoints, step out, and go to step 1)
    - Test both SP and MP
