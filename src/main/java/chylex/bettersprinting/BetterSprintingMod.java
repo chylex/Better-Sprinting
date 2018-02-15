@@ -12,6 +12,7 @@ import chylex.bettersprinting.system.Log;
      name = "Better Sprinting",
      useMetadata = true,
      guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory",
+     dependencies = "required-after:forge@[14.23.0.2527,);",
      acceptableRemoteVersions = "*",
      updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
 public class BetterSprintingMod{

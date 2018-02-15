@@ -6,6 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.client.ForgeHooksClient;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
@@ -34,6 +35,7 @@ final class PlayerLogicHandler{
 		wasSneaking = player.movementInput.sneak;
 		wasMovingForward = player.movementInput.moveForward >= 0.8F;
 		customMovementInput.update(mc, player.movementInput);
+		ForgeHooksClient.onInputUpdate(player, player.movementInput);
 		mc.getTutorial().handleMovement(player.movementInput);
 	}
 	
