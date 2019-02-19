@@ -10,3 +10,4 @@ run/
 *.launch
 Thumbs.db
 Mod Update Process.txt
+!run/eula.txt
