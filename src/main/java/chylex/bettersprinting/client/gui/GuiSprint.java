@@ -183,6 +183,20 @@ public class GuiSprint extends GuiScreen{
 		}
 	}
 	
+	@Override
+	public boolean keyReleased(int keyCode, int scanCode, int modifiers){
+		if (selectedBinding != null){
+			selectedBinding.setKeyModifierAndCode(KeyModifier.NONE, InputMappings.getInputByCode(keyCode, scanCode));
+			selectedBinding = null;
+			
+			onKeyBindingUpdated();
+			return true;
+		}
+		else{
+			return super.keyReleased(keyCode, scanCode, modifiers);
+		}
+	}
+	
 	private void onKeyBindingUpdated(){
 		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintHold, ClientModManager.keyBindSprintHold.getKey().getKeyCode());
 		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintToggle, ClientModManager.keyBindSprintToggle.getKey().getKeyCode());
