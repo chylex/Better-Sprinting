@@ -1,30 +1,18 @@
 package chylex.bettersprinting.client.player;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class LivingUpdate{
-	private static final Minecraft mc;
-	private static final MethodHandle mPushOutOfBlocks;
+	private static final Minecraft mc = Minecraft.getInstance();
+	
 	private static PlayerLogicHandler currentHandler;
 	private static boolean hasTriggered;
-	
-	static{
-		mc = Minecraft.getMinecraft();
-		
-		try{
-			mPushOutOfBlocks = MethodHandles.lookup().unreflect(EntityPlayerSP.class.getMethod("_bsm_pushOutOfBlocks", double.class, double.class, double.class));
-		}catch(Exception e){
-			throw new RuntimeException(e);
-		}
-	}
 	
 	public static boolean checkIntegrity(){
 		return hasTriggered;
@@ -35,7 +23,7 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
+	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
 	public static void injectOnLivingUpdate(EntityPlayerSP $this){
 		/*
 		if (this.timeUntilPortal > 0){
@@ -58,7 +46,7 @@ public final class LivingUpdate{
 		currentHandler.updateMovementInput();
 		
 		// VANILLA
-		if ($this.isHandActive() && !$this.isRiding()){
+		if ($this.isHandActive() && !$this.isPassenger()){
 			$this.movementInput.moveStrafe *= 0.2F;
 			$this.movementInput.moveForward *= 0.2F;
 			$this.sprintToggleTimer = 0;
@@ -72,28 +60,25 @@ public final class LivingUpdate{
 			$this.movementInput.jump = true;
 		}
 		
-		AxisAlignedBB playerBoundingBox = $this.getEntityBoundingBox();
+		AxisAlignedBB playerBoundingBox = $this.getBoundingBox();
 		PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
 		
-        if (!MinecraftForge.EVENT_BUS.post(event)){
-			try{
-				mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
-			}catch(Throwable e){
-				throw new RuntimeException(e);
-			}
-        }
+		if (!MinecraftForge.EVENT_BUS.post(event)){
+			playerBoundingBox = event.getEntityBoundingBox();
+			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
+			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
+			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
+			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
+		}
 		
 		// CUSTOM
 		currentHandler.updateLiving();
 		
 		// VANILLA
-		if ($this.capabilities.allowFlying){
+		if ($this.abilities.allowFlying){
 			if (mc.playerController.isSpectatorMode()){
-				if (!$this.capabilities.isFlying){
-					$this.capabilities.isFlying = true;
+				if (!$this.abilities.isFlying){
+					$this.abilities.isFlying = true;
 					$this.sendPlayerAbilities();
 				}
 			}
@@ -102,7 +87,7 @@ public final class LivingUpdate{
 					$this.flyToggleTimer = 7;
 				}
 				else{
-					$this.capabilities.isFlying = !$this.capabilities.isFlying;
+					$this.abilities.isFlying = !$this.abilities.isFlying;
 					$this.sendPlayerAbilities();
 					$this.flyToggleTimer = 0;
 				}
@@ -112,7 +97,7 @@ public final class LivingUpdate{
 		/*
 		}
 		    <<< SKIPPED TO HERE
-		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.capabilities.isFlying)
+		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.abilities.isFlying)
 		{
 			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		*/

@@ -1,16 +1,16 @@
 package chylex.bettersprinting.client.player;
+import chylex.bettersprinting.client.ClientModManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.client.ClientModManager;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class IntegrityCheck{
 	public static void register(){
 		MinecraftForge.EVENT_BUS.register(instance);
@@ -21,7 +21,7 @@ public final class IntegrityCheck{
 	}
 
 	private static final IntegrityCheck instance = new IntegrityCheck();
-	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static final Minecraft mc = Minecraft.getInstance();
 	
 	private IntegrityCheck(){}
 	
@@ -29,7 +29,7 @@ public final class IntegrityCheck{
 	public void onPlayerTick(ClientTickEvent e){
 		if (e.phase == Phase.END && mc.player != null && mc.player.ticksExisted > 1){
 			if (!LivingUpdate.checkIntegrity()){
-				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity")));
+				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix + I18n.format("bs.game.integrity")));
 			}
 			
 			unregister();

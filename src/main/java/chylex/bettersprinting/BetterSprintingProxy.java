@@ -1,11 +1,9 @@
 package chylex.bettersprinting;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 public abstract class BetterSprintingProxy{
-	public abstract void loadSidedConfig(BetterSprintingConfig config);
-	public abstract void onPreInit(FMLPreInitializationEvent e);
-	public abstract void onInit(FMLInitializationEvent e);
-	public abstract void onServerStarting(FMLServerStartingEvent e);
+	public abstract String getMinecraftVersion();
+	public abstract void onConstructed(ModLoadingContext ctx);
+	public abstract void onLoaded(FMLLoadCompleteEvent e);
 }

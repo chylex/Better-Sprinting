@@ -1,47 +1,41 @@
 package chylex.bettersprinting.client;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import org.apache.commons.lang3.ArrayUtils;
-import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
-import chylex.bettersprinting.system.Log;
 import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.core.BetterSprintingCore;
+import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.realms.RealmsSharedConstants;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class ClientProxy extends BetterSprintingProxy{
 	@Override
-	public void loadSidedConfig(BetterSprintingConfig config){
-		ClientSettings.reload(config);
+	public String getMinecraftVersion(){
+		return RealmsSharedConstants.VERSION_STRING;
 	}
 	
 	@Override
-	public void onPreInit(FMLPreInitializationEvent e){
-		if (!BetterSprintingCore.wasInitialized()){ // Forge fucks with 'acceptedMinecraftVersions', so no, I'm not going to use that, thank you very much
-			throw new RuntimeException("This version of Better Sprinting only supports Minecraft "+BetterSprintingCore.supportedMinecraftVersion);
-		}
-		
-		Log.initializeDebug();
+	public void onConstructed(ModLoadingContext ctx){
+		ClientSettings.register(ctx);
 		ClientEventHandler.register();
 		PacketPipeline.initialize(new ClientNetwork());
 	}
 	
 	@Override
-	public void onInit(FMLInitializationEvent e){
-		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+	public void onLoaded(FMLLoadCompleteEvent e){
+		Minecraft mc = Minecraft.getInstance();
 		
-		settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
-			ClientModManager.keyBindSprintToggle,
-			ClientModManager.keyBindSneakToggle,
-			ClientModManager.keyBindOptionsMenu,
+		mc.addScheduledTask(() -> {
+			GameSettings settings = mc.gameSettings;
+			
+			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
+				ClientModManager.keyBindSprintToggle,
+				ClientModManager.keyBindSneakToggle,
+				ClientModManager.keyBindOptionsMenu,
+			});
+			
+			ClientSettings.updateKeyBindings();
 		});
-		
-		KeyBinding.resetKeyBindingArrayAndHash();
 	}
-	
-	@Override
-	public void onServerStarting(FMLServerStartingEvent e){}
 }

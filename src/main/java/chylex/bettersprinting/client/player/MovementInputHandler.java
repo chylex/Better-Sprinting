@@ -1,15 +1,15 @@
 package chylex.bettersprinting.client.player;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.MovementInput;
 import chylex.bettersprinting.client.ClientModManager;
+import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.MovementInput;
 
 final class MovementInputHandler{
 	public boolean held = false;
 	public int stoptime = 0;
 	public boolean sprint, sprintToggle, sneakToggle, hasToggledSprint, hasToggledSneak;
 	
-	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.12.2
+	// UPDATE | MovementInputFromOptions.updatePlayerMoveState | 1.13.2
 	public void update(Minecraft mc, MovementInput $this){
 		GameSettings settings = mc.gameSettings;
 		
@@ -94,8 +94,8 @@ final class MovementInputHandler{
 		
 		// VANILLA
 		if ($this.sneak){
-			$this.moveStrafe = $this.moveStrafe*0.3F;
-			$this.moveForward = $this.moveForward*0.3F;
+			$this.moveStrafe = $this.moveStrafe * 0.3F;
+			$this.moveForward = $this.moveForward * 0.3F;
 		}
 	}
 }

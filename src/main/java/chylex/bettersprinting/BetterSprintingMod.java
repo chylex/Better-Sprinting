@@ -1,26 +1,19 @@
 package chylex.bettersprinting;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import chylex.bettersprinting.client.ClientProxy;
+import chylex.bettersprinting.server.ServerProxy;
 import chylex.bettersprinting.system.Log;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(modid = BetterSprintingMod.modId,
-     name = "Better Sprinting",
-     useMetadata = true,
-     guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory",
-     dependencies = "required-after:forge@[14.23.0.2527,);",
-     acceptableRemoteVersions = "*",
-     updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
+@Mod(BetterSprintingMod.modId)
 public class BetterSprintingMod{
-	@Instance(BetterSprintingMod.modId)
-	public static BetterSprintingMod instance;
-	
-	@SidedProxy(clientSide = "chylex.bettersprinting.client.ClientProxy", serverSide = "chylex.bettersprinting.server.ServerProxy")
-	public static BetterSprintingProxy proxy;
+	public static final BetterSprintingProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 	
 	public static BetterSprintingConfig config;
 	
@@ -28,21 +21,24 @@ public class BetterSprintingMod{
 	public static final String buildId = "15-02-2018-0";
 	public static String modVersion;
 	
-	@EventHandler
-	public void onPreInit(FMLPreInitializationEvent e){
+	public BetterSprintingMod(){
+		ModLoadingContext ctx = ModLoadingContext.get();
+		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		
+		modVersion = ctx.getActiveContainer().getModInfo().getVersion().toString();
+		proxy.onConstructed(ctx);
+		
+		bus.register(this);
 		Log.load();
-		modVersion = e.getModMetadata().version;
-		config = new BetterSprintingConfig(e.getSuggestedConfigurationFile());
-		proxy.onPreInit(e);
 	}
 	
-	@EventHandler
-	public void onInit(FMLInitializationEvent e){
-		proxy.onInit(e);
+	@SubscribeEvent
+	public void onConfigLoading(final ModConfig.Loading e){
+		config = new BetterSprintingConfig(e.getConfig());
 	}
 	
-	@EventHandler
-	public void onServerStarting(FMLServerStartingEvent e){
-		proxy.onServerStarting(e);
+	@SubscribeEvent
+	public void onLoadComplete(final FMLLoadCompleteEvent e){
+		proxy.onLoaded(e);
 	}
 }

@@ -1,16 +1,19 @@
 package chylex.bettersprinting.server;
+import chylex.bettersprinting.system.PacketPipeline;
+import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
-public class ServerNetwork implements INetworkHandler{
+@OnlyIn(Dist.DEDICATED_SERVER)
+final class ServerNetwork implements INetworkHandler{
+	// TODO update
 	/*
 	 * OVERVIEW
 	 * ========
@@ -83,21 +86,15 @@ public class ServerNetwork implements INetworkHandler{
 	}
 	
 	@Override
-	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
+	public void onPacket(ByteBuf data, EntityPlayer player){
 		players.add(player.getUniqueID());
 		
-		if (ServerSettings.disableClientMod){
+		if (ServerSettings.disableClientMod.get()){
 			sendToPlayer(player, writeDisableMod(true));
 		}
 		
-		if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
-			sendToPlayer(player, writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
+		if (ServerSettings.enableSurvivalFlyBoost.get() || ServerSettings.enableAllDirs.get()){
+			sendToPlayer(player, writeSettings(ServerSettings.enableSurvivalFlyBoost.get(), ServerSettings.enableAllDirs.get()));
 		}
-		
-		/*byte type = data.readByte();
-		
-		if (type == 0){
-			// might be useful later
-		}*/
 	}
 }

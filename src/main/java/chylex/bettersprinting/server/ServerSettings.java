@@ -1,24 +1,34 @@
 package chylex.bettersprinting.server;
-import chylex.bettersprinting.BetterSprintingConfig;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 
-public class ServerSettings{
-	public static boolean enableSurvivalFlyBoost = false;
-	public static boolean enableAllDirs = false;
-	public static boolean disableClientMod = false;
+@OnlyIn(Dist.DEDICATED_SERVER)
+final class ServerSettings{
+	public static final BooleanValue enableSurvivalFlyBoost;
+	public static final BooleanValue enableAllDirs;
+	public static final BooleanValue disableClientMod;
 	
-	public static void reload(BetterSprintingConfig config){
-		config.setCategory("server");
-		enableSurvivalFlyBoost = config.getBool("enableSurvivalFlyBoost", enableSurvivalFlyBoost).getBoolean();
-		enableAllDirs = config.getBool("enableAllDirs", enableAllDirs).getBoolean();
-		disableClientMod = config.getBool("disableClientMod", disableClientMod).getBoolean();
-		config.update();
+	private static final ForgeConfigSpec configSpec;
+	
+	static void register(ModLoadingContext ctx){
+		ctx.registerConfig(ModConfig.Type.COMMON, configSpec);
 	}
 	
-	public static void update(BetterSprintingConfig config){
-		config.setCategory("server");
-		config.setBool("enableSurvivalFlyBoost", enableSurvivalFlyBoost);
-		config.setBool("enableAllDirs", enableAllDirs);
-		config.setBool("disableClientMod", disableClientMod);
-		config.update();
+	static{
+		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		
+		builder.push("server");
+		
+		enableSurvivalFlyBoost = builder.define("enableSurvivalFlyBoost", false);
+		enableAllDirs          = builder.define("enableAllDirs", false);
+		disableClientMod       = builder.define("disableClientMod", false);
+		
+		builder.pop();
+		
+		configSpec = builder.build();
 	}
 }

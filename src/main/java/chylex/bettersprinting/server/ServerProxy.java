@@ -1,28 +1,24 @@
 package chylex.bettersprinting.server;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.system.PacketPipeline;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
-public class ServerProxy extends BetterSprintingProxy{	
+public final class ServerProxy extends BetterSprintingProxy{
+	static String mcVersion = "";
+	
 	@Override
-	public void loadSidedConfig(BetterSprintingConfig config){
-		ServerSettings.reload(config);
+	public String getMinecraftVersion(){
+		return mcVersion;
 	}
 	
 	@Override
-	public void onPreInit(FMLPreInitializationEvent e){
+	public void onConstructed(ModLoadingContext ctx){
+		ServerSettings.register(ctx);
 		ServerEventHandler.register();
 		PacketPipeline.initialize(new ServerNetwork());
 	}
 
 	@Override
-	public void onInit(FMLInitializationEvent e){}
-	
-	@Override
-	public void onServerStarting(FMLServerStartingEvent e){
-		e.registerServerCommand(new ServerCommandConfig());
-	}
+	public void onLoaded(FMLLoadCompleteEvent e){}
 }

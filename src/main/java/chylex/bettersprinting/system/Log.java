@@ -1,40 +1,30 @@
 package chylex.bettersprinting.system;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import chylex.bettersprinting.BetterSprintingMod;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.Display;
-import chylex.bettersprinting.BetterSprintingMod;
+import org.lwjgl.glfw.GLFW;
 
 public final class Log{
-	static final Logger logger = LogManager.getLogger("BetterSprinting");
-	
-	public static boolean isDeobfEnvironment;
+	private static boolean isDeobfEnvironment = System.getProperty("bettersprinting.debug") != null;
+	private static final Logger logger = LogManager.getLogger("BetterSprinting");
 	
 	public static void load(){
-		isDeobfEnvironment = ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
-		
-		if (isDeobfEnvironment && FMLCommonHandler.instance().getSide() == Side.SERVER){
-			try(FileOutputStream fos = new FileOutputStream(new File("eula.txt"))){
-				Properties properties = new Properties();
-				properties.setProperty("eula", "true");
-				properties.store(fos, "Screw your EULA, I don't want that stuff in my workspace.");
-			}catch(IOException e){}
+		if (isDeobfEnvironment){
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> Log::loadDeobfClient);
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public static void initializeDebug(){
-		if (isDeobfEnvironment){
-			Display.setTitle(new StringBuilder().append(Display.getTitle()).append(" - BetterSprinting - ").append(isDeobfEnvironment ? "dev" : "debug").append(' ').append(BetterSprintingMod.modVersion).toString());
-		}
+	@OnlyIn(Dist.CLIENT)
+	private static void loadDeobfClient(){
+		String title = "Minecraft " + BetterSprintingMod.proxy.getMinecraftVersion() + " - BetterSprinting " + BetterSprintingMod.modVersion;
+		
+		Minecraft mc = Minecraft.getInstance();
+		mc.addScheduledTask(() -> GLFW.glfwSetWindowTitle(mc.mainWindow.getHandle(), title));
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */

@@ -1,18 +1,19 @@
 package chylex.bettersprinting.client.player;
+import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
+import chylex.bettersprinting.client.gui.GuiSprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.MobEffects;
+import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.ForgeHooksClient;
-import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.ClientSettings;
-import chylex.bettersprinting.client.gui.GuiSprint;
 
 final class PlayerLogicHandler{
-	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static final Minecraft mc = Minecraft.getInstance();
 
 	private final EntityPlayerSP player;
 	private final MovementInputHandler customMovementInput;
@@ -30,22 +31,23 @@ final class PlayerLogicHandler{
 		return player;
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
+	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
 	public void updateMovementInput(){
 		wasSneaking = player.movementInput.sneak;
 		wasMovingForward = player.movementInput.moveForward >= 0.8F;
 		customMovementInput.update(mc, player.movementInput);
+		
 		ForgeHooksClient.onInputUpdate(player, player.movementInput);
 		mc.getTutorial().handleMovement(player.movementInput);
 	}
 	
-	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
+	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
 	public void updateLiving(){
-		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.capabilities.allowFlying;
+		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.abilities.allowFlying;
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(MobEffects.BLINDNESS);
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if ((player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown()){
 					player.sprintToggleTimer = 7;
 				}
@@ -54,7 +56,7 @@ final class PlayerLogicHandler{
 				}
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && (!player.isInWater() || player.canSwim()) && player.movementInput.moveForward >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
@@ -62,20 +64,20 @@ final class PlayerLogicHandler{
 			updateSneakToggle();
 			boolean prevHeld = customMovementInput.held;
 			boolean sprint = customMovementInput.sprint;
-			boolean dblTap = ClientSettings.enableDoubleTap;
+			boolean dblTap = ClientSettings.enableDoubleTap.get();
 
-			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak){
+			if (!player.abilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak){
 				sprint = false;
 			}
 			
-			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !isSprintBlocked){
+			if ((!dblTap || !player.isSprinting()) && (player.onGround || player.canSwim()) && enoughHunger && !isSprintBlocked){
 				player.setSprinting(sprint);
 			}
 			
 			customMovementInput.held = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
-				if (player.sprintToggleTimer == 0){
+			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && (player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+				if (player.sprintToggleTimer <= 0){
 					player.sprintToggleTimer = 7;
 				}
 				else{
@@ -95,16 +97,18 @@ final class PlayerLogicHandler{
 				}
 			}
 			
-			if (ClientSettings.flySpeedBoost > 0){
-				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying()){
-					player.capabilities.setFlySpeed(0.05F+0.075F*ClientSettings.flySpeedBoost);
+			int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
+			
+			if (flySpeedBoostMultiplier > 0){
+				if (sprint && player.abilities.isFlying && ClientModManager.canBoostFlying()){
+					player.abilities.setFlySpeed(0.05F + 0.075F * flySpeedBoostMultiplier);
 				}
 				else{
-					player.capabilities.setFlySpeed(0.05F);
+					player.abilities.setFlySpeed(0.05F);
 				}
 			}
-			else if (player.capabilities.getFlySpeed() > 0.05F){
-				player.capabilities.setFlySpeed(0.05F);
+			else if (player.abilities.getFlySpeed() > 0.05F){
+				player.abilities.setFlySpeed(0.05F);
 			}
 		}
 
@@ -112,18 +116,29 @@ final class PlayerLogicHandler{
 			mc.displayGuiScreen(new GuiSprint(null));
 		}
 		
-		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying){
+		if (player.isSprinting() && player.isSneaking() && !player.abilities.isFlying){
 			player.setSprinting(false);
 		}
-
-		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.collidedHorizontally || !enoughHunger)){
-			if ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F)){
+		
+		if (player.isSprinting()){
+			MovementInput movementInput = player.movementInput;
+			boolean isSlow = movementInput.moveForward < 0.8F && ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs.get()) == false || (movementInput.moveForward == 0F && movementInput.moveStrafe == 0F));
+			
+			boolean isSlowOrHungry = isSlow || !enoughHunger;
+			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
+			
+			if (player.isSwimming()){
+				if (!player.onGround && !movementInput.sneak && isSlowOrHungry || !player.isInWater()){
+					player.setSprinting(false);
+				}
+			}
+			else if (stopRunning){
 				player.setSprinting(false);
 			}
 		}
 		
 		if (ClientModManager.showDisableWarningWhenPossible){
-			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
+			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
 			ClientModManager.showDisableWarningWhenPossible = false;
 		}
 	}

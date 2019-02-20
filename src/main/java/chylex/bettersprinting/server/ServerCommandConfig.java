@@ -1,120 +1,107 @@
 package chylex.bettersprinting.server;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+import chylex.bettersprinting.BetterSprintingMod;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.command.CommandSource;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
-import chylex.bettersprinting.BetterSprintingMod;
+import net.minecraft.util.text.translation.LanguageMap;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
+import static com.mojang.brigadier.arguments.StringArgumentType.word;
+import static net.minecraft.command.Commands.argument;
+import static net.minecraft.command.Commands.literal;
 
-@SuppressWarnings("deprecation")
-public class ServerCommandConfig extends CommandBase{
-	@Override
-	public String getName(){
-		return "bettersprinting";
-	}
-
-	@Override
-	public String getUsage(ICommandSender sender){
-		return "/bettersprinting [...]";
-	}
-	
-	@Override
-	public int getRequiredPermissionLevel(){
-		return 3;
-	}
-
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
-		if (args.length == 0){
-			sendMessage(sender, TextFormatting.GREEN+"[Better Sprinting]");
-			sendMessage(sender, "/bettersprinting info");
-			sendMessage(sender, "/bettersprinting disablemod <true|false>");
-			sendMessage(sender, "/bettersprinting setting <survivalFlyBoost|runInAllDirs> <true|false>");
-		}
-		else if (args[0].equalsIgnoreCase("info")){
-			sendMessageTranslated(sender, "bs.command.info");
-		}
-		else if (args[0].equalsIgnoreCase("disablemod")){
-			if (isValidBool(args, 1)){
-				ServerSettings.disableClientMod = getBool(args, 1);
-				ServerSettings.update(BetterSprintingMod.config);
-				
-				sendMessageTranslated(sender, ServerSettings.disableClientMod ? "bs.command.disableMod" : "bs.command.enableMod");
-				ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
-			}
-			else sendMessageTranslated(sender, "bs.command.invalidSyntax");
-		}
-		else if (args[0].equalsIgnoreCase("setting")){
-			if (args.length <= 1 || !isValidBool(args, 2)){
-				sendMessageTranslated(sender, "bs.command.invalidSyntax");
-			}
-			else{
-				if (args[1].equalsIgnoreCase("survivalFlyBoost")){
-					ServerSettings.enableSurvivalFlyBoost = getBool(args, 2);
-					ServerSettings.update(BetterSprintingMod.config);
-					
-					sendMessageTranslated(sender, ServerSettings.enableSurvivalFlyBoost ? "bs.command.enableFlyBoost" : "bs.command.disableFlyBoost");
-					ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
-				}
-				else if (args[1].equalsIgnoreCase("runInAllDirs")){
-					ServerSettings.enableAllDirs = getBool(args, 2);
-					ServerSettings.update(BetterSprintingMod.config);
-					
-					sendMessageTranslated(sender, ServerSettings.enableAllDirs ? "bs.command.enableAllDirs" : "bs.command.disableAllDirs");
-					ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
-				}
-			}
-		}
-		else sendMessageTranslated(sender, "bs.command.invalidSyntax");
-	}
-	
-	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos){
-		if (args.length == 1){
-			return getListOfStringsMatchingLastWord(args, "info", "disablemod", "setting");
-		}
-		else if (args[0].equalsIgnoreCase("disablemod")){
-			if (args.length == 2){
-				return getListOfStringsMatchingLastWord(args, "true", "false");
-			}
-		}
-		else if (args[0].equalsIgnoreCase("setting")){
-			if (args.length == 2){
-				return getListOfStringsMatchingLastWord(args, "survivalFlyBoost", "runInAllDirs");
-			}
-			else if (args.length == 3){
-				return getListOfStringsMatchingLastWord(args, "true", "false");
-			}
-		}
+@OnlyIn(Dist.DEDICATED_SERVER)
+final class ServerCommandConfig{
+	public static void register(CommandDispatcher<CommandSource> dispatcher){
+		LiteralArgumentBuilder<CommandSource> builder = literal("bettersprinting").requires(source -> source.hasPermissionLevel(3));
 		
-		return Collections.emptyList();
+		builder.executes(ServerCommandConfig::execHelp);
+		builder.then(literal("info").executes(ServerCommandConfig::execInfo));
+		builder.then(literal("disablemod").then(argument("true|false", bool()).executes(ServerCommandConfig::execDisableMod)));
+		builder.then(literal("setting").then(argument("survivalFlyBoost|runInAllDirs", word()).then(argument("true|false", bool()).executes(ServerCommandConfig::execSetting))));
+		
+		dispatcher.register(builder);
 	}
 	
-	private void sendMessage(ICommandSender sender, String text){
-		sender.sendMessage(new TextComponentString(text));
+	private static int execHelp(CommandContext<CommandSource> ctx){
+		CommandSource source = ctx.getSource();
+		sendMessage(source, TextFormatting.GREEN + "[Better Sprinting]");
+		sendMessage(source, "/bettersprinting info");
+		sendMessage(source, "/bettersprinting disablemod <true|false>");
+		sendMessage(source, "/bettersprinting setting <survivalFlyBoost|runInAllDirs> <true|false>");
+		return 0;
 	}
 	
-	private void sendMessageTranslated(ICommandSender sender, String translationName){
-		if (sender instanceof EntityPlayer && !ServerNetwork.hasBetterSprinting((EntityPlayer)sender)){
-			sender.sendMessage(new TextComponentString(I18n.translateToLocal(translationName)));
+	private static int execInfo(CommandContext<CommandSource> ctx){
+		CommandSource source = ctx.getSource();
+		sendMessageTranslated(source, "bs.command.info");
+		return 0;
+	}
+	
+	private static int execDisableMod(CommandContext<CommandSource> ctx){
+		BetterSprintingMod.config.set(ServerSettings.disableClientMod, ctx.getArgument("true|false", Boolean.class));
+		BetterSprintingMod.config.save();
+		
+		CommandSource source = ctx.getSource();
+		sendMessageTranslated(source, ServerSettings.disableClientMod.get() ? "bs.command.disableMod" : "bs.command.enableMod", true);
+		ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeDisableMod(ServerSettings.disableClientMod.get()));
+		return 0;
+	}
+	
+	private static int execSetting(CommandContext<CommandSource> ctx){
+		String setting = ctx.getArgument("survivalFlyBoost|runInAllDirs", String.class);
+		boolean value = ctx.getArgument("true|false", Boolean.class);
+		
+		CommandSource source = ctx.getSource();
+		
+		if (setting.equalsIgnoreCase("survivalFlyBoost")){
+			BetterSprintingMod.config.set(ServerSettings.enableSurvivalFlyBoost, value);
+			BetterSprintingMod.config.save();
+			
+			sendMessageTranslated(source, ServerSettings.enableSurvivalFlyBoost.get() ? "bs.command.enableFlyBoost" : "bs.command.disableFlyBoost", true);
+			ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost.get(), ServerSettings.enableAllDirs.get()));
+		}
+		else if (setting.equalsIgnoreCase("runInAllDirs")){
+			BetterSprintingMod.config.set(ServerSettings.enableAllDirs, value);
+			BetterSprintingMod.config.save();
+			
+			sendMessageTranslated(source, ServerSettings.enableAllDirs.get() ? "bs.command.enableAllDirs" : "bs.command.disableAllDirs", true);
+			ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost.get(), ServerSettings.enableAllDirs.get()));
 		}
 		else{
-			sender.sendMessage(new TextComponentTranslation(translationName));
+			execHelp(ctx);
 		}
+		
+		return 0;
 	}
 	
-	private boolean isValidBool(String[] args, int index){
-		return index < args.length && (args[index].equalsIgnoreCase("true") || args[index].equalsIgnoreCase("false"));
+	private static void sendMessage(CommandSource source, String text){
+		sendMessage(source, text, false);
 	}
 	
-	private boolean getBool(String[] args, int index){
-		return args[index].equalsIgnoreCase("true");
+	private static void sendMessage(CommandSource source, String text, boolean log){
+		source.sendFeedback(new TextComponentString(text), log);
+	}
+	
+	private static void sendMessageTranslated(CommandSource source, String translationKey){
+		sendMessageTranslated(source, translationKey, false);
+	}
+	
+	private static void sendMessageTranslated(CommandSource source, String translationName, boolean log){
+		Entity entity = source.getEntity();
+		
+		if (entity instanceof EntityPlayer && ServerNetwork.hasBetterSprinting((EntityPlayer)entity)){
+			source.sendFeedback(new TextComponentTranslation(translationName), log);
+		}
+		else{
+			source.sendFeedback(new TextComponentString(LanguageMap.getInstance().translateKey(translationName)), log);
+		}
 	}
 }

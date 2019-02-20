@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "[24,)"
+
+displayURL = "https://bsprint.chylex.com"
+issueTrackerURL = "https://github.com/chylex/Better-Sprinting/issues"
+updateJSONURL = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json"
+
+authors = "chylex"
+
+[[mods]]
+modId = "bettersprinting"
+version = "2.1.1"
+displayName = "Better Sprinting"
+description = '''
+New sprinting and sneaking functionality. Mod settings are configurable in Controls and in-game menu (default: 'O'), for internal settings (notifications) click Config button below.
+
+Find me on Twitter: https://twitter.com/chylexmc
+'''
+
+[[dependencies.bettersprinting]]
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.13.2]"
+    ordering = "NONE"
+    side = "BOTH"

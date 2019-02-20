@@ -1,89 +1,24 @@
 package chylex.bettersprinting;
-import java.io.File;
-import java.util.List;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.client.config.IConfigElement;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.fml.config.ModConfig;
+import java.util.function.Function;
 
 public class BetterSprintingConfig{
-	private final Configuration config;
-	private String currentCategory = "unknown";
+	private final ModConfig config;
 	
-	BetterSprintingConfig(File file){
-		MinecraftForge.EVENT_BUS.register(this);
-		config = new Configuration(file);
-		reload();
+	BetterSprintingConfig(ModConfig config){ // TODO migrate Paths.get("config").resolve(modId + ".cfg").toFile()
+		this.config = config;
 	}
 	
-	@SubscribeEvent
-	public void onConfigChanged(OnConfigChangedEvent e){
-		if (e.getModID().equals(BetterSprintingMod.modId)){
-			reload();
-		}
+	public void save(){
+		config.save();
 	}
 	
-	private void reload(){
-		BetterSprintingMod.proxy.loadSidedConfig(this);
+	public <T> void set(ConfigValue<T> property, T value){
+		config.getConfigData().set(property.getPath(), value);
 	}
 	
-	public void update(){
-		if (config.hasChanged()){
-			config.save();
-		}
-	}
-	
-	public String getFileName(){
-		return config.toString();
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public List<IConfigElement> getClientGuiElements(String category){
-		return new ConfigElement(config.getCategory(category)).getChildElements();
-	}
-	
-	public void setCategory(String newCategory){
-		this.currentCategory = newCategory;
-	}
-	
-	public Property getBool(String name, boolean defValue){
-		return config.get(currentCategory, name, defValue, "");
-	}
-	
-	public Property getBool(String name, boolean defValue, String comment){
-		return config.get(currentCategory, name, defValue, comment);
-	}
-	
-	public Property getInt(String name, int defValue){
-		return config.get(currentCategory, name, defValue, "");
-	}
-	
-	public Property getInt(String name, int defValue, String comment){
-		return config.get(currentCategory, name, defValue, comment);
-	}
-	
-	public Property getString(String name, String defValue){
-		return config.get(currentCategory, name, defValue, "");
-	}
-	
-	public Property getString(String name, String defValue, String comment){
-		return config.get(currentCategory, name, defValue, comment);
-	}
-	
-	public void setBool(String name, boolean value){
-		config.get(currentCategory, name, value).set(value);
-	}
-	
-	public void setInt(String name, int value){
-		config.get(currentCategory, name, value).set(value);
-	}
-	
-	public void setString(String name, String value){
-		config.get(currentCategory, name, value).set(value);
+	public <T> void update(ConfigValue<T> property, Function<T, T> func){
+		set(property, func.apply(property.get()));
 	}
 }

@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.IOUtils;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientSettings;
@@ -25,7 +24,7 @@ public class UpdateThread extends Thread{
 	
 	public UpdateThread(String modVersion){
 		this.modVersion = modVersion;
-		this.mcVersion = MinecraftForge.MC_VERSION;
+		this.mcVersion = BetterSprintingMod.proxy.getMinecraftVersion();
 		setPriority(MIN_PRIORITY);
 		setDaemon(true);
 	}
@@ -86,7 +85,7 @@ public class UpdateThread extends Thread{
 					.append(TextFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(TextFormatting.RESET)
 					.append("\n Caution, you are using a broken build that can cause critical crashes! Please, redownload or update the mod.");
 			}
-			else if (counter > 0 && newestVersionForCurrentMC != null && ClientSettings.enableUpdateNotifications){
+			else if (counter > 0 && newestVersionForCurrentMC != null && ClientSettings.enableUpdateNotifications.get()){
 				message = new StringBuilder()
 					.append(TextFormatting.GREEN).append(" [Better Sprinting ").append(modVersion).append("]").append(TextFormatting.RESET)
 					.append("\n Found update ").append(TextFormatting.GREEN).append(newestVersionForCurrentMC.modVersionName).append(TextFormatting.RESET)
@@ -98,7 +97,7 @@ public class UpdateThread extends Thread{
 				message.append("\n ").append(TextFormatting.GOLD).append("Click to download: ").append(downloadURL);
 				
 				for(String s:message.toString().split("\n")){
-					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+					Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
 				}
 			}
 		}

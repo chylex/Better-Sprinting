@@ -1,22 +1,20 @@
 package chylex.bettersprinting.client.gui;
-import java.io.IOException;
-import net.minecraft.client.Minecraft;
+import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
-import chylex.bettersprinting.BetterSprintingMod;
-import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.ClientSettings;
+import org.lwjgl.glfw.GLFW;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiSprint extends GuiScreen{
 	private static final int idDone = 200;
 	private static final int idDoubleTap = 199;
@@ -41,8 +39,7 @@ public class GuiSprint extends GuiScreen{
 	private final GuiScreen parentScreen;
 	
 	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnAllDirs, btnDisableMod;
-	private int buttonId = -1;
-	private long pressTime;
+	private KeyBinding selectedBinding;
 	
 	public GuiSprint(GuiScreen parentScreen){
 		this.parentScreen = parentScreen;
@@ -50,53 +47,53 @@ public class GuiSprint extends GuiScreen{
 	
 	@Override
 	public void initGui(){
-		buttonList.clear();
+		buttons.clear();
 		
-		int left = getLeftColumnX(), top = height/6;
+		int left = (width / 2) - 155;
+		int top = height / 6;
 		
 		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
-			GuiButton btn = new GuiButton(a, left+160*(a%2), top+24*(a/2), 70, 20, ClientModManager.keyBindings[a].getDisplayName());
-			buttonList.add(btn);
+			GuiButton btn = new GuiButtonInputBinding(a, left + 160 * (a % 2), top + 24 * (a / 2), 70, 20, ClientModManager.keyBindings[a], this::onBindingClicked);
+			addButton(btn);
 			
 			if ((a == 1 || a == 2) && ClientModManager.isModDisabled()){
 				btn.enabled = false;
 			}
 		}
 		
-		buttonList.add(btnDoubleTap = new GuiButton(idDoubleTap, left, top+60, 70, 20, ""));
-		buttonList.add(btnAllDirs = new GuiButton(idAllDirs, left+160, top+60, 70, 20, ""));
-		buttonList.add(btnFlyBoost = new GuiButton(idFlyBoost, left, top+84, 70, 20, ""));
-		buttonList.add(btnDisableMod = new GuiButton(idDisableMod, left+160, top+84, 70, 20, ""));
-		buttonList.add(btnAutoJump = new GuiButton(idAutoJump, left, top+108, 70, 20, ""));
+		btnDoubleTap = addButton(new GuiButtonCustom(idDoubleTap, left, top + 60, 70, 20, "", this::onButtonClicked));
+		btnAllDirs = addButton(new GuiButtonCustom(idAllDirs, left + 160, top + 60, 70, 20, "", this::onButtonClicked));
+		btnFlyBoost = addButton(new GuiButtonCustom(idFlyBoost, left, top + 84, 70, 20, "", this::onButtonClicked));
+		btnDisableMod = addButton(new GuiButtonCustom(idDisableMod, left + 160, top + 84, 70, 20, "", this::onButtonClicked));
+		btnAutoJump = addButton(new GuiButtonCustom(idAutoJump, left, top + 108, 70, 20, "", this::onButtonClicked));
 		
 		if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 		if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
 		if (!ClientModManager.canBoostFlying())btnFlyBoost.enabled = false;
 		if (!ClientModManager.inMenu())btnDisableMod.enabled = false;
 		
-		buttonList.add(new GuiButton(idDone, width/2-100, top+168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done")));
+		addButton(new GuiButtonCustom(idDone, width / 2 - 100, top + 168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done"), this::onButtonClicked));
 		
 		if (parentScreen == null){
-			buttonList.add(new GuiButton(idControls, width/2+2, top+168, 98, 20, I18n.format("options.controls")));
+			addButton(new GuiButtonCustom(idControls, width / 2 + 2, top + 168, 98, 20, I18n.format("options.controls"), this::onButtonClicked));
 		}
 		
 		updateButtons();
 	}
 	
 	private void updateButtons(){
-		btnDoubleTap.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap ? "gui.enabled" : "gui.disabled"));
-		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost+1)+"x") : "gui.unavailable");
-		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs() ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
+		btnDoubleTap.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
+		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
+		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs() ? (ClientSettings.enableAllDirs.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
 		btnAutoJump.displayString = I18n.format(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
 	}
 	
-	@Override
-	protected void actionPerformed(GuiButton btn){
-		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
-			buttonList.get(a).displayString = ClientModManager.keyBindings[a].getDisplayName();
-		}
+	private void onBindingClicked(KeyBinding binding){
+		selectedBinding = binding;
+	}
 	
+	private void onButtonClicked(GuiButton btn){
 		switch(btn.id){
 			case idControls:
 				mc.displayGuiScreen(new GuiControls(this, mc.gameSettings));
@@ -109,120 +106,101 @@ public class GuiSprint extends GuiScreen{
 				
 			case idDisableMod:
 				if (ClientModManager.inMenu()){
-					ClientSettings.disableMod = !ClientSettings.disableMod;
+					BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
 					initGui();
 				}
 				
 				break;
 				
 			case idFlyBoost:
-				if (ClientModManager.canBoostFlying() && ++ClientSettings.flySpeedBoost == 8){
-					ClientSettings.flySpeedBoost = 0;
+				if (ClientModManager.canBoostFlying()){
+					BetterSprintingMod.config.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
 				}
 				
 				break;
 				
 			case idAllDirs:
 				if (ClientModManager.canRunInAllDirs()){
-					ClientSettings.enableAllDirs = !ClientSettings.enableAllDirs;
+					BetterSprintingMod.config.update(ClientSettings.enableAllDirs, value -> !value);
 				}
 				
 				break;
 				
 			case idDoubleTap:
-				if (!ClientSettings.disableMod){
-					ClientSettings.enableDoubleTap = !ClientSettings.enableDoubleTap;
+				if (!ClientSettings.disableMod.get()){
+					BetterSprintingMod.config.update(ClientSettings.enableDoubleTap, value -> !value);
 				}
 				
 				break;
 				
 			case idDone:
-				if (parentScreen == null)mc.setIngameFocus();
-				else mc.displayGuiScreen(parentScreen);
-				
+				mc.displayGuiScreen(parentScreen);
 				break;
 				
 			default:
-				buttonId = btn.id;
-				btn.displayString = "> "+GameSettings.getKeyDisplayString(mc.gameSettings.keyBindings[btn.id].getKeyCode())+" <";
+				return;
 		}
-
-		ClientSettings.update(BetterSprintingMod.config);
+		
+		BetterSprintingMod.config.save();
 		updateButtons();
 	}
 	
 	@Override
-	public void handleKeyboardInput() throws IOException{
-		char chr = Keyboard.getEventCharacter();
-		
-		if (Keyboard.getEventKey() == 0 && chr >= ' ' || Keyboard.getEventKeyState()){
-			keyTyped(chr, Keyboard.getEventKey());
-		}
-		
-		int key = Keyboard.getEventKey() == 0 ? chr+256 : Keyboard.getEventKey();
-		
-		if (key != 0 && !Keyboard.isRepeatEvent() && pressTime <= Minecraft.getSystemTime()-20L && !Keyboard.getEventKeyState()){
-			buttonId = -1;
-		}
-		
-		mc.dispatchKeypresses();
-	}
-	
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
-		if (!handleInput(button-100)){
-			super.mouseClicked(mouseX, mouseY, button);
-		}
-	}
-	
-	@Override
-	protected void keyTyped(char keyChar, int keyCode) throws IOException{
-		if (!handleInput(keyCode)){
-			super.keyTyped(keyChar, keyCode);
-		}
-	}
-	
-	private boolean handleInput(int keyId){
-		if (buttonId >= 0 && buttonId < 180){
-			KeyBinding binding = ClientModManager.keyBindings[buttonId];
-			
-			if (keyId == Keyboard.KEY_ESCAPE){
-				binding.setKeyModifierAndCode(KeyModifier.NONE, 0);
-			}
-			else{
-				binding.setKeyModifierAndCode(KeyModifier.getActiveModifier(), keyId);
-			}
-			
-			buttonList.get(buttonId).displayString = binding.getDisplayName();
-			
-			if (!KeyModifier.isKeyCodeModifier(keyId)){
-				buttonId = -1;
-			}
-			
-			KeyBinding.resetKeyBindingArrayAndHash();
-			
-			ClientSettings.keyCodeSprintHold = ClientModManager.keyBindSprintHold.getKeyCode();
-			ClientSettings.keyCodeSprintToggle = ClientModManager.keyBindSprintToggle.getKeyCode();
-			ClientSettings.keyCodeSneakToggle = ClientModManager.keyBindSneakToggle.getKeyCode();
-			ClientSettings.keyCodeOptionsMenu = ClientModManager.keyBindOptionsMenu.getKeyCode();
-			
-			ClientSettings.keyModSprintHold = ClientModManager.keyBindSprintHold.getKeyModifier();
-			ClientSettings.keyModSprintToggle = ClientModManager.keyBindSprintToggle.getKeyModifier();
-			ClientSettings.keyModSneakToggle = ClientModManager.keyBindSneakToggle.getKeyModifier();
-			ClientSettings.keyModOptionsMenu = ClientModManager.keyBindOptionsMenu.getKeyModifier();
-			
-			ClientSettings.update(BetterSprintingMod.config);
-			
-			pressTime = Minecraft.getSystemTime();
+	public boolean mouseClicked(double mouseX, double mouseY, int button){
+		/* TODO readd support
+		if (selectedBinding != null){
+			selectedBinding.bind(InputMappings.Type.MOUSE.getOrMakeInput(button));
+			onKeyBindingUpdated();
 			return true;
 		}
-		else return false;
+		else{*/
+			return super.mouseClicked(mouseX, mouseY, button);
+		//}
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTickTime){
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers){
+		if (selectedBinding != null){
+			if (keyCode == GLFW.GLFW_KEY_ESCAPE){
+				selectedBinding.setKeyModifierAndCode(KeyModifier.NONE, InputMappings.INPUT_INVALID);
+			}
+			else{
+				selectedBinding.setKeyModifierAndCode(KeyModifier.getActiveModifier(), InputMappings.getInputByCode(keyCode, scanCode));
+			}
+			
+			if (!KeyModifier.isKeyCodeModifier(selectedBinding.getKey())){
+				selectedBinding = null;
+			}
+			
+			onKeyBindingUpdated();
+			return true;
+		}
+		else{
+			return super.keyPressed(keyCode, scanCode, modifiers);
+		}
+	}
+	
+	private void onKeyBindingUpdated(){
+		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintHold, ClientModManager.keyBindSprintHold.getKey().getKeyCode());
+		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintToggle, ClientModManager.keyBindSprintToggle.getKey().getKeyCode());
+		BetterSprintingMod.config.set(ClientSettings.keyCodeSneakToggle, ClientModManager.keyBindSneakToggle.getKey().getKeyCode());
+		BetterSprintingMod.config.set(ClientSettings.keyCodeOptionsMenu, ClientModManager.keyBindOptionsMenu.getKey().getKeyCode());
+		
+		/* TODO BetterSprintingMod.config.set(ClientSettings.keyModSprintHold, ClientModManager.keyBindSprintHold.getKeyModifier());
+		BetterSprintingMod.config.set(ClientSettings.keyModSprintToggle, ClientModManager.keyBindSprintToggle.getKeyModifier());
+		BetterSprintingMod.config.set(ClientSettings.keyModSneakToggle, ClientModManager.keyBindSneakToggle.getKeyModifier());
+		BetterSprintingMod.config.set(ClientSettings.keyModOptionsMenu, ClientModManager.keyBindOptionsMenu.getKeyModifier());*/
+		
+		BetterSprintingMod.config.save();
+		ClientSettings.updateKeyBindings();
+	}
+	
+	@Override
+	public void render(int mouseX, int mouseY, float partialTickTime){
 		drawDefaultBackground();
-		drawCenteredString(fontRenderer, "Better Sprinting", width/2, 20, 16777215);
+		drawCenteredString(fontRenderer, "Better Sprinting", width / 2, 20, 16777215);
+		
+		super.render(mouseX, mouseY, partialTickTime);
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
@@ -233,27 +211,27 @@ public class GuiSprint extends GuiScreen{
 			boolean hasConflict = false;
 			boolean hasOnlyModifierConflict = true;
 			
-			if (binding.getKeyCode() != 0){
-				for(KeyBinding other:mc.gameSettings.keyBindings){
-					if (binding != other && binding.conflicts(other)){
+			if (!binding.isInvalid()){
+				for(KeyBinding other : mc.gameSettings.keyBindings){
+					if (binding != other && binding.func_197983_b(other)){
 						hasConflict = true;
 						hasOnlyModifierConflict &= binding.hasKeyCodeModifierConflict(other);
 					}
 				}
 			}
 			
-			if (buttonId == a){
-				buttonList.get(a).displayString = TextFormatting.WHITE+"> "+TextFormatting.YELLOW+binding.getDisplayName()+TextFormatting.WHITE+" <";
+			if (binding == selectedBinding){
+				buttons.get(a).displayString = TextFormatting.WHITE + "> " + TextFormatting.YELLOW + binding.func_197978_k() + TextFormatting.WHITE + " <";
 			}
 			else if (hasConflict){
-				buttonList.get(a).displayString = (hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED)+binding.getDisplayName();
+				buttons.get(a).displayString = (hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED) + binding.func_197978_k();
 			}
 			else{
-				buttonList.get(a).displayString = binding.getDisplayName();
+				buttons.get(a).displayString = binding.func_197978_k();
 			}
 			
 			String desc = (binding == mc.gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
-			drawButtonTitle(I18n.format(desc), buttonList.get(a), a%2 == 0 ? maxWidthLeft : maxWidthRight);
+			drawButtonTitle(I18n.format(desc), buttons.get(a), a % 2 == 0 ? maxWidthLeft : maxWidthRight);
 		}
 	
 		drawButtonTitle(I18n.format("bs.doubleTapping"), btnDoubleTap, maxWidthLeft);
@@ -262,30 +240,22 @@ public class GuiSprint extends GuiScreen{
 		drawButtonTitle(I18n.format("bs.disableMod"), btnDisableMod, maxWidthRight);
 		drawButtonTitle(I18n.format("bs.autoJump"), btnAutoJump, maxWidthLeft);
 		
-		for(int a = 0, top = height/6; a < buttonList.size(); a++){
-			GuiButton btn = buttonList.get(a);
-			
-			if (mouseX >= btn.x && mouseX < btn.x+btn.width && mouseY >= btn.y && mouseY < btn.y+20){
+		for(int a = 0, top = height / 6; a < buttons.size(); a++){
+			if (buttons.get(a).isMouseOver()){
 				String info = a < buttonTitles.length ? buttonTitles[a] : "";
 				String[] spl = I18n.format(info).split("#");
 				
 				for(int line = 0; line < spl.length; line++){
-					drawCenteredString(fontRenderer, spl[line], width/2, top+148+10*line-(fontRenderer.FONT_HEIGHT*spl.length/2), -1);
+					drawCenteredString(fontRenderer, spl[line], width / 2, top + 148 + (10 * line - (fontRenderer.FONT_HEIGHT * spl.length / 2)), -1);
 				}
 				
 				break;
 			}
 		}
-		
-		super.drawScreen(mouseX, mouseY, partialTickTime);
-	}
-	
-	private int getLeftColumnX(){
-		return width/2-155;
 	}
 	
 	private void drawButtonTitle(String title, GuiButton btn, int maxWidth){
 		int lines = fontRenderer.listFormattedStringToWidth(title, maxWidth).size();
-		fontRenderer.drawSplitString(title, btn.x+76, btn.y+7-5*(lines-1), maxWidth, -1);
+		fontRenderer.drawSplitString(title, btn.x + 76, btn.y + 7 - 5 * (lines - 1), maxWidth, -1);
 	}
 }

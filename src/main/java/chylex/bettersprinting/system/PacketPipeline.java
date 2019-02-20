@@ -4,48 +4,55 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLEventChannel;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.NetworkEvent.ClientCustomPayloadEvent;
+import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.commons.lang3.tuple.Pair;
+
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
 
 public class PacketPipeline{
-	private static final String channelName = "BSM";
-	private static PacketPipeline instance;
+	private static final ResourceLocation channelName = new ResourceLocation("bsm", "settings");
+	private static final String protocolId = "1";
+	
+	private static boolean registered = false;
 	
 	public static void initialize(INetworkHandler handler){
-		if (instance != null)throw new RuntimeException("Packet pipeline has already been registered!");
-		instance = new PacketPipeline(handler);
+		if (registered){
+			throw new RuntimeException("Packet pipeline has already been registered!");
+		}
+		
+		new PacketPipeline(handler);
+		registered = true;
 	}
 	
-	private final FMLEventChannel channel;
 	private final INetworkHandler handler;
 	
 	private PacketPipeline(INetworkHandler handler){
-		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
-		channel.register(this);
 		this.handler = handler;
+		NetworkRegistry.newEventChannel(channelName, () -> protocolId, protocolServer -> true, protocolClient -> true).registerObject(this);
 	}
 	
 	@SubscribeEvent
-	public void onClientPacket(ClientCustomPacketEvent e){
-		handler.onPacket(Side.CLIENT, e.getPacket().payload(), getClientPlayer());
+	public void onServerToClientPacket(ServerCustomPayloadEvent e){
+		handler.onPacket(e.getPayload(), getClientPlayer());
 	}
 	
 	@SubscribeEvent
-	public void onServerPacket(ServerCustomPacketEvent e){
-		handler.onPacket(Side.SERVER, e.getPacket().payload(), ((NetHandlerPlayServer)e.getHandler()).player);
+	public void onClientToServerPacket(ClientCustomPayloadEvent e){
+		handler.onPacket(e.getPayload(), e.getSource().get().getSender());
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private EntityPlayer getClientPlayer(){
-		return Minecraft.getMinecraft().player;
+		return Minecraft.getInstance().player;
 	}
 	
 	public static PacketBuffer buf(){
@@ -53,14 +60,14 @@ public class PacketPipeline{
 	}
 	
 	public static void sendToPlayer(PacketBuffer buffer, EntityPlayer player){
-		instance.channel.sendTo(new FMLProxyPacket(buffer, channelName), (EntityPlayerMP)player);
+		PacketDistributor.PLAYER.with(() -> (EntityPlayerMP)player).send(PLAY_TO_CLIENT.buildPacket(Pair.of(buffer, 0), channelName).getThis());
 	}
 	
 	public static void sendToServer(PacketBuffer buffer){
-		instance.channel.sendToServer(new FMLProxyPacket(buffer, channelName));
+		PacketDistributor.SERVER.noArg().send(PLAY_TO_SERVER.buildPacket(Pair.of(buffer, 0), channelName).getThis());
 	}
 	
-	public static interface INetworkHandler{
-		void onPacket(Side side, ByteBuf data, EntityPlayer player);
+	public interface INetworkHandler{
+		void onPacket(ByteBuf data, EntityPlayer player);
 	}
 }

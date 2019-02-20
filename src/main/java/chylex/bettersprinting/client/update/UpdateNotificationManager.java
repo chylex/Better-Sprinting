@@ -16,7 +16,7 @@ public final class UpdateNotificationManager{
 		if (hasRun)return;
 		hasRun = true;
 		
-		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
+		if (ClientSettings.enableUpdateNotifications.get() || ClientSettings.enableBuildCheck.get()){
 			long time = Calendar.getInstance().getTimeInMillis();
 			
 			if (time-globalData.getLong(prefKey, 0L) > 86400000L){ // 24 hours
