@@ -1,0 +1,61 @@
+{
+    "_comment": "Generic GUI titles",
+
+    "gui.enabled": "Zapnuto",
+    "gui.disabled": "Vypnuto",
+    "gui.unavailable": "Nedostupné",
+
+    "_comment": "Titles for controls",
+
+    "bs.sprint.hold": "Běh (držet)",
+    "bs.sprint.toggle": "Běh (přepnout)",
+    "bs.sneak.toggle": "Plížení (přepnout)",
+    "bs.menu": "Sprint menu",
+
+    "bs.doubleTapping": "Dvojitý stisk",
+    "bs.runAllDirs": "Běh ve všech směrech",
+    "bs.flyBoost": "Zrychlení létání",
+    "bs.disableMod": "Vypnout funkce módu",
+    "bs.autoJump": "Automatické skákání",
+
+    "_comment": "Tooltips for controls (use the '#' character for splitting lines)",
+
+    "bs.sprint.hold.info": "Drž pro běh.",
+    "bs.sprint.toggle.info": "Stiskni jednou pro zapnutí nebo vypnutí běhu.",
+    "bs.sneak.toggle.info": "Stiskni jednou pro zapnutí nebo vypnutí plížení.#Při otevření GUI je plížení pozastaveno dokud GUI nezavřete.",
+    "bs.menu.info": "Klávesa pro rychlý přístup k tomuto menu ve hře.",
+
+    "bs.doubleTapping.info": "Zapne nebo vypne běh dvojitým stisknutím klávesy pro chůzi dopředu.",
+    "bs.runAllDirs.info": "Umožní běžet do stran nebo dozadu.#Nelze použít v multiplayeru pokud to server neumožní.",
+    "bs.flyBoost.info": "Použití běhu zrychlí let v tvořivé hře.",
+    "bs.disableMod.info": "Vypne všechny funkce módu. Lze použít pokud server nepovoluje Better Sprinting.",
+    "bs.autoJump.info": "Funkce Minecraftu která umožní automaticky skákat poblíž překážek.",
+
+    "_comment": "If you need to translate fly speed boost, use the following pattern (from 2x to 8x)",
+
+    "2x": "2x",
+
+    "_comment": "In-game messages",
+
+    "bs.game.integrity": "Kontrola integrity selhala, nalezen konflikt s dalším módem. Zkuste nainstalovat PlayerAPI pro vyřešení problému.",
+    "bs.game.disabled": "Server vyžádal vypnutí módu, všechny mechaniky módu budou vypnuty po dobu hraní na serveru.",
+    "bs.game.reenabled": "Server povolil mód, všechny mechaniky módu jsou opět zapnuty.",
+
+    "_comment": "Server messages (translated on client)",
+
+    "bs.server.kick": "Server nepovoluje mód Better Sprinting. Novější verze módu umožní automatické vypnutí módu bez vykopnutí ze serveru.",
+
+    "bs.command.invalidSyntax": "Chybná syntaxe, použijte /bettersprinting pro seznam příkazů.",
+    "bs.command.info": "Příkaz lze použít buď pro zablokování/povolení módu, nebo pro upravení specifických nastavení módu. Tato nastavení zůstanou uložena po restartu serveru, a jejich změna automaticky ovlivní všechny hráče připojené na serveru s módem.",
+    "bs.command.disableMod": "Better Sprinting bude automaticky vypnut pro hráče na serveru.",
+    "bs.command.enableMod": "Better Sprinting je na serveru opět povolen.",
+    "bs.command.disableFlyBoost": "Zrychlení letu v módu o přežití je nyní zablokován.",
+    "bs.command.enableFlyBoost": "Zrychlení letu v módu o přežití je nyní povolen.",
+    "bs.command.disableAllDirs": "Běh ve všech směrech je nyní zablokován.",
+    "bs.command.enableAllDirs": "Běh ve všech směrech je nyní povolen.",
+
+    "_comment": "Configuration",
+
+    "bs.config.notifications": "Upozorní uživatele na nové verze módu. Kontrola verze běží pouze jednou denně a neovlivňuje výkon hry.",
+    "bs.config.buildCheck": "Je vysoce doporučeno toto nastavení nechat zapnuté. Kontroluje poškozené buildy módu s kritickými chybami které můžou způsobit pád hry. Tyto chyby jsou většinou rychle opraveny, ale malé množství uživatelů může poškozený build stáhnout."
+}
