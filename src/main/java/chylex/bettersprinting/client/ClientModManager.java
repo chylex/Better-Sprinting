@@ -42,7 +42,7 @@ public final class ClientModManager{
 	}
 	
 	public static boolean canBoostFlying(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.capabilities.isCreativeMode || svSurvivalFlyingBoost);
+		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
 	}
 	
 	public static boolean isModDisabled(){
