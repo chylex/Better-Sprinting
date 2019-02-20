@@ -147,15 +147,18 @@ public class GuiSprint extends GuiScreen{
 	
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button){
-		/* TODO readd support
-		if (selectedBinding != null){
+		if (super.mouseClicked(mouseX, mouseY, button)){
+			return true;
+		}
+		else if (selectedBinding != null){
 			selectedBinding.bind(InputMappings.Type.MOUSE.getOrMakeInput(button));
+			selectedBinding = null;
+			
 			onKeyBindingUpdated();
 			return true;
 		}
-		else{*/
-			return super.mouseClicked(mouseX, mouseY, button);
-		//}
+		
+		return false;
 	}
 	
 	@Override
@@ -186,10 +189,15 @@ public class GuiSprint extends GuiScreen{
 		BetterSprintingMod.config.set(ClientSettings.keyCodeSneakToggle, ClientModManager.keyBindSneakToggle.getKey().getKeyCode());
 		BetterSprintingMod.config.set(ClientSettings.keyCodeOptionsMenu, ClientModManager.keyBindOptionsMenu.getKey().getKeyCode());
 		
-		/* TODO BetterSprintingMod.config.set(ClientSettings.keyModSprintHold, ClientModManager.keyBindSprintHold.getKeyModifier());
-		BetterSprintingMod.config.set(ClientSettings.keyModSprintToggle, ClientModManager.keyBindSprintToggle.getKeyModifier());
-		BetterSprintingMod.config.set(ClientSettings.keyModSneakToggle, ClientModManager.keyBindSneakToggle.getKeyModifier());
-		BetterSprintingMod.config.set(ClientSettings.keyModOptionsMenu, ClientModManager.keyBindOptionsMenu.getKeyModifier());*/
+		BetterSprintingMod.config.set(ClientSettings.keyModSprintHold, ClientModManager.keyBindSprintHold.getKeyModifier().name());
+		BetterSprintingMod.config.set(ClientSettings.keyModSprintToggle, ClientModManager.keyBindSprintToggle.getKeyModifier().name());
+		BetterSprintingMod.config.set(ClientSettings.keyModSneakToggle, ClientModManager.keyBindSneakToggle.getKeyModifier().name());
+		BetterSprintingMod.config.set(ClientSettings.keyModOptionsMenu, ClientModManager.keyBindOptionsMenu.getKeyModifier().name());
+		
+		BetterSprintingMod.config.set(ClientSettings.keyTypeSprintHold, ClientModManager.keyBindSprintHold.getKey().getType().name());
+		BetterSprintingMod.config.set(ClientSettings.keyTypeSprintToggle, ClientModManager.keyBindSprintToggle.getKey().getType().name());
+		BetterSprintingMod.config.set(ClientSettings.keyTypeSneakToggle, ClientModManager.keyBindSneakToggle.getKey().getType().name());
+		BetterSprintingMod.config.set(ClientSettings.keyTypeOptionsMenu, ClientModManager.keyBindOptionsMenu.getKey().getType().name());
 		
 		BetterSprintingMod.config.save();
 		ClientSettings.updateKeyBindings();
