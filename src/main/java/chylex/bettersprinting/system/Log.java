@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 public final class Log{
-	private static boolean isDeobfEnvironment = System.getProperty("bettersprinting.debug") != null;
+	private static final boolean isDeobfEnvironment = System.getProperty("bettersprinting.debug") != null;
 	private static final Logger logger = LogManager.getLogger("BetterSprinting");
 	
 	public static void load(){
@@ -29,7 +29,9 @@ public final class Log{
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */
 	public static void debug(String message, Object...data){
-		if (isDeobfEnvironment)logger.info(getMessage(message, data));
+		if (isDeobfEnvironment){
+			logger.info(getMessage(message, data));
+		}
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */
@@ -54,7 +56,10 @@ public final class Log{
 	}
 	
 	private static String getMessage(String message, Object...data){
-		for(int a = data.length-1; a >= 0; a--)message = message.replace("$"+a, data[a] == null ? "null" : String.valueOf(data[a]));
+		for(int a = data.length - 1; a >= 0; a--){
+			message = message.replace("$" + a, data[a] == null ? "null" : String.valueOf(data[a]));
+		}
+		
 		return message;
 	}
 }

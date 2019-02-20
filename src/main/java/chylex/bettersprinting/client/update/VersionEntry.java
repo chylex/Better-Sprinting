@@ -39,7 +39,7 @@ final class VersionEntry implements Comparable<VersionEntry>{
 			}
 		}
 		
-		orderId = Byte.valueOf(i);
+		orderId = i;
 		modVersionName = tmp;
 	}
 	

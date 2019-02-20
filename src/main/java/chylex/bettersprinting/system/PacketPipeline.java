@@ -29,7 +29,7 @@ public class PacketPipeline{
 			throw new RuntimeException("Packet pipeline has already been registered!");
 		}
 		
-		new PacketPipeline(handler);
+		NetworkRegistry.newEventChannel(channelName, () -> protocolId, protocolServer -> true, protocolClient -> true).registerObject(new PacketPipeline(handler));
 		registered = true;
 	}
 	
@@ -37,7 +37,6 @@ public class PacketPipeline{
 	
 	private PacketPipeline(INetworkHandler handler){
 		this.handler = handler;
-		NetworkRegistry.newEventChannel(channelName, () -> protocolId, protocolServer -> true, protocolClient -> true).registerObject(this);
 	}
 	
 	@SubscribeEvent

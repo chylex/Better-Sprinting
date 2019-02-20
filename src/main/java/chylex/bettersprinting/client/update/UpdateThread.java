@@ -1,20 +1,20 @@
 package chylex.bettersprinting.client.update;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.ForgeHooks;
-import org.apache.commons.io.IOUtils;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.system.Log;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ForgeHooks;
+import org.apache.commons.io.IOUtils;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class UpdateThread extends Thread{
 	private static final String url = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateNotificationData.txt";
@@ -22,7 +22,7 @@ public class UpdateThread extends Thread{
 	private final String modVersion;
 	private final String mcVersion;
 	
-	public UpdateThread(String modVersion){
+	UpdateThread(String modVersion){
 		this.modVersion = modVersion;
 		this.mcVersion = BetterSprintingMod.proxy.getMinecraftVersion();
 		setPriority(MIN_PRIORITY);
@@ -38,6 +38,7 @@ public class UpdateThread extends Thread{
 			
 			List<VersionEntry> versionList = Lists.newArrayList();
 			VersionEntry newestVersionForCurrentMC = null;
+			
 			int counter = -1;
 			String buildId = "";
 			boolean isInDev = true;
@@ -52,7 +53,9 @@ public class UpdateThread extends Thread{
 						downloadURL = entry.getValue().getAsString();
 					}
 				}
-				else versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
+				else{
+					versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
+				}
 			}
 			
 			Collections.sort(versionList);
@@ -61,7 +64,10 @@ public class UpdateThread extends Thread{
 				Log.debug("Reading update data: $0", version.versionIdentifier);
 				
 				if (version.isSupportedByMC(mcVersion)){
-					if (newestVersionForCurrentMC == null)newestVersionForCurrentMC = version;
+					if (newestVersionForCurrentMC == null){
+						newestVersionForCurrentMC = version;
+					}
+					
 					++counter;
 				}
 				
@@ -76,7 +82,9 @@ public class UpdateThread extends Thread{
 				Log.debug("In-dev version used, notifications disabled.");
 				return;
 			}
-			else Log.debug("Done.");
+			else{
+				Log.debug("Done.");
+			}
 			
 			StringBuilder message = null;
 			
@@ -101,7 +109,7 @@ public class UpdateThread extends Thread{
 				}
 			}
 		}
-		catch(UnknownHostException e){}
+		catch(UnknownHostException ignored){}
 		catch(Exception e){
 			Log.throwable(e, "Error detecting updates!");
 		}

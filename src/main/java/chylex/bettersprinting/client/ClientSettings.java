@@ -21,15 +21,15 @@ public class ClientSettings{
 	public static final IntValue keyCodeSneakToggle;
 	public static final IntValue keyCodeOptionsMenu;
 	
-	public static ConfigValue<String> keyModSprintHold;
-	public static ConfigValue<String> keyModSprintToggle;
-	public static ConfigValue<String> keyModSneakToggle;
-	public static ConfigValue<String> keyModOptionsMenu;
+	public static final ConfigValue<String> keyModSprintHold;
+	public static final ConfigValue<String> keyModSprintToggle;
+	public static final ConfigValue<String> keyModSneakToggle;
+	public static final ConfigValue<String> keyModOptionsMenu;
 	
-	public static ConfigValue<String> keyTypeSprintHold;
-	public static ConfigValue<String> keyTypeSprintToggle;
-	public static ConfigValue<String> keyTypeSneakToggle;
-	public static ConfigValue<String> keyTypeOptionsMenu;
+	public static final ConfigValue<String> keyTypeSprintHold;
+	public static final ConfigValue<String> keyTypeSprintToggle;
+	public static final ConfigValue<String> keyTypeSneakToggle;
+	public static final ConfigValue<String> keyTypeOptionsMenu;
 	
 	public static final IntValue flySpeedBoost;
 	public static final BooleanValue enableDoubleTap;

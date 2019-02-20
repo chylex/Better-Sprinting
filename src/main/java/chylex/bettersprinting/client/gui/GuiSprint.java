@@ -220,7 +220,7 @@ public class GuiSprint extends GuiScreen{
 			boolean hasOnlyModifierConflict = true;
 			
 			if (!binding.isInvalid()){
-				for(KeyBinding other : mc.gameSettings.keyBindings){
+				for(KeyBinding other:mc.gameSettings.keyBindings){
 					if (binding != other && binding.func_197983_b(other)){
 						hasConflict = true;
 						hasOnlyModifierConflict &= binding.hasKeyCodeModifierConflict(other);

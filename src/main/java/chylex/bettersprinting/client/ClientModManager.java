@@ -27,7 +27,7 @@ public final class ClientModManager{
 	static{
 		keyBindSprintHold.keyCategory = categoryName;
 		
-		for(KeyBinding binding : keyBindings){
+		for(KeyBinding binding:keyBindings){
 			binding.setKeyConflictContext(KeyConflictContext.IN_GAME);
 		}
 	}
