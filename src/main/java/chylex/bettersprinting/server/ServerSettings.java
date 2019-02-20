@@ -1,4 +1,5 @@
 package chylex.bettersprinting.server;
+import chylex.bettersprinting.BetterSprintingConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -15,7 +16,7 @@ final class ServerSettings{
 	private static final ForgeConfigSpec configSpec;
 	
 	static void register(ModLoadingContext ctx){
-		ctx.registerConfig(ModConfig.Type.COMMON, configSpec);
+		BetterSprintingConfig.register(ctx, ModConfig.Type.COMMON, configSpec, "server");
 	}
 	
 	static{

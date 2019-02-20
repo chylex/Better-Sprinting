@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client;
+import chylex.bettersprinting.BetterSprintingConfig;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +43,7 @@ public class ClientSettings{
 	private static final ForgeConfigSpec configSpec;
 	
 	static void register(ModLoadingContext ctx){
-		ctx.registerConfig(ModConfig.Type.CLIENT, configSpec);
+		BetterSprintingConfig.register(ctx, ModConfig.Type.CLIENT, configSpec, "client");
 	}
 	
 	static{

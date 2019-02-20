@@ -35,6 +35,7 @@ public class BetterSprintingMod{
 	@SubscribeEvent
 	public void onConfigLoading(final ModConfig.Loading e){
 		config = new BetterSprintingConfig(e.getConfig());
+		config.migrate();
 	}
 	
 	@SubscribeEvent
