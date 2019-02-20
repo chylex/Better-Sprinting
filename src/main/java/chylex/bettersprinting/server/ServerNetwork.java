@@ -13,37 +13,55 @@ import java.util.UUID;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
 final class ServerNetwork implements INetworkHandler{
-	// TODO update
 	/*
 	 * OVERVIEW
 	 * ========
-	 * Use this guide to handle players with Better Sprinting in Minecraft 1.9. If you need information for older versions,
-	 * view this file in the 1.8.8 branch where you can find a guide to disable the mod in all legacy versions of the mod.
-	 * 
-	 * Better Sprinting for Minecraft 1.9 no longer uses the legacy BSprint channel, if you are using unofficial mods or
-	 * plugins to ban the mod from your server, please make sure it takes advantage of the new BSM channel features which
-	 * allow seamlessly disabling the mod when a player enters your server.
-	 * 
-	 * 
-	 * 
+	 * Use this guide to handle players with Better Sprinting in Minecraft 1.13. If you need information for older versions,
+	 * view this file in the appropriate branch where you can find a guide to disable the mod in legacy versions of the mod.
+	 *
+	 * All messages are sent via payload packets on the "bsm:settings" channel (versions before 1.13 used a different name).
+	 * See https://wiki.vg/Plugin_channels for information about payload packets.
+	 *
+	 * Each message begins with a byte that identifies its type.
+	 * Some message types declare additional parameters that must follow after the first byte.
+	 *
+	 *
+	 *
 	 * INCOMING PACKETS
 	 * ================
-	 * Payload packet on "BSM" channel, sent when a player connects to the server
-	 * 
-	 *** byte 0, byte <protocolVersion> - the protocol version can be used to determine available functionality (see below)
-	 * 
-	 * 
-	 * 
+	 *
+	 *** [byte 0] [byte <protocolVersion>]
+	 ***
+	 *** Asks the server to send it any necessary information.
+	 *** The <protocolVersion> parameter may be used in the future to inform server about client's feature availability.
+	 *** Sent when a player connects to the server.
+	 *
+	 *
+	 *
 	 * OUTCOMING PACKETS
 	 * =================
-	 * Payload packet on "BSM" channel, sent when a player connects to the server or the server settings change.
-	 * 
-	 *** byte 0, boolean <enableSurvivalFlyBoost>, boolean <enableAllDirs> - custom settings, both are false by default [since 10]
-	 *** byte 1 - disables the mod on client-side [since 10]
-	 *** byte 2 - re-enables the mod in client-side, called from command [since 10]
-	 * 
-	 * 
-	 * 
+	 *
+	 *** [byte 0] [bool <enableSurvivalFlyBoost>] [bool <enableAllDirs>]
+	 ***
+	 *** Notifies the player about which non-vanilla settings are enabled on the server (both are disabled by default).
+	 *** Sent to player when their [byte 0] message is processed, and either or both settings are enabled.
+	 *** Sent to all players with the mod after using the '/bettersprinting setting (...)' command.
+	 *
+	 *
+	 *** [byte 1]
+	 ***
+	 *** Disables basic functionality of the mod on client side.
+	 *** Sent to player when their [byte 0] message is processed, and the server wants to disable the mod.
+	 *** Sent to all players with the mod after using the '/bettersprinting disablemod true' command.
+	 *
+	 *
+	 *** [byte 2]
+	 ***
+	 *** Re-enables basic functionality of the mod on client side.
+	 *** Sent to all players with the mod after using the '/bettersprinting disablemod false' command.
+	 *
+	 *
+	 *
 	 * ADDITIONAL INFO
 	 * ===============
 	 * Feel free to contact me if you need details on how to implement special cases, such as servers that accept clients
