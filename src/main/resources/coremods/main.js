@@ -324,7 +324,7 @@ function initializeCoreMod(){
         return function(method){
             return method.name.equals(name) && method.desc.equals(desc);
         };
-    }
+    };
     
     return {
         "BetterSprintingCore": {
@@ -341,9 +341,9 @@ function initializeCoreMod(){
                                           .toArray();
                 
                 var pushOutOfBlocks = classNode.methods
-                                                .stream()
-                                                .filter(matchMethod("pushOutOfBlocks", "(DDD)Z"))
-                                                .toArray();
+                                               .stream()
+                                               .filter(matchMethod("pushOutOfBlocks", "(DDD)Z"))
+                                               .toArray();
                 
                 if (livingTick.length == 1 && pushOutOfBlocks.length == 1){
                     var mLivingTick = livingTick[0];
@@ -371,5 +371,5 @@ function initializeCoreMod(){
                 return classNode;
             }
         }
-    }
+    };
 }
