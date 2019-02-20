@@ -232,6 +232,10 @@ function initializeCoreMod(){
         }
     };
     
+    var checkInstructionName = function(instruction, name1, name2){
+        return instruction.name.equals(name1) || instruction.name.equals(name2);
+    };
+    
     var transformLivingTick = function(method){
         var instructions = method.instructions;
         var instrcount = instructions.size();
@@ -256,7 +260,7 @@ function initializeCoreMod(){
             var instruction = instructions.get(index);
             
             if (instruction.getOpcode() == opcodes.GETFIELD &&
-                instruction.name.equals("movementInput") &&
+                checkInstructionName(instruction, "movementInput", "field_71158_b") &&
                 checkOpcodeChain(index - 1, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
                 checkOpcodeChain(index + 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
             ){
@@ -320,9 +324,9 @@ function initializeCoreMod(){
         method.access |= opcodes.ACC_PUBLIC;
     };
     
-    var matchMethod = function(name, desc){
+    var matchMethod = function(name1, name2, desc){
         return function(method){
-            return method.name.equals(name) && method.desc.equals(desc);
+            return (method.name.equals(name1) || method.name.equals(name2)) && method.desc.equals(desc);
         };
     };
     
@@ -337,12 +341,12 @@ function initializeCoreMod(){
                 
                 var livingTick = classNode.methods
                                           .stream()
-                                          .filter(matchMethod("livingTick", "()V"))
+                                          .filter(matchMethod("livingTick", "func_70636_d", "()V"))
                                           .toArray();
                 
                 var pushOutOfBlocks = classNode.methods
                                                .stream()
-                                               .filter(matchMethod("pushOutOfBlocks", "(DDD)Z"))
+                                               .filter(matchMethod("pushOutOfBlocks", "func_145771_j", "(DDD)Z"))
                                                .toArray();
                 
                 if (livingTick.length == 1 && pushOutOfBlocks.length == 1){
@@ -363,7 +367,7 @@ function initializeCoreMod(){
                     print("Could not find EntityPlayerSP.livingTick() and/or EntityPlayerSP.pushOutOfBlocks(), printing all methods...");
                     
                     classNode.methods.forEach(function(method){
-                        print(method.name + " .. " + method.desc);
+                        print(method.name + method.desc);
                     });
                 }
                 
