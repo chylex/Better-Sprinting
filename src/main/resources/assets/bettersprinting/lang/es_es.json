@@ -37,7 +37,7 @@
 
     "_comment": "In-game messages",
 
-    "bs.game.integrity": "La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting. Intenta instalar PlayerAPI para resolver este conflicto.",
+    "bs.game.integrity": "La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting.",
     "bs.game.disabled": "El servidor ha desactivado el uso del mod, la funcionalidad de correr se ha cambiado a las originales de Minecraft hasta que te desconectes.",
     "bs.game.reenabled": "El servidor ha activado el uso del mod, la funcionalidad de correr se ha cambiado a Better Sprinting.",
 

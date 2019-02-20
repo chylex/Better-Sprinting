@@ -37,7 +37,7 @@
 
     "_comment": "In-game messages",
 
-    "bs.game.integrity": "Jakiś mod kłóci się z Better Sprinting. Zainstaluj PLAYER API by naprawić konflikt.",
+    "bs.game.integrity": "Jakiś mod kłóci się z Better Sprinting.",
     "bs.game.disabled": "Serwer poprosił o wyłaczenie tego moda. Funkcje wyłączone do czasu wyjścia z serwera.",
     "bs.game.reenabled": "Ten serwer odblokował tego moda. Funkcje reaktywowane.",
 
