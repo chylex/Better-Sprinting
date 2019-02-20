@@ -1,1 +1,0 @@
-@start /B gradlew.bat setupDecompWorkspace eclipse
