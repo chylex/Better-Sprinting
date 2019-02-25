@@ -9,7 +9,6 @@
    - build.gradle > version  -  mod version
    - mods.toml > version  -  mod version
    - BetterSprintingMod.buildId  -  unique build string for each release
-   - BetterSprintingCore.supportedMinecraftVersion  -  Minecraft version
 
 3. Make sure the mod is working
    - Test coremod
