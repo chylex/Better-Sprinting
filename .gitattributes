@@ -1,0 +1,4 @@
+* text=auto
+
+*.toml text eol=lf
+
