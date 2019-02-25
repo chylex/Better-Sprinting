@@ -13,9 +13,16 @@ buildscript{
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '2.1.1'
+def prefixName = 'displayName = '
+def prefixVersion = 'version = '
+
+def metaLines = file('src/main/resources/META-INF/mods.toml').readLines()
+def metaName = metaLines.find { line -> line.startsWith(prefixName) }.substring(prefixName.length())[1..-2]
+def metaVersion = metaLines.find { line -> line.startsWith(prefixVersion) }.substring(prefixVersion.length())[1..-2]
+
 group = 'chylex.bettersprinting'
-archivesBaseName = 'bettersprinting'
+archivesBaseName = metaName.replaceAll('\\s', '')
+version = metaVersion
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -28,7 +35,7 @@ minecraft{
     runs{
         client{
             properties 'bettersprinting.debug': ''
-            workingDirectory project.file('run')
+            workingDirectory file('run')
             
             mods{
                 bettersprinting{
@@ -39,7 +46,7 @@ minecraft{
         
         server{
             properties 'bettersprinting.debug': ''
-            workingDirectory project.file('run')
+            workingDirectory file('run')
             
             mods{
                 bettersprinting{
@@ -52,4 +59,20 @@ minecraft{
 
 dependencies{
     minecraft 'net.minecraftforge:forge:1.13.2-25.0.53'
+}
+
+jar{
+    manifest{
+        attributes([
+            'Specification-Title'  : 'bettersprinting',
+            'Specification-Version': '1',
+            'Specification-Vendor' : 'chylex',
+
+            'Implementation-Title'  : metaName,
+            'Implementation-Version': metaVersion,
+            'Implementation-Vendor' : 'chylex',
+
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
