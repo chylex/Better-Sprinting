@@ -10,11 +10,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkEvent.ClientCustomPayloadEvent;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
-
 import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
 import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
 
@@ -41,12 +41,17 @@ public class PacketPipeline{
 	
 	@SubscribeEvent
 	public void onServerToClientPacket(ServerCustomPayloadEvent e){
-		handler.onPacket(e.getPayload(), getClientPlayer());
+		handlePacket(getClientPlayer(), e.getPayload().copy(), e.getSource().get());
 	}
 	
 	@SubscribeEvent
 	public void onClientToServerPacket(ClientCustomPayloadEvent e){
-		handler.onPacket(e.getPayload(), e.getSource().get().getSender());
+		Context ctx = e.getSource().get();
+		handlePacket(ctx.getSender(), e.getPayload().copy(), ctx);
+	}
+	
+	private void handlePacket(EntityPlayer player, ByteBuf payload, Context ctx){
+		ctx.enqueueWork(() -> handler.onPacket(payload, player));
 	}
 	
 	@OnlyIn(Dist.CLIENT)
