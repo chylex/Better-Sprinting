@@ -236,22 +236,22 @@ function initializeCoreMod(){
         return instruction.name.equals(name1) || instruction.name.equals(name2);
     };
     
+    var checkOpcodeChain = function(instructions, start, chain){
+        for(var offset = 0; offset < chain.length; offset++){
+            var instruction = instructions.get(start + offset);
+            
+            if (instruction.getOpcode() != chain[offset]){
+                print("Mismatched opcode chain, " + instruction.getOpcode() + " != " + chain[offset]);
+                return false;
+            }
+        }
+        
+        return true;
+    };
+    
     var transformLivingTick = function(method){
         var instructions = method.instructions;
         var instrcount = instructions.size();
-        
-        var checkOpcodeChain = function(start, chain){
-            for(var offset = 0; offset < chain.length; offset++){
-                var instruction = instructions.get(start + offset);
-                
-                if (instruction.getOpcode() != chain[offset]){
-                    print("Mismatched opcode chain, " + instruction.getOpcode() + " != " + chain[offset]);
-                    return false;
-                }
-            }
-            
-            return true;
-        };
         
         var insertionPoint = -1;
         var skipPoint = -1;
@@ -261,8 +261,8 @@ function initializeCoreMod(){
             
             if (instruction.getOpcode() == opcodes.GETFIELD &&
                 checkInstructionName(instruction, "movementInput", "field_71158_b") &&
-                checkOpcodeChain(index - 1, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
-                checkOpcodeChain(index + 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
+                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
+                checkOpcodeChain(instructions, index + 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
             ){
                 insertionPoint = index + 9;
                 break;
@@ -280,8 +280,8 @@ function initializeCoreMod(){
             
             if (instruction.getOpcode() == opcodes.GETSTATIC &&
                 instruction.name.equals("CHEST") &&
-                checkOpcodeChain(index - 1, [ opcodes.ALOAD, opcodes.GETSTATIC, opcodes.INVOKEVIRTUAL, opcodes.ASTORE ]) &&
-                checkOpcodeChain(index - 24, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.IFEQ ])
+                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETSTATIC, opcodes.INVOKEVIRTUAL, opcodes.ASTORE ]) &&
+                checkOpcodeChain(instructions, index - 24, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.IFEQ ])
             ){
                 skipPoint = index - 27;
                 break;
@@ -315,7 +315,7 @@ function initializeCoreMod(){
         helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false);
         helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
         
-        instructions.insertBefore(insertionPointLabel, helper.instructions);
+        instructions.insert(insertionPointLabel, helper.instructions);
         return true;
     };
     
