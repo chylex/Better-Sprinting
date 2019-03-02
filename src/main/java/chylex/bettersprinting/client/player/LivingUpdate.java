@@ -31,10 +31,11 @@ public final class LivingUpdate{
 		}
 		
 		boolean flag = this.movementInput.jump;
-		boolean flag1 = this.movementInput.sneak;    <<< INSERTED HERE
+		boolean flag1 = this.movementInput.sneak;
+		<<< INSERTED HERE
 		float f = 0.8F;
 		boolean flag2 = this.movementInput.moveForward >= 0.8F;
-		 */
+		*/
 		
 		// CUSTOM
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
@@ -96,9 +97,8 @@ public final class LivingUpdate{
 		
 		/*
 		}
-		    <<< SKIPPED TO HERE
-		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.abilities.isFlying)
-		{
+		<<< SKIPPED TO HERE
+		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.abilities.isFlying){
 			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		*/
 	}
