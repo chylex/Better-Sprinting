@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.LogicalSide;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -104,7 +105,7 @@ final class ServerNetwork implements INetworkHandler{
 	}
 	
 	@Override
-	public void onPacket(ByteBuf data, EntityPlayer player){
+	public void onPacket(LogicalSide side, ByteBuf data, EntityPlayer player){
 		players.add(player.getUniqueID());
 		
 		if (ServerSettings.disableClientMod.get()){

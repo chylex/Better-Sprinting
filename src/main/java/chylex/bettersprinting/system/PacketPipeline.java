@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent.ClientCustomPayloadEvent;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadEvent;
@@ -41,17 +42,17 @@ public class PacketPipeline{
 	
 	@SubscribeEvent
 	public void onServerToClientPacket(ServerCustomPayloadEvent e){
-		handlePacket(getClientPlayer(), e.getPayload().copy(), e.getSource().get());
+		handlePacket(LogicalSide.CLIENT, getClientPlayer(), e.getPayload().copy(), e.getSource().get());
 	}
 	
 	@SubscribeEvent
 	public void onClientToServerPacket(ClientCustomPayloadEvent e){
 		Context ctx = e.getSource().get();
-		handlePacket(ctx.getSender(), e.getPayload().copy(), ctx);
+		handlePacket(LogicalSide.SERVER, ctx.getSender(), e.getPayload().copy(), ctx);
 	}
 	
-	private void handlePacket(EntityPlayer player, ByteBuf payload, Context ctx){
-		ctx.enqueueWork(() -> handler.onPacket(payload, player));
+	private void handlePacket(LogicalSide side, EntityPlayer player, ByteBuf payload, Context ctx){
+		ctx.enqueueWork(() -> handler.onPacket(side, payload, player));
 	}
 	
 	@OnlyIn(Dist.CLIENT)
@@ -72,6 +73,6 @@ public class PacketPipeline{
 	}
 	
 	public interface INetworkHandler{
-		void onPacket(ByteBuf data, EntityPlayer player);
+		void onPacket(LogicalSide side, ByteBuf data, EntityPlayer player);
 	}
 }
