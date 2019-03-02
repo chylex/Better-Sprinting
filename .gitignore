@@ -2,12 +2,16 @@ bin/
 build/
 eclipse/
 run/
+out/
 .gradle/
 .settings/
 .updateclasses/
+.idea/
 .classpath
 .project
 .DS_Store
 *.launch
+*.iml
 Thumbs.db
 Mod Update Process.txt
+!run/eula.txt
