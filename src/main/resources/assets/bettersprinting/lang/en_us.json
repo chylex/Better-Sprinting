@@ -15,6 +15,7 @@
     "bs.doubleTapping": "Double tapping",
     "bs.runAllDirs": "Run in all directions",
     "bs.flyBoost": "Flying boost",
+    "bs.flyOnGround": "Fly on ground",
     "bs.disableMod": "Disable mod functionality",
     "bs.autoJump": "Auto-jump",
 
@@ -28,6 +29,7 @@
     "bs.doubleTapping.info": "Enable or disable sprinting by double-tapping the forward key.",
     "bs.runAllDirs.info": "Sprint in all directions.#You cannot use this in multiplayer unless the server allows it.",
     "bs.flyBoost.info": "Use sprint key when flying in creative mode to fly faster.",
+    "bs.flyOnGround.info": "Continue flying when touching ground in creative mode.",
     "bs.disableMod.info": "Disables all non-vanilla functionality of Better Sprinting.#This option can be used if a server doesn't allow the mod.",
     "bs.autoJump.info": "Vanilla feature that makes you automatically jump near obstacles.",
 

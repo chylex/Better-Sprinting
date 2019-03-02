@@ -20,9 +20,10 @@ public class GuiSprint extends GuiScreen{
 	private static final int idDoubleTap = 199;
 	private static final int idAllDirs = 198;
 	private static final int idFlyBoost = 197;
-	private static final int idDisableMod = 196;
-	private static final int idAutoJump = 195;
-	private static final int idControls = 194;
+	private static final int idFlyOnGround = 196;
+	private static final int idDisableMod = 195;
+	private static final int idAutoJump = 194;
+	private static final int idControls = 193;
 	
 	private final String[] buttonTitles = new String[]{
 		"bs.sprint.hold.info",
@@ -32,13 +33,14 @@ public class GuiSprint extends GuiScreen{
 		"bs.doubleTapping.info",
 		"bs.runAllDirs.info",
 		"bs.flyBoost.info",
+		"bs.flyOnGround.info",
 		"bs.disableMod.info",
 		"bs.autoJump.info"
 	};
 	
 	private final GuiScreen parentScreen;
 	
-	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnAllDirs, btnDisableMod;
+	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
 	private KeyBinding selectedBinding;
 	
 	public GuiSprint(GuiScreen parentScreen){
@@ -64,12 +66,14 @@ public class GuiSprint extends GuiScreen{
 		btnDoubleTap = addButton(new GuiButtonCustom(idDoubleTap, left, top + 60, 70, 20, "", this::onButtonClicked));
 		btnAllDirs = addButton(new GuiButtonCustom(idAllDirs, left + 160, top + 60, 70, 20, "", this::onButtonClicked));
 		btnFlyBoost = addButton(new GuiButtonCustom(idFlyBoost, left, top + 84, 70, 20, "", this::onButtonClicked));
-		btnDisableMod = addButton(new GuiButtonCustom(idDisableMod, left + 160, top + 84, 70, 20, "", this::onButtonClicked));
+		btnFlyOnGround = addButton(new GuiButtonCustom(idFlyOnGround, left + 160, top + 84, 70, 20, "", this::onButtonClicked));
+		btnDisableMod = addButton(new GuiButtonCustom(idDisableMod, left + 160, top + 108, 70, 20, "", this::onButtonClicked));
 		btnAutoJump = addButton(new GuiButtonCustom(idAutoJump, left, top + 108, 70, 20, "", this::onButtonClicked));
 		
 		if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 		if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
 		if (!ClientModManager.canBoostFlying())btnFlyBoost.enabled = false;
+		if (!ClientModManager.canFlyOnGround())btnFlyOnGround.enabled = false;
 		if (!ClientModManager.inMenu())btnDisableMod.enabled = false;
 		
 		addButton(new GuiButtonCustom(idDone, width / 2 - 100, top + 168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done"), this::onButtonClicked));
@@ -84,6 +88,7 @@ public class GuiSprint extends GuiScreen{
 	private void updateButtons(){
 		btnDoubleTap.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
+		btnFlyOnGround.displayString = I18n.format(ClientModManager.canFlyOnGround() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs() ? (ClientSettings.enableAllDirs.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
 		btnAutoJump.displayString = I18n.format(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
@@ -115,6 +120,13 @@ public class GuiSprint extends GuiScreen{
 			case idFlyBoost:
 				if (ClientModManager.canBoostFlying()){
 					BetterSprintingMod.config.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
+				}
+				
+				break;
+			
+			case idFlyOnGround:
+				if (ClientModManager.canFlyOnGround()){
+					BetterSprintingMod.config.update(ClientSettings.flyOnGround, value -> !value);
 				}
 				
 				break;
@@ -259,6 +271,7 @@ public class GuiSprint extends GuiScreen{
 		drawButtonTitle(I18n.format("bs.doubleTapping"), btnDoubleTap, maxWidthLeft);
 		drawButtonTitle(I18n.format("bs.runAllDirs"), btnAllDirs, maxWidthRight);
 		drawButtonTitle(I18n.format("bs.flyBoost"), btnFlyBoost, maxWidthLeft);
+		drawButtonTitle(I18n.format("bs.flyOnGround"), btnFlyOnGround, maxWidthRight);
 		drawButtonTitle(I18n.format("bs.disableMod"), btnDisableMod, maxWidthRight);
 		drawButtonTitle(I18n.format("bs.autoJump"), btnAutoJump, maxWidthLeft);
 		

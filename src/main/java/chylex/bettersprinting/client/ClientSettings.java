@@ -33,6 +33,7 @@ public class ClientSettings{
 	public static final ConfigValue<String> keyTypeOptionsMenu;
 	
 	public static final IntValue flySpeedBoost;
+	public static final BooleanValue flyOnGround;
 	public static final BooleanValue enableDoubleTap;
 	public static final BooleanValue enableAllDirs;
 	public static final BooleanValue disableMod;
@@ -67,6 +68,7 @@ public class ClientSettings{
 		keyTypeOptionsMenu  = defineEnum(builder, "keyTypeOptionsMenu", InputMappings.Type.KEYSYM);
 		
 		flySpeedBoost   = builder.defineInRange("flySpeedBoost", 3, 0, 7);
+		flyOnGround     = builder.define("flyOnGround", false);
 		enableDoubleTap = builder.define("enableDoubleTap", false);
 		enableAllDirs   = builder.define("enableAllDirs", false);
 		disableMod      = builder.define("disableMod", false);

@@ -250,6 +250,8 @@ function initializeCoreMod(){
     };
     
     var transformLivingTick = function(method){
+        print("Transforming livingTick (start)...")
+        
         var instructions = method.instructions;
         var instrcount = instructions.size();
         
@@ -319,6 +321,74 @@ function initializeCoreMod(){
         return true;
     };
     
+    var transformLivingTickEnd = function(method){
+        print("Transforming livingTick (end)...")
+        
+        var instructions = method.instructions;
+        var instrcount = instructions.size();
+        
+        var insertionPoint = -1;
+        var skipPoint = -1;
+        
+        for(var index = instrcount - 1; index > skipPoint; index--){
+            var instruction = instructions.get(index);
+            
+            if (instruction.getOpcode() == opcodes.INVOKESPECIAL &&
+                checkInstructionName(instruction, "livingTick", "func_70636_d")
+            ){
+                insertionPoint = index + 1;
+                break;
+            }
+        }
+        
+        if (insertionPoint == -1){
+            return false;
+        }
+        
+        print("Found insertion point at index " + insertionPoint + ".");
+        
+        for(var index = insertionPoint; index < instrcount; index++){
+            var instruction = instructions.get(index);
+            
+            if (instruction.getOpcode() == opcodes.INVOKEVIRTUAL &&
+                checkInstructionName(instruction, "sendPlayerAbilities", "func_71016_p")
+            ){
+                skipPoint = index + 1;
+                break;
+            }
+        }
+        
+        if (skipPoint == -1){
+            return false;
+        }
+        
+        print("Found skip point at index " + skipPoint + ".");
+        
+        var insertionPointLabel = instructions.get(insertionPoint);
+        var skipPointLabel = instructions.get(skipPoint);
+        
+        if (insertionPointLabel.getType() != 8){
+            print("Insertion point is not a label!");
+            return false;
+        }
+        
+        if (skipPointLabel.getType() != 8){
+            print("Skip point is not a label!");
+            return false;
+        }
+        
+        var skipPointLabelInst = skipPointLabel.getLabel();
+        skipPointLabelInst.info = skipPointLabel;
+        
+        var helper = api.getMethodNode();
+        helper.visitVarInsn(opcodes.ALOAD, 0);
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false);
+        helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
+        
+        instructions.insert(insertionPointLabel, helper.instructions);
+        return true;
+    };
+    
     var transformPushOutOfBlocks = function(method){
         method.access &= ~opcodes.ACC_PROTECTED;
         method.access |= opcodes.ACC_PUBLIC;
@@ -352,7 +422,7 @@ function initializeCoreMod(){
                 if (livingTick.length == 1 && pushOutOfBlocks.length == 1){
                     var mLivingTick = livingTick[0];
                     
-                    if (transformLivingTick(mLivingTick)){
+                    if (transformLivingTick(mLivingTick) && transformLivingTickEnd(mLivingTick)){
                         print("Transformed EntityPlayerSP.livingTick().");
                     }
                     else{
