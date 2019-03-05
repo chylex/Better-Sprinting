@@ -25,22 +25,9 @@ public class GuiSprint extends GuiScreen{
 	private static final int idAutoJump = 194;
 	private static final int idControls = 193;
 	
-	private final String[] buttonTitles = new String[]{
-		"bs.sprint.hold.info",
-		"bs.sprint.toggle.info",
-		"bs.sneak.toggle.info",
-		"bs.menu.info",
-		"bs.doubleTapping.info",
-		"bs.runAllDirs.info",
-		"bs.flyBoost.info",
-		"bs.flyOnGround.info",
-		"bs.disableMod.info",
-		"bs.autoJump.info"
-	};
-	
 	private final GuiScreen parentScreen;
 	
-	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
+	private GuiButtonInputOption btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
 	private KeyBinding selectedBinding;
 	
 	public GuiSprint(GuiScreen parentScreen){
@@ -55,20 +42,19 @@ public class GuiSprint extends GuiScreen{
 		int top = height / 6;
 		
 		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
-			GuiButton btn = new GuiButtonInputBinding(a, left + 160 * (a % 2), top + 24 * (a / 2), 70, 20, ClientModManager.keyBindings[a], this::onBindingClicked);
-			addButton(btn);
+			GuiButton btn = addButton(new GuiButtonInputBinding(a, left + 160 * (a % 2), top + 24 * (a / 2), ClientModManager.keyBindings[a], this::onBindingClicked));
 			
 			if ((a == 1 || a == 2) && ClientModManager.isModDisabled()){
 				btn.enabled = false;
 			}
 		}
 		
-		btnDoubleTap = addButton(new GuiButtonCustom(idDoubleTap, left, top + 60, 70, 20, "", this::onButtonClicked));
-		btnAllDirs = addButton(new GuiButtonCustom(idAllDirs, left + 160, top + 60, 70, 20, "", this::onButtonClicked));
-		btnFlyBoost = addButton(new GuiButtonCustom(idFlyBoost, left, top + 84, 70, 20, "", this::onButtonClicked));
-		btnFlyOnGround = addButton(new GuiButtonCustom(idFlyOnGround, left + 160, top + 84, 70, 20, "", this::onButtonClicked));
-		btnDisableMod = addButton(new GuiButtonCustom(idDisableMod, left + 160, top + 108, 70, 20, "", this::onButtonClicked));
-		btnAutoJump = addButton(new GuiButtonCustom(idAutoJump, left, top + 108, 70, 20, "", this::onButtonClicked));
+		btnDoubleTap = addButton(new GuiButtonInputOption(idDoubleTap, left, top + 60, "bs.doubleTapping", this::onButtonClicked));
+		btnAllDirs = addButton(new GuiButtonInputOption(idAllDirs, left + 160, top + 60, "bs.runAllDirs", this::onButtonClicked));
+		btnFlyBoost = addButton(new GuiButtonInputOption(idFlyBoost, left, top + 84, "bs.flyBoost", this::onButtonClicked));
+		btnFlyOnGround = addButton(new GuiButtonInputOption(idFlyOnGround, left + 160, top + 84, "bs.flyOnGround", this::onButtonClicked));
+		btnDisableMod = addButton(new GuiButtonInputOption(idDisableMod, left + 160, top + 108, "bs.disableMod", this::onButtonClicked));
+		btnAutoJump = addButton(new GuiButtonInputOption(idAutoJump, left, top + 108, "bs.autoJump", this::onButtonClicked));
 		
 		if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 		if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
@@ -231,13 +217,13 @@ public class GuiSprint extends GuiScreen{
 	
 	@Override
 	public void render(int mouseX, int mouseY, float partialTickTime){
+		final int top = height / 6;
+		final int middle = width / 2;
+		
 		drawDefaultBackground();
-		drawCenteredString(fontRenderer, "Better Sprinting", width / 2, 20, 16777215);
+		drawCenteredString(fontRenderer, "Better Sprinting", middle, 20, 16777215);
 		
 		super.render(mouseX, mouseY, partialTickTime);
-		
-		final int maxWidthLeft = 82;
-		final int maxWidthRight = 124;
 		
 		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
 			KeyBinding binding = ClientModManager.keyBindings[a];
@@ -263,28 +249,22 @@ public class GuiSprint extends GuiScreen{
 			else{
 				buttons.get(a).displayString = binding.func_197978_k();
 			}
-			
-			String desc = (binding == mc.gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
-			drawButtonTitle(I18n.format(desc), buttons.get(a), a % 2 == 0 ? maxWidthLeft : maxWidthRight);
 		}
-	
-		drawButtonTitle(I18n.format("bs.doubleTapping"), btnDoubleTap, maxWidthLeft);
-		drawButtonTitle(I18n.format("bs.runAllDirs"), btnAllDirs, maxWidthRight);
-		drawButtonTitle(I18n.format("bs.flyBoost"), btnFlyBoost, maxWidthLeft);
-		drawButtonTitle(I18n.format("bs.flyOnGround"), btnFlyOnGround, maxWidthRight);
-		drawButtonTitle(I18n.format("bs.disableMod"), btnDisableMod, maxWidthRight);
-		drawButtonTitle(I18n.format("bs.autoJump"), btnAutoJump, maxWidthLeft);
 		
-		for(int a = 0, top = height / 6; a < buttons.size(); a++){
-			if (buttons.get(a).isMouseOver()){
-				String info = a < buttonTitles.length ? buttonTitles[a] : "";
-				String[] spl = I18n.format(info).split("#");
+		final int maxWidthLeft = 82;
+		final int maxWidthRight = 124;
+		
+		for(GuiButton button:buttons){
+			if (button instanceof GuiButtonCustomInput){
+				drawButtonTitle(((GuiButtonCustomInput)button).getTitle(), button, button.x < middle ? maxWidthLeft : maxWidthRight);
 				
-				for(int line = 0; line < spl.length; line++){
-					drawCenteredString(fontRenderer, spl[line], width / 2, top + 148 + (10 * line - (fontRenderer.FONT_HEIGHT * spl.length / 2)), -1);
+				if (button.isMouseOver()){
+					String[] spl = ((GuiButtonCustomInput)button).getInfo();
+					
+					for(int line = 0; line < spl.length; line++){
+						drawCenteredString(fontRenderer, spl[line], middle, top + 148 + (10 * line - (fontRenderer.FONT_HEIGHT * spl.length / 2)), -1);
+					}
 				}
-				
-				break;
 			}
 		}
 	}

@@ -1,14 +1,17 @@
 package chylex.bettersprinting.client.gui;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.function.Consumer;
 
-public class GuiButtonInputBinding extends GuiButtonExt{
+@OnlyIn(Dist.CLIENT)
+public class GuiButtonInputBinding extends GuiButtonCustomInput{
 	private final KeyBinding binding;
 	private final Consumer<KeyBinding> onClicked;
 	
-	public GuiButtonInputBinding(int id, int x, int y, int width, int height, KeyBinding binding, Consumer<KeyBinding> onClick){
-		super(id, x, y, width, height, binding.func_197978_k());
+	public GuiButtonInputBinding(int id, int x, int y, KeyBinding binding, Consumer<KeyBinding> onClick){
+		super(id, x, y, binding.func_197978_k(), binding == Minecraft.getInstance().gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
 		this.binding = binding;
 		this.onClicked = onClick;
 	}
