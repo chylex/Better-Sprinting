@@ -39,7 +39,7 @@ processResources{
 }
 
 jar{
-    archiveName = modname+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
+    archiveName = modname+"-"+project.minecraft.version+"-v"+modver+".jar"
     
     manifest{
         attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.BetterSprintingCore'
