@@ -7,7 +7,7 @@ issueTrackerURL = "https://github.com/chylex/Better-Sprinting/issues"
 
 [[mods]]
 modId = "bettersprinting"
-version = "2.2.0"
+version = "2.2.1"
 displayName = "Better Sprinting"
 updateJSONURL = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json"
 description = '''
