@@ -1,5 +1,5 @@
 package chylex.bettersprinting.system.core;
-import java.util.Iterator;
+import chylex.bettersprinting.system.Log;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.apache.commons.lang3.ArrayUtils;
@@ -7,10 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
-import chylex.bettersprinting.system.Log;
+import java.util.Iterator;
 
 public final class TransformerEntityPlayerSP implements IClassTransformer{
 	private static final String[] NAMES_ONLIVINGUPDATE = new String[]{ "n", "onLivingUpdate" };
@@ -44,7 +53,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			.findAny()
 			.<IllegalStateException>orElseThrow(() -> {
 				logMethods("onLivingUpdate", node);
-				return new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
+				return new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report.");
 			})
 		);
 		
@@ -75,7 +84,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		Log.error("Finding insertion point - $0", String.join(" / ", clsMovementInput));
 		logInstructions(method);
 		
-		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find an insertion point into onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
+		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find an insertion point into onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report.");
 	}
 	
 	private int findSkipPointOnLivingUpdate(MethodNode method, int insertionPoint){
@@ -94,7 +103,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		Log.error("Finding skip point - $0", String.join(" / ", clsEntityEquipmentSlot));
 		logInstructions(method);
 		
-		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find a skip point in onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report. You can also try downloading PlayerAPI to resolve the issue.");
+		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find a skip point in onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report.");
 	}
 	
 	private void transformOnLivingUpdate(MethodNode method){

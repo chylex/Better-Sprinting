@@ -36,7 +36,7 @@ bs.autoJump.info=Funcionalidad incluida en Minecraft que salta#de forma automát
 
 # In-game messages
 
-bs.game.integrity=La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting. Intenta instalar PlayerAPI para resolver este conflicto.
+bs.game.integrity=La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting.
 bs.game.disabled=El servidor ha desactivado el uso del mod, la funcionalidad de correr se ha cambiado a las originales de Minecraft hasta que te desconectes.
 bs.game.reenabled=El servidor ha activado el uso del mod, la funcionalidad de correr se ha cambiado a Better Sprinting.
 
@@ -48,8 +48,8 @@ bs.command.invalidSyntax=Comando desconocido. Escribe /bettersprinting para ver 
 bs.command.info=Puedes utilizar el comando para activar o desactivar el mod, o cambiar ajustes específicos del mod. Estos cambios se guardarán incluso tras reiniciar el servidor, además de afectar de manera inmediata a los jugadores conectados.
 bs.command.disableMod=Better Sprinting será desactivado de forma automática cuando un jugador se conecta al servidor.
 bs.command.enableMod=Better Sprinting se ha activado en el servidor.
-bs.command.disableFlyBoost=Correr en modo vuelo está desactivado cuando el jugador está en modo supervivencia. 
-bs.command.enableFlyBoost=Correr en modo vuelo está activado cuando el jugador está en modo supervivencia. 
+bs.command.disableFlyBoost=Correr en modo vuelo está desactivado cuando el jugador está en modo supervivencia.
+bs.command.enableFlyBoost=Correr en modo vuelo está activado cuando el jugador está en modo supervivencia.
 bs.command.disableAllDirs=Correr en todas direcciones ha sido desactivado.
 bs.command.enableAllDirs=Correr en todas direcciones ha sido activado.
 
