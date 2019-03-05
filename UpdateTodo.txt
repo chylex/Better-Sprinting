@@ -6,7 +6,6 @@
    - Once done, update the Minecraft version in the comment
 
 2. Update version numbers
-   - build.gradle > version  -  mod version
    - mods.toml > version  -  mod version
    - BetterSprintingMod.buildId  -  unique build string for each release
 
