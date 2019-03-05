@@ -1,14 +1,15 @@
 package chylex.bettersprinting.server;
+import chylex.bettersprinting.system.PacketPipeline;
+import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.relauncher.Side;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
 public class ServerNetwork implements INetworkHandler{
 	/*
@@ -48,7 +49,7 @@ public class ServerNetwork implements INetworkHandler{
 	 * guarantee support of the protocol features in any unofficial mods or plugins.
 	 */
 	
-	private static final Set<UUID> players = new HashSet<>();
+	private static final Set<UUID> players = Collections.synchronizedSet(new HashSet<>());
 	
 	public static boolean hasBetterSprinting(EntityPlayer player){
 		return players.contains(player.getUniqueID());
