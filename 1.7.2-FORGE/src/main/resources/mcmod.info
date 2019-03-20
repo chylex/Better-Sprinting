@@ -1,0 +1,18 @@
+[
+{
+  "modid": "bettersprinting",
+  "name": "Better Sprinting",
+  "version": "1.0.1",
+  "mcversion": "",
+  "description": "",
+  "logoFile": "",
+  "url": "http://tinyurl.com/better-sprinting-mod",
+  "updateUrl": "",
+  "authors": [ "chylex" ],
+  "parent": "",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+}
+]
