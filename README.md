@@ -26,3 +26,28 @@ Some versions are not up-to-date with the [actual releases](http://archive.chyle
 | [1.6.4-FORGE](https://github.com/chylex/Better-Sprinting/tree/legacy/1.6.4-FORGE) | BetterSprinting_1.6.4_Forge_v11.jar | matches release |
 | [1.7.2](https://github.com/chylex/Better-Sprinting/tree/legacy/1.7.2) | BetterSprinting_vanilla_1.7.2_v13.zip | matches release |
 | [1.7.2-FORGE](https://github.com/chylex/Better-Sprinting/tree/legacy/1.7.2-FORGE;) | BetterSprinting_forge_1.7.2_v1.0.1.zip | matches release |
+
+### Missing
+
+The following versions (only including latest release within a Minecraft version) are not currently available:
+
+| Version | Matching Filename |
+|:--------|:------------------|
+| 1.2.5 | BetterSprinting_1.2.5_SSP_v3.zip |
+| 12w26a | BetterSprinting_12w26a_SSP_v3.zip |
+| 1.3.1 | BetterSprinting_1.3.1_SSP_v3.zip |
+| 1.3.2 | BetterSprinting_1.3.2_SSP_v4.zip |
+| 1.4pre (?) | BetterSprinting_1.4pre_SSP_v4.zip |
+| 1.4.2 | BetterSprinting_1.4.2_SSP_v4.zip |
+| 1.4.5 | BetterSprinting_1.4.5_SSP_v5.zip |
+| 1.5pre (?) | BetterSprinting_1.5pre_SSP_v7.zip |
+| 1.5.1 | BetterSprinting_1.5.1_SSP_v9.zip |
+| 1.5.1 | BetterSprinting_1.5.1_SSP_v9_PlayerAPI.zip |
+| 1.5.2 | BetterSprinting_1.5.2_SSP_v9a.zip |
+| 1.5.2 | BetterSprinting_1.5.2_SSP_v9_PlayerAPI.zip |
+| 1.6.1 | BetterSprinting_1.6.1_SSP_v10.zip |
+| 1.6.1 | BetterSprinting_1.6.1_Forge_SSP_v10.jar |
+| 1.7.10 | BetterSprinting_jar_1.7.10_v14.zip |
+| 1.8 | BetterSprinting_jar_1.8_v14.zip |
+| 1.8 | BSM_1.8_release-1.1.1_extractme.zip |
+| 1.3.1 | BetterSprintingUhc_1.3.1.zip |
