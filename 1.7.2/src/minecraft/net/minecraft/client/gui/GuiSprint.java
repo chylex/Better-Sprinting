@@ -22,6 +22,7 @@ public class GuiSprint extends GuiScreen{
     public static boolean allowDoubleTap = false;
     public static boolean allowAllDirs = false;
     public static boolean disableModFunctionality = false;
+    public static boolean showedToggleSneakWarning = false;
     
     private static int nbtInt(NBTTagCompound tag, String key, int def){ return tag.hasKey(key)?tag.getInteger(key):def; }
     private static boolean nbtBool(NBTTagCompound tag, String key, boolean def){ return tag.hasKey(key)?tag.getBoolean(key):def; }
@@ -40,6 +41,7 @@ public class GuiSprint extends GuiScreen{
     		allowDoubleTap=nbtBool(tag,"doubleTap",false);
     		allowAllDirs=nbtBool(tag,"allDirs",false);
     		disableModFunctionality=nbtBool(tag,"disableMod",false);
+    		showedToggleSneakWarning=nbtBool(tag,"showedWarn",false);
     	}catch(Exception e){
     		e.printStackTrace();
     		System.out.println("Error loading Better Sprinting settings!");
@@ -57,6 +59,7 @@ public class GuiSprint extends GuiScreen{
     	tag.setBoolean("doubleTap",allowDoubleTap);
     	tag.setBoolean("allDirs",allowAllDirs);
     	tag.setBoolean("disableMod",disableModFunctionality);
+    	tag.setBoolean("showedWarn",showedToggleSneakWarning);
     	NBTTagCompound fintag=new NBTTagCompound();
     	fintag.setTag("Data",tag);
     	try{
@@ -69,6 +72,7 @@ public class GuiSprint extends GuiScreen{
 	
 	private static boolean isPlayerClassEdited = false;
 	public static boolean svFlyingBoost = false, svRunInAllDirs = false;
+	private static boolean shouldRestoreSneakToggle = false;
 	public static String connectedServer = "";
 	private static byte connectedServerResponse = 0;
 	private static byte behaviorCheckTimer = 10;
@@ -91,10 +95,28 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	public static void updateSettingBehavior(Minecraft mc){
-		if (mc.currentScreen!=null&&mc.thePlayer!=null&&mc.thePlayer.isSneaking()&&((MovementInputFromOptions)((EntityPlayerSP)mc.thePlayer).movementInput).sneakToggle){
-			mc.thePlayer.func_145747_a(new ChatComponentText("You cannot open menus while sneaking."));
-			mc.func_147108_a((GuiScreen)null);
-			mc.setIngameFocus();
+		if (mc.currentScreen!=null&&mc.thePlayer!=null&&mc.thePlayer.isSneaking()){
+			MovementInputFromOptions opts=(MovementInputFromOptions)((EntityPlayerSP)mc.thePlayer).movementInput;
+			
+			if (opts.sneakToggle&&!(mc.currentScreen instanceof GuiGameOver)){
+				if (!showedToggleSneakWarning){
+					mc.thePlayer.func_145747_a(new ChatComponentText("First-time warning: You can open inventories and menus while sneaking, however you will not be sneaking for the time it is open. Once you close the menu, sneaking will be restored."));
+					mc.func_147108_a(null);
+					mc.setIngameFocus();
+					showedToggleSneakWarning=true;
+					saveSprint(mc);
+				}
+				else{
+					shouldRestoreSneakToggle=true;
+					opts.sneakToggle=false;
+				}
+			}
+		}
+		
+		if (shouldRestoreSneakToggle&&mc.currentScreen==null){
+			MovementInputFromOptions opts=(MovementInputFromOptions)((EntityPlayerSP)mc.thePlayer).movementInput;
+			opts.sneakToggle=true;
+			shouldRestoreSneakToggle=false;
 		}
 
 		if (behaviorCheckTimer>0){
@@ -335,7 +357,7 @@ public class GuiSprint extends GuiScreen{
 				switch(i){
 					case 0: info="Hold to sprint."; break;
 					case 1: info="Press once to start or stop sprinting."; break;
-					case 2: info="Press once to start or stop sneaking.#You cannot open menus whilst sneaking."; break;
+					case 2: info="Press once to start or stop sneaking.#When you open an inventory/menu, sneaking will stop and get restored when you close the menu."; break;
 					case 3: info="Key to open this menu ingame."; break;
 					case 4: info="Enable or disable sprinting by double-tapping the forward key."; break;
 					case 5: info="Sprint in all directions.#You cannot use this in multiplayer unless the server allows it."; break;

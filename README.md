@@ -24,5 +24,5 @@ Some versions are not up-to-date with the [actual releases](http://archive.chyle
 | [1.6.2-FORGE](https://github.com/chylex/Better-Sprinting/tree/legacy/1.6.2-FORGE) | BetterSprinting_1.6.2_Forge_v11.jar | matches release |
 | [1.6.4](https://github.com/chylex/Better-Sprinting/tree/legacy/1.6.4) | BetterSprinting_1.6.4_v11.zip | matches release |
 | [1.6.4-FORGE](https://github.com/chylex/Better-Sprinting/tree/legacy/1.6.4-FORGE) | BetterSprinting_1.6.4_Forge_v11.jar | matches release |
-| [1.7.2](https://github.com/chylex/Better-Sprinting/tree/legacy/1.7.2) | BetterSprinting_vanilla_1.7.2_v12.zip | newest version is v13 |
+| [1.7.2](https://github.com/chylex/Better-Sprinting/tree/legacy/1.7.2) | BetterSprinting_vanilla_1.7.2_v13.zip | matches release |
 | [1.7.2-FORGE](https://github.com/chylex/Better-Sprinting/tree/legacy/1.7.2-FORGE;) | BetterSprinting_forge_1.7.2_v1.0.1.zip | matches release |
