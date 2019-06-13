@@ -1,40 +1,37 @@
 Better Sprinting
 ================
 
-## Network specifications
+## Network specification
 
 If you are a server owner and want to disable the mod, or enable some of the singleplayer-only functions, see the Better Sprinting network specification which has all the information:
 
 https://raw.githubusercontent.com/chylex/Better-Sprinting/master/src/main/java/chylex/bettersprinting/server/ServerNetwork.java
 
-If you have a Forge server, you can just install the mod and use the /bettersprinting command to configure the behavior.
+If you have a Forge server, you can just install the mod and use the `/bettersprinting` command to configure the behavior.
 
 ## Project license
 
-The project is under the All Rights Reserved license, which means that redistribution is forbidden. However, I do not want to be as restrictive, so here are some general rules, and some specific cases for what you may want to do with the source.
+The source code, asset files, and [official binaries](https://minecraft.curseforge.com/projects/better-sprinting/files) are licensed under [MPL-2.0](https://github.com/chylex/Better-Sprinting/blob/master/LICENSE). Note this only applies to commits and binaries published after 12 June 2019.
 
-1. Feel free to fork the project on GitHub. The repository must be publicly visible.
-2. You are allowed to study the source code and learn from it, but don't just copy large portions of it into your project.
-3. Official terms of use apply, thus you cannot redistribute any part of the mod or claim it as your own. Forking is the only exception to the redistribution rule.
+## Project setup guide
 
-### I want to use part of the mod in my own project
+In order to setup a workspace to play around with the source code, first clone this repository using your Git client (make sure to select the correct branch, they are named by Minecraft versions; master is always the latest work in progress version).
 
-If you find something handy in the source code, I don't mind if you use it in your project (don't copy everything you see though, that's not how you learn to mod). Giving credit is only required if your project has publicly visible source, in that case use javadoc and link back to the original source.
+Once you cloned the repository, follow the [Getting Started with Forge](https://mcforge.readthedocs.io/en/latest/gettingstarted) tutorial. You can skip the first 3 steps, the repository already comes with the Gradle build system.
 
-### I want to modify something in Better Sprinting
+To run Better Sprinting, make sure you add the following entry to your startup VM arguments:
 
-It would be best to contact me first, because not everything can be added into the mod and I wouldn't want you to waste your time with a PR that will not get accepted.
+`-Dfml.coreMods.load=chylex.bettersprinting.system.core.BetterSprintingCore`
 
-When modifying the files, please try to follow my code formatting style. I don't autoformat because Eclipse doesn't let me customize the style exactly the way I want it, and for that reason I also cannot give you any preference file you could import.
+## Contributing
 
-I'm also a huge derp and don't really get how most of this Git thing works. Don't do anything big because if there's any problem accepting a PR, it will most likely not be accepted.
+If you want to do any large changes, please contact me first (open an [Issue](https://github.com/chylex/Better-Sprinting/issues)) with detail about what you want to do. I wouldn't want you to waste your time with a large Pull Request that will not get accepted.
 
-### I want to create an addon
+When creating a Pull Request, please follow these guidelines:
 
-Keep in mind that addons depend on the parent mod, but don't contain any part of it - otherwise it's a modification!
-
-You are welcome to create and distribute any addon. If you let me know about it, I might add it to a list of supported addons too. :)
-
-### I want to create a modification
-
-The terms say that you cannot redistribute the mod or modifications of the mod. You can play around with the code if you fork the project, but if you want to distribute it, you need my explicit permission. I haven't been in this situation yet, so if you create a modification, let me know and we'll figure something out.
+- Always target the `master` branch which contains the most recent code
+- Follow my code formatting style; most of it should be easy to pick up, here are a couple details:
+  - Use tabs for indentation, spaces for alignment
+  - No space between right parenthesis and left bracket: `void method(){`
+  - No blank lines between imports
+- When updating the mod to a new Minecraft version, read `UpdateTodo.txt` for an overview of what needs to be done during each update
