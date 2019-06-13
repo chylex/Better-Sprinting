@@ -11,17 +11,15 @@ If you have a Forge server, you can just install the mod and use the `/betterspr
 
 ## Project license
 
-The project is under the All Rights Reserved license, which means that redistribution without my permission is forbidden. However, I do not want to be as restrictive, so here are some general guidelines:
+The source code, asset files, and [official binaries](https://minecraft.curseforge.com/projects/better-sprinting/files) are licensed under [MPL-2.0](https://github.com/chylex/Better-Sprinting/blob/master/LICENSE). Note this only applies to commits and binaries published after 12 June 2019.
 
-1. Feel free to fork the project on GitHub. The repository must be publicly visible.
-2. You are allowed to study the source code and learn from it, but don't just copy large portions of it into your project.
-3. Official terms of use apply, thus you cannot redistribute any part of the mod or claim it as your own. Forking is the only exception to the redistribution rule.
+## Project setup guide
 
-### I want to use a piece of code in my own project
+In order to setup a workspace to play around with the source code, first clone this repository using your Git client (make sure to select the correct branch, they are named by Minecraft versions; master is always the latest work in progress version).
 
-If you find some useful code in this repository, I don't mind if you use it in your own project, as long as you don't just copy entire files. Do take the time to learn how the code works. Linking back to the repository is appreciated.
+Once you cloned the repository, follow the [Getting Started with Forge](https://mcforge.readthedocs.io/en/latest/gettingstarted) tutorial. You can skip the first 3 steps, the repository already comes with the Gradle build system.
 
-### I want to contribute to the code or assets
+## Contributing
 
 If you want to do any large changes, please contact me first (open an [Issue](https://github.com/chylex/Better-Sprinting/issues)) with detail about what you want to do. I wouldn't want you to waste your time with a large Pull Request that will not get accepted.
 
@@ -33,17 +31,3 @@ When creating a Pull Request, please follow these guidelines:
   - No space between right parenthesis and left bracket: `void method(){`
   - No blank lines between imports
 - When updating the mod to a new Minecraft version, read `UpdateTodo.txt` for an overview of what needs to be done during each update
-
-### I want to create an addon
-
-You are welcome to create and distribute an addon that depends on Better Sprinting, as long as it does not contain any of the original Better Sprinting code or assets.
-
-### I want to create a modification
-
-If you create your own version of Better Sprinting, you have to ask for my explicit permission to distribute it. (Better Sprinting is not open source!)
-
-## Project setup guide
-
-In order to setup a workspace to play around with the source code, first clone this repository using your Git client (make sure to select the correct branch, they are named by Minecraft versions; master is always the latest work in progress version).
-
-Once you cloned the repository, follow the [Getting Started with Forge](https://mcforge.readthedocs.io/en/latest/gettingstarted) tutorial. You can skip the first 3 steps, the repository already comes with the Gradle build system.
