@@ -1,8 +1,10 @@
 package chylex.bettersprinting.client.gui;
-import java.util.Set;
+import chylex.bettersprinting.BetterSprintingMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
+import net.minecraftforge.fml.client.config.GuiConfig;
+import java.util.Set;
 
 public class ModGuiFactory implements IModGuiFactory{
 	@Override
@@ -15,7 +17,7 @@ public class ModGuiFactory implements IModGuiFactory{
 
 	@Override
 	public GuiScreen createConfigGui(GuiScreen parentScreen){
-		return new GuiGeneralConfig(parentScreen);
+		return new GuiConfig(parentScreen, BetterSprintingMod.config.getClientGuiElements("client"), BetterSprintingMod.modId, false, false, GuiConfig.getAbridgedConfigPath(BetterSprintingMod.config.getFileName()));
 	}
 
 	@Override

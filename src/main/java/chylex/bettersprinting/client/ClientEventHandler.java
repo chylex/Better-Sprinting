@@ -55,7 +55,7 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onClientDisconnectedFromServer(ClientDisconnectionFromServerEvent e){
-		ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
+		ClientModManager.onDisconnectedFromServer();
 		IntegrityCheck.unregister();
 		LivingUpdate.cleanup();
 		stopChecking = false;
@@ -81,7 +81,9 @@ public final class ClientEventHandler{
 			keyList.listEntries = ArrayUtils.removeAll(keyList.listEntries, keyIndices);
 			
 			if (!(controls.parentScreen instanceof GuiSprint)){
-				controls.buttonList.add(0, new GuiButtonSprint(205, controls.width/2+5, 18+24, 150, 20, "Better Sprinting"));
+				controls.buttonList.add(0, new GuiButtonInteractive(205, (controls.width / 2) + 5, 42, 150, 20, "Better Sprinting", __ -> {
+					mc.displayGuiScreen(new GuiSprint(mc.currentScreen));
+				}));
 			}
 		}
 	}

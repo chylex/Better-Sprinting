@@ -4,10 +4,9 @@ import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.MobEffects;
-import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.util.MovementInput;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.ForgeHooksClient;
 
@@ -15,15 +14,19 @@ final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getMinecraft();
 
 	private final EntityPlayerSP player;
-	private final MovementInputHandler customMovementInput;
+	private final MovementInput movementInput;
+	private final MovementController movementController;
 	
 	private boolean wasMovingForward;
 	private boolean wasSneaking;
-	private boolean shouldRestoreSneakToggle;
+	
+	private boolean isHeld = false;
+	private int stopTimer = 0;
 	
 	public PlayerLogicHandler(EntityPlayerSP player){
 		this.player = player;
-		this.customMovementInput = new MovementInputHandler();
+		this.movementInput = player.movementInput;
+		this.movementController = new MovementController(movementInput);
 	}
 	
 	public EntityPlayerSP getPlayer(){
@@ -32,11 +35,12 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public void updateMovementInput(){
-		wasSneaking = player.movementInput.sneak;
-		wasMovingForward = player.movementInput.moveForward >= 0.8F;
-		customMovementInput.update(mc, player.movementInput);
-		ForgeHooksClient.onInputUpdate(player, player.movementInput);
-		mc.getTutorial().handleMovement(player.movementInput);
+		wasSneaking = movementInput.sneak;
+		wasMovingForward = movementInput.moveForward >= 0.8F;
+		movementController.update();
+		
+		ForgeHooksClient.onInputUpdate(player, movementInput);
+		mc.getTutorial().handleMovement(movementInput);
 	}
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
@@ -45,7 +49,7 @@ final class PlayerLogicHandler{
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(MobEffects.BLINDNESS);
 		
 		if (ClientModManager.isModDisabled()){
-			if (player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if (player.onGround && !wasSneaking && !wasMovingForward && movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown()){
 					player.sprintToggleTimer = 7;
 				}
@@ -54,27 +58,22 @@ final class PlayerLogicHandler{
 				}
 			}
 
-			if (!player.isSprinting() && player.movementInput.moveForward >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
+			if (!player.isSprinting() && movementInput.moveForward >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
 		else{
-			updateSneakToggle();
-			boolean prevHeld = customMovementInput.held;
-			boolean sprint = customMovementInput.sprint;
+			boolean prevHeld = isHeld;
+			boolean sprint = movementController.sprint && !(movementInput.sneak && !player.capabilities.isFlying);
 			boolean dblTap = ClientSettings.enableDoubleTap;
-
-			if (!player.capabilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak){
-				sprint = false;
-			}
 			
-			if (((dblTap && !player.isSprinting()) || !dblTap) && player.onGround && enoughHunger && !isSprintBlocked){
+			if ((!dblTap || !player.isSprinting()) && player.onGround && enoughHunger && !isSprintBlocked){
 				player.setSprinting(sprint);
 			}
 			
-			customMovementInput.held = sprint;
+			isHeld = sprint;
 
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && player.onGround && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if (dblTap && !isHeld && stopTimer == 0 && player.onGround && !wasSneaking && !wasMovingForward && movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer == 0){
 					player.sprintToggleTimer = 7;
 				}
@@ -85,19 +84,19 @@ final class PlayerLogicHandler{
 			}
 			
 			if (dblTap){
-				if (prevHeld && !customMovementInput.held){
-					customMovementInput.stoptime = 1;
+				if (prevHeld && !isHeld){
+					stopTimer = 1;
 				}
 				
-				if (customMovementInput.stoptime > 0){
-					customMovementInput.stoptime--;
+				if (stopTimer > 0){
+					stopTimer--;
 					player.setSprinting(false);
 				}
 			}
 			
 			if (ClientSettings.flySpeedBoost > 0){
 				if (sprint && player.capabilities.isFlying && ClientModManager.canBoostFlying()){
-					player.capabilities.setFlySpeed(0.05F+0.075F*ClientSettings.flySpeedBoost);
+					player.capabilities.setFlySpeed(0.05F + 0.075F * ClientSettings.flySpeedBoost);
 				}
 				else{
 					player.capabilities.setFlySpeed(0.05F);
@@ -107,38 +106,26 @@ final class PlayerLogicHandler{
 				player.capabilities.setFlySpeed(0.05F);
 			}
 		}
-
-		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
-			mc.displayGuiScreen(new GuiSprint(null));
-		}
 		
-		if (player.isSprinting() && player.isSneaking() && !player.capabilities.isFlying){
-			player.setSprinting(false);
-		}
-
-		if (player.isSprinting() && (player.movementInput.moveForward < 0.8F || player.collidedHorizontally || !enoughHunger)){
-			if ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) == false || (player.movementInput.moveForward == 0F && player.movementInput.moveStrafe == 0F)){
+		if (player.isSprinting()){
+			boolean isSlow = (ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs) ? !movementController.isMovingAnywhere() : movementInput.moveForward < 0.8F;
+			
+			if (isSlow || !enoughHunger || player.collidedHorizontally){
 				player.setSprinting(false);
 			}
 		}
 		
-		if (ClientModManager.showDisableWarningWhenPossible){
-			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
-			ClientModManager.showDisableWarningWhenPossible = false;
-		}
+		postLogic();
 	}
 	
-	private void updateSneakToggle(){
-		if (mc.currentScreen != null && player != null && player.isSneaking()){
-			if (customMovementInput.sneakToggle && !(mc.currentScreen instanceof GuiGameOver)){
-				shouldRestoreSneakToggle = true;
-				customMovementInput.sneakToggle = false;
-			}
+	private void postLogic(){
+		if (ClientModManager.showDisableWarningWhenPossible){
+			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
+			ClientModManager.showDisableWarningWhenPossible = false;
 		}
 		
-		if (shouldRestoreSneakToggle && mc.currentScreen == null){
-			customMovementInput.sneakToggle = true;
-			shouldRestoreSneakToggle = false;
+		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
+			mc.displayGuiScreen(new GuiSprint(null));
 		}
 	}
 }
