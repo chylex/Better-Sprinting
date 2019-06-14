@@ -25,10 +25,7 @@
        - 5. If any of these steps fail, things are bork
             (if the first breakpoint doesn't trigger, breakpoint into injectOnLivingUpdate, remove all breakpoints, step out, and go to step 1)
    - Test both SP and MP
-     - Make sure all control options work
-     - Test server-side commands with different locales
-     - Join a BSM server with vanilla client
-     - Join a vanilla server with BSM client
+     - Follow TESTING.md
 
 4. Update version data
    - UpdateInfo.json
