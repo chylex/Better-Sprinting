@@ -1,11 +1,11 @@
 package chylex.bettersprinting.client;
+import chylex.bettersprinting.system.PacketPipeline;
+import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import net.minecraftforge.fml.LogicalSide;
 
 @OnlyIn(Dist.CLIENT)
@@ -23,7 +23,7 @@ public class ClientNetwork implements INetworkHandler{
 	}
 	
 	@Override
-	public void onPacket(LogicalSide side, ByteBuf data, EntityPlayer player){
+	public void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player){
 		if (side == LogicalSide.SERVER){
 			PacketPipeline.sendToPlayer(writeLanSettings(), player);
 			return;

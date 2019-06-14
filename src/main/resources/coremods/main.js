@@ -260,13 +260,14 @@ function initializeCoreMod(){
         
         for(var index = 0; index < instrcount; index++){
             var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.GETFIELD &&
-                checkInstructionName(instruction, "movementInput", "field_71158_b") &&
-                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
-                checkOpcodeChain(instructions, index + 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
+
+            if (instruction.getOpcode() == opcodes.INVOKESPECIAL &&
+                checkInstructionName(instruction, "func_213839_ed", "func_213839_ed") &&
+                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD ]) &&
+                checkOpcodeChain(instructions, index + 3, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
+                checkOpcodeChain(instructions, index + 9, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
             ){
-                insertionPoint = index + 9;
+                insertionPoint = index + 13;
                 break;
             }
         }
@@ -283,9 +284,9 @@ function initializeCoreMod(){
             if (instruction.getOpcode() == opcodes.GETSTATIC &&
                 instruction.name.equals("CHEST") &&
                 checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETSTATIC, opcodes.INVOKEVIRTUAL, opcodes.ASTORE ]) &&
-                checkOpcodeChain(instructions, index - 24, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.IFEQ ])
+                checkOpcodeChain(instructions, index - 25, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.IFEQ ])
             ){
-                skipPoint = index - 27;
+                skipPoint = index - 28;
                 break;
             }
         }
@@ -314,7 +315,7 @@ function initializeCoreMod(){
         
         var helper = api.getMethodNode();
         helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false);
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
         helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
         
         instructions.insert(insertionPointLabel, helper.instructions);
@@ -382,7 +383,7 @@ function initializeCoreMod(){
         
         var helper = api.getMethodNode();
         helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false);
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
         helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
         
         instructions.insert(insertionPointLabel, helper.instructions);
@@ -404,7 +405,7 @@ function initializeCoreMod(){
         "BetterSprintingCore": {
             "target": {
                 "type": "CLASS",
-                "name": "net.minecraft.client.entity.EntityPlayerSP"
+                "name": "net.minecraft.client.entity.player.ClientPlayerEntity"
             },
             "transformer": function(classNode){
                 print("Setting up BetterSprintingCore...");
@@ -416,26 +417,26 @@ function initializeCoreMod(){
                 
                 var pushOutOfBlocks = classNode.methods
                                                .stream()
-                                               .filter(matchMethod("pushOutOfBlocks", "func_145771_j", "(DDD)Z"))
+                                               .filter(matchMethod("pushOutOfBlocks", "func_213282_i", "(DDD)V"))
                                                .toArray();
                 
                 if (livingTick.length == 1 && pushOutOfBlocks.length == 1){
                     var mLivingTick = livingTick[0];
                     
                     if (transformLivingTick(mLivingTick) && transformLivingTickEnd(mLivingTick)){
-                        print("Transformed EntityPlayerSP.livingTick().");
+                        print("Transformed ClientPlayerEntity.livingTick().");
                     }
                     else{
-                        print("Could not inject into EntityPlayerSP.livingTick(), printing all instructions...");
+                        print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
                         printInstructions(mLivingTick.instructions);
                     }
                     
                     transformPushOutOfBlocks(pushOutOfBlocks[0]);
-                    print("Transformed EntityPlayerSP.pushOutOfBlocks().");
+                    print("Transformed ClientPlayerEntity.pushOutOfBlocks().");
                 }
                 else{
-                    print("Could not find EntityPlayerSP.livingTick() and/or EntityPlayerSP.pushOutOfBlocks(), printing all methods...");
-                    
+                    print("Could not find ClientPlayerEntity.livingTick() and/or ClientPlayerEntity.pushOutOfBlocks(), printing all methods...");
+
                     classNode.methods.forEach(function(method){
                         print(method.name + method.desc);
                     });

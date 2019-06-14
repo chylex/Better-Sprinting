@@ -11,7 +11,7 @@ public class GuiButtonInputBinding extends GuiButtonCustomInput{
 	private final Consumer<KeyBinding> onClicked;
 	
 	public GuiButtonInputBinding(int id, int x, int y, KeyBinding binding, Consumer<KeyBinding> onClick){
-		super(id, x, y, binding.func_197978_k(), binding == Minecraft.getInstance().gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
+		super(id, x, y, binding.getLocalizedName(), binding == Minecraft.getInstance().gameSettings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
 		this.binding = binding;
 		this.onClicked = onClick;
 	}

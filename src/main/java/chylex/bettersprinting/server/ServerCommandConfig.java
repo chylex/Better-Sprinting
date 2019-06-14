@@ -5,10 +5,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -87,7 +87,7 @@ final class ServerCommandConfig{
 	}
 	
 	private static void sendMessage(CommandSource source, String text, boolean log){
-		source.sendFeedback(new TextComponentString(text), log);
+		source.sendFeedback(new StringTextComponent(text), log);
 	}
 	
 	private static void sendMessageTranslated(CommandSource source, String translationKey){
@@ -97,11 +97,11 @@ final class ServerCommandConfig{
 	private static void sendMessageTranslated(CommandSource source, String translationName, boolean log){
 		Entity entity = source.getEntity();
 		
-		if (entity instanceof EntityPlayer && ServerNetwork.hasBetterSprinting((EntityPlayer)entity)){
-			source.sendFeedback(new TextComponentTranslation(translationName), log);
+		if (entity instanceof PlayerEntity && ServerNetwork.hasBetterSprinting((PlayerEntity)entity)){
+			source.sendFeedback(new TranslationTextComponent(translationName), log);
 		}
 		else{
-			source.sendFeedback(new TextComponentString(LanguageMap.getInstance().translateKey(translationName)), log);
+			source.sendFeedback(new StringTextComponent(LanguageMap.getInstance().translateKey(translationName)), log);
 		}
 	}
 }

@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.SharedConstants;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeHooks;
 import org.apache.commons.io.IOUtils;
@@ -24,7 +25,7 @@ public class UpdateThread extends Thread{
 	
 	UpdateThread(String modVersion){
 		this.modVersion = modVersion;
-		this.mcVersion = BetterSprintingMod.proxy.getMinecraftVersion();
+		this.mcVersion = SharedConstants.getVersion().getName();
 		setPriority(MIN_PRIORITY);
 		setDaemon(true);
 	}
@@ -105,7 +106,7 @@ public class UpdateThread extends Thread{
 				message.append("\n ").append(TextFormatting.GOLD).append("Click to download: ").append(downloadURL);
 				
 				for(String s:message.toString().split("\n")){
-					Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+					Minecraft.getInstance().field_71456_v.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
 				}
 			}
 		}

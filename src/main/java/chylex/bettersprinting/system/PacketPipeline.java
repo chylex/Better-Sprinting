@@ -2,8 +2,8 @@ package chylex.bettersprinting.system;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,12 +51,12 @@ public class PacketPipeline{
 		handlePacket(LogicalSide.SERVER, ctx.getSender(), e.getPayload().copy(), ctx);
 	}
 	
-	private void handlePacket(LogicalSide side, EntityPlayer player, ByteBuf payload, Context ctx){
+	private void handlePacket(LogicalSide side, PlayerEntity player, ByteBuf payload, Context ctx){
 		ctx.enqueueWork(() -> handler.onPacket(side, payload, player));
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	private EntityPlayer getClientPlayer(){
+	private PlayerEntity getClientPlayer(){
 		return Minecraft.getInstance().player;
 	}
 	
@@ -64,8 +64,8 @@ public class PacketPipeline{
 		return new PacketBuffer(Unpooled.buffer());
 	}
 	
-	public static void sendToPlayer(PacketBuffer buffer, EntityPlayer player){
-		PacketDistributor.PLAYER.with(() -> (EntityPlayerMP)player).send(PLAY_TO_CLIENT.buildPacket(Pair.of(buffer, 0), channelName).getThis());
+	public static void sendToPlayer(PacketBuffer buffer, PlayerEntity player){
+		PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player).send(PLAY_TO_CLIENT.buildPacket(Pair.of(buffer, 0), channelName).getThis());
 	}
 	
 	public static void sendToServer(PacketBuffer buffer){
@@ -73,6 +73,6 @@ public class PacketPipeline{
 	}
 	
 	public interface INetworkHandler{
-		void onPacket(LogicalSide side, ByteBuf data, EntityPlayer player);
+		void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player);
 	}
 }

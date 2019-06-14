@@ -6,12 +6,17 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class GuiButtonCustomInput extends GuiButtonExt{
+	public final int id;
 	private final String titleKey;
 	
 	public GuiButtonCustomInput(int id, int x, int y, String buttonText, String titleKey){
-		super(id, x, y, 70, 20, buttonText);
+		super(x, y, 70, 20, buttonText, null);
+		this.id = id;
 		this.titleKey = titleKey;
 	}
+	
+	@Override
+	public void onPress(){}
 	
 	public String getTitle(){
 		return I18n.format(titleKey);

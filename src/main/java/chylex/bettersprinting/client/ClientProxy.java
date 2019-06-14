@@ -5,7 +5,6 @@ import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.realms.RealmsSharedConstants;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -15,11 +14,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.List;
 
 public class ClientProxy extends BetterSprintingProxy{
-	@Override
-	public String getMinecraftVersion(){
-		return RealmsSharedConstants.VERSION_STRING;
-	}
-	
 	@Override
 	public void onConstructed(ModLoadingContext ctx){
 		ClientSettings.register(ctx);
@@ -31,7 +25,7 @@ public class ClientProxy extends BetterSprintingProxy{
 	public void onLoaded(FMLLoadCompleteEvent e){
 		Minecraft mc = Minecraft.getInstance();
 		
-		mc.addScheduledTask(() -> {
+		mc.execute(() -> {
 			GameSettings settings = mc.gameSettings;
 			
 			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{

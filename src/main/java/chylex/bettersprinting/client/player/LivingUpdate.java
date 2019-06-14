@@ -2,7 +2,7 @@ package chylex.bettersprinting.client.player;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,18 +25,14 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
-	public static void injectOnLivingUpdate(EntityPlayerSP $this){
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
+	public static void injectOnLivingUpdate(ClientPlayerEntity $this){
 		/*
-		if (this.timeUntilPortal > 0){
-			--this.timeUntilPortal;
-		}
-		
+		this.func_213839_ed();
 		boolean flag = this.movementInput.jump;
 		boolean flag1 = this.movementInput.sneak;
 		<<< INSERTED HERE
-		float f = 0.8F;
-		boolean flag2 = this.movementInput.moveForward >= 0.8F;
+		boolean flag2 = this.func_223110_ee();
 		*/
 		
 		// CUSTOM
@@ -45,7 +41,7 @@ public final class LivingUpdate{
 			hasTriggered = true;
 		}
 		
-		if (mc.playerController.isInCreativeMode() && $this.abilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
+		if (mc.field_71442_b.isInCreativeMode() && $this.playerAbilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
 			$this.onGround = false;
 		}
 		
@@ -67,25 +63,27 @@ public final class LivingUpdate{
 			$this.movementInput.jump = true;
 		}
 		
-		AxisAlignedBB playerBoundingBox = $this.getBoundingBox();
-		PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
-		
-		if (!MinecraftForge.EVENT_BUS.post(event)){
-			playerBoundingBox = event.getEntityBoundingBox();
-			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
-			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
-			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
-			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
+		if (!$this.noClip){
+			AxisAlignedBB playerBoundingBox = $this.getBoundingBox();
+			PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
+			
+			if (!MinecraftForge.EVENT_BUS.post(event)){
+				playerBoundingBox = event.getEntityBoundingBox();
+				$this.func_213282_i($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
+				$this.func_213282_i($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
+				$this.func_213282_i($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
+				$this.func_213282_i($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
+			}
 		}
 		
 		// CUSTOM
 		currentHandler.updateLiving();
 		
 		// VANILLA
-		if ($this.abilities.allowFlying){
-			if (mc.playerController.isSpectatorMode()){
-				if (!$this.abilities.isFlying){
-					$this.abilities.isFlying = true;
+		if ($this.playerAbilities.allowFlying){
+			if (mc.field_71442_b.isSpectatorMode()){
+				if (!$this.playerAbilities.isFlying){
+					$this.playerAbilities.isFlying = true;
 					$this.sendPlayerAbilities();
 				}
 			}
@@ -93,8 +91,8 @@ public final class LivingUpdate{
 				if ($this.flyToggleTimer == 0){
 					$this.flyToggleTimer = 7;
 				}
-				else{
-					$this.abilities.isFlying = !$this.abilities.isFlying;
+				else if (!$this.isSwimming()){
+					$this.playerAbilities.isFlying = !$this.playerAbilities.isFlying;
 					$this.sendPlayerAbilities();
 					$this.flyToggleTimer = 0;
 				}
@@ -104,13 +102,13 @@ public final class LivingUpdate{
 		/*
 		}
 		<<< SKIPPED TO HERE
-		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.abilities.isFlying){
+		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.playerAbilities.isFlying){
 			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		*/
 	}
 	
-	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
-	public static void injectOnLivingUpdateEnd(EntityPlayerSP $this){
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
+	public static void injectOnLivingUpdateEnd(ClientPlayerEntity $this){
 		/*
 		else{
 			this.horseJumpPower = 0.0F;
@@ -118,15 +116,15 @@ public final class LivingUpdate{
 		
 		super.livingTick();
 		<<< INSERTED HERE
-			
-		if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode()){
+		
+		if (this.onGround && this.playerAbilities.isFlying && !this.mc.field_71442_b.isSpectatorMode()){
 		*/
 		
-		if ($this.onGround && $this.abilities.isFlying && !mc.playerController.isSpectatorMode()){
-			boolean shouldFlyOnGround = mc.playerController.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
+		if ($this.onGround && $this.playerAbilities.isFlying && !mc.field_71442_b.isSpectatorMode()){
+			boolean shouldFlyOnGround = mc.field_71442_b.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
 			
 			if (!shouldFlyOnGround){
-				$this.abilities.isFlying = false;
+				$this.playerAbilities.isFlying = false;
 				$this.sendPlayerAbilities();
 			}
 		}

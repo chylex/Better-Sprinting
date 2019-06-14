@@ -2,7 +2,7 @@ package chylex.bettersprinting.server;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -72,11 +72,11 @@ final class ServerNetwork implements INetworkHandler{
 	
 	private static final Set<UUID> players = new HashSet<>();
 	
-	public static boolean hasBetterSprinting(EntityPlayer player){
+	public static boolean hasBetterSprinting(PlayerEntity player){
 		return players.contains(player.getUniqueID());
 	}
 	
-	public static void onDisconnected(EntityPlayer player){
+	public static void onDisconnected(PlayerEntity player){
 		players.remove(player.getUniqueID());
 	}
 	
@@ -92,20 +92,20 @@ final class ServerNetwork implements INetworkHandler{
 		return buffer;
 	}
 	
-	public static void sendToPlayer(EntityPlayer player, PacketBuffer packet){
+	public static void sendToPlayer(PlayerEntity player, PacketBuffer packet){
 		if (hasBetterSprinting(player)){
 			PacketPipeline.sendToPlayer(packet, player);
 		}
 	}
 	
-	public static void sendToAll(List<? extends EntityPlayer> players, PacketBuffer packet){
-		for(EntityPlayer player:players){
+	public static void sendToAll(List<? extends PlayerEntity> players, PacketBuffer packet){
+		for(PlayerEntity player:players){
 			sendToPlayer(player, packet);
 		}
 	}
 	
 	@Override
-	public void onPacket(LogicalSide side, ByteBuf data, EntityPlayer player){
+	public void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player){
 		players.add(player.getUniqueID());
 		
 		if (ServerSettings.disableClientMod.get()){

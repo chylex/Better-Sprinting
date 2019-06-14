@@ -14,7 +14,6 @@ final class ServerEventHandler{
 	
 	@SubscribeEvent
 	public void onServerStarting(FMLServerStartingEvent e){
-		ServerProxy.mcVersion = e.getServer().getMinecraftVersion();
 		ServerCommandConfig.register(e.getCommandDispatcher());
 	}
 	

@@ -3,51 +3,56 @@ import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.gui.GuiSprint;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiGameOver;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.player.PlayerAbilities;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovementInputFromOptions;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
 
 final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
 
-	private final EntityPlayerSP player;
-	private final MovementInputHandler customMovementInput;
+	private final ClientPlayerEntity player;
+	private final PlayerAbilities abilities;
+	private final MovementInput movementInput;
+	private final MovementController movementController;
 	
 	private boolean wasMovingForward;
 	private boolean wasSneaking;
-	private boolean shouldRestoreSneakToggle;
 	
-	public PlayerLogicHandler(EntityPlayerSP player){
+	private boolean isHeld = false;
+	private int stopTimer = 0;
+	
+	public PlayerLogicHandler(ClientPlayerEntity player){
 		this.player = player;
-		this.customMovementInput = new MovementInputHandler();
+		this.abilities = player.playerAbilities;
+		this.movementInput = player.movementInput;
+		this.movementController = new MovementController(movementInput);
 	}
 	
-	public EntityPlayerSP getPlayer(){
+	public ClientPlayerEntity getPlayer(){
 		return player;
 	}
 	
-	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
 	public void updateMovementInput(){
-		wasSneaking = player.movementInput.sneak;
-		wasMovingForward = player.movementInput.moveForward >= 0.8F;
-		customMovementInput.update(mc, player.movementInput);
+		wasSneaking = movementInput.sneak;
+		wasMovingForward = player.func_223110_ee();
+		movementController.update(player.func_213287_bg() || player.func_213300_bk(), player.isSpectator());
 		
-		ForgeHooksClient.onInputUpdate(player, player.movementInput);
-		mc.getTutorial().handleMovement(player.movementInput);
+		ForgeHooksClient.onInputUpdate(player, movementInput);
+		mc.getTutorial().handleMovement(movementInput);
 	}
 	
-	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
 	public void updateLiving(){
-		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || player.abilities.allowFlying;
-		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(MobEffects.BLINDNESS);
+		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
+		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.field_76440_q);
 		
 		if (ClientModManager.isModDisabled()){
-			if ((player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if ((player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown()){
 					player.sprintToggleTimer = 7;
 				}
@@ -55,28 +60,23 @@ final class PlayerLogicHandler{
 					player.setSprinting(true);
 				}
 			}
-
-			if (!player.isSprinting() && (!player.isInWater() || player.canSwim()) && player.movementInput.moveForward >= 0.8F && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
+			
+			if (!player.isSprinting() && (!player.isInWater() || player.canSwim()) && player.func_223110_ee() && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
 				player.setSprinting(true);
 			}
 		}
 		else{
-			updateSneakToggle();
-			boolean prevHeld = customMovementInput.held;
-			boolean sprint = customMovementInput.sprint;
+			boolean prevHeld = isHeld;
+			boolean sprint = movementController.sprint && !(movementInput.sneak && !abilities.isFlying);
 			boolean dblTap = ClientSettings.enableDoubleTap.get();
-
-			if (!player.abilities.isFlying && ((MovementInputFromOptions)player.movementInput).sneak){
-				sprint = false;
-			}
 			
 			if ((!dblTap || !player.isSprinting()) && (player.onGround || player.canSwim()) && enoughHunger && !isSprintBlocked){
 				player.setSprinting(sprint);
 			}
 			
-			customMovementInput.held = sprint;
-
-			if (dblTap && !customMovementInput.held && customMovementInput.stoptime == 0 && (player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.movementInput.moveForward >= 0.8F && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			isHeld = sprint;
+			
+			if (dblTap && !isHeld && stopTimer == 0 && (player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !player.isSprinting() && enoughHunger && !isSprintBlocked){
 				if (player.sprintToggleTimer <= 0){
 					player.sprintToggleTimer = 7;
 				}
@@ -87,12 +87,12 @@ final class PlayerLogicHandler{
 			}
 			
 			if (dblTap){
-				if (prevHeld && !customMovementInput.held){
-					customMovementInput.stoptime = 1;
+				if (prevHeld && !isHeld){
+					stopTimer = 1;
 				}
 				
-				if (customMovementInput.stoptime > 0){
-					customMovementInput.stoptime--;
+				if (stopTimer > 0){
+					stopTimer--;
 					player.setSprinting(false);
 				}
 			}
@@ -100,29 +100,20 @@ final class PlayerLogicHandler{
 			int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
 			
 			if (flySpeedBoostMultiplier > 0){
-				if (sprint && player.abilities.isFlying && ClientModManager.canBoostFlying()){
-					player.abilities.setFlySpeed(0.05F + 0.075F * flySpeedBoostMultiplier);
+				if (sprint && abilities.isFlying && ClientModManager.canBoostFlying()){
+					abilities.setFlySpeed(0.05F + 0.075F * flySpeedBoostMultiplier);
 				}
 				else{
-					player.abilities.setFlySpeed(0.05F);
+					abilities.setFlySpeed(0.05F);
 				}
 			}
-			else if (player.abilities.getFlySpeed() > 0.05F){
-				player.abilities.setFlySpeed(0.05F);
+			else if (abilities.getFlySpeed() > 0.05F){
+				abilities.setFlySpeed(0.05F);
 			}
-		}
-
-		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
-			mc.displayGuiScreen(new GuiSprint(null));
-		}
-		
-		if (player.isSprinting() && player.isSneaking() && !player.abilities.isFlying){
-			player.setSprinting(false);
 		}
 		
 		if (player.isSprinting()){
-			MovementInput movementInput = player.movementInput;
-			boolean isSlow = movementInput.moveForward < 0.8F && ((ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs.get()) == false || (movementInput.moveForward == 0F && movementInput.moveStrafe == 0F));
+			boolean isSlow = (ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs.get()) ? !movementController.isMovingAnywhere() : !movementInput.func_223135_b();
 			
 			boolean isSlowOrHungry = isSlow || !enoughHunger;
 			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
@@ -137,23 +128,17 @@ final class PlayerLogicHandler{
 			}
 		}
 		
-		if (ClientModManager.showDisableWarningWhenPossible){
-			player.sendMessage(new TextComponentString(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
-			ClientModManager.showDisableWarningWhenPossible = false;
-		}
+		postLogic();
 	}
 	
-	private void updateSneakToggle(){
-		if (mc.currentScreen != null && player != null && player.isSneaking()){
-			if (customMovementInput.sneakToggle && !(mc.currentScreen instanceof GuiGameOver)){
-				shouldRestoreSneakToggle = true;
-				customMovementInput.sneakToggle = false;
-			}
+	private void postLogic(){
+		if (ClientModManager.showDisableWarningWhenPossible){
+			player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
+			ClientModManager.showDisableWarningWhenPossible = false;
 		}
 		
-		if (shouldRestoreSneakToggle && mc.currentScreen == null){
-			customMovementInput.sneakToggle = true;
-			shouldRestoreSneakToggle = false;
+		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
+			mc.displayGuiScreen(new GuiSprint(null));
 		}
 	}
 }

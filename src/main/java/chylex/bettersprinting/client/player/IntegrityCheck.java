@@ -2,7 +2,7 @@ package chylex.bettersprinting.client.player;
 import chylex.bettersprinting.client.ClientModManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,7 +29,7 @@ public final class IntegrityCheck{
 	public void onPlayerTick(ClientTickEvent e){
 		if (e.phase == Phase.END && mc.player != null && mc.player.ticksExisted > 1){
 			if (!LivingUpdate.checkIntegrity()){
-				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix + I18n.format("bs.game.integrity")));
+				mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format("bs.game.integrity")));
 			}
 			
 			unregister();
