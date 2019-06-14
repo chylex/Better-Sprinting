@@ -62,6 +62,10 @@ jar{
         }
     }
     
+    from('./'){
+        include 'LICENSE'
+    }
+    
     manifest{
         attributes 'FMLAT': 'bs_at.cfg'
         attributes 'TweakClass': 'bsm.javacheck.Java8Checker'
