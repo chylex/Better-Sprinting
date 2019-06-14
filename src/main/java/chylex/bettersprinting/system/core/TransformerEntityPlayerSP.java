@@ -11,7 +11,6 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -20,14 +19,17 @@ import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
 import java.util.Iterator;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ASTORE;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.GETSTATIC;
+import static org.objectweb.asm.Opcodes.IFEQ;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.ISTORE;
 
 public final class TransformerEntityPlayerSP implements IClassTransformer{
 	private static final String[] NAMES_ONLIVINGUPDATE = new String[]{ "n", "onLivingUpdate" };
 	private static final String DESC_ONLIVINGUPDATE = "()V";
-	
-	private static final String[] NAMES_PUSHOUTOFBLOCKS = new String[]{ "i", "pushOutOfBlocks" };
-	private static final String DESC_PUSHOUTOFBLOCKS = "(DDD)Z";
-	private static final String SRG_PUSHOUTOFBLOCKS = "func_145771_j";
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes){
@@ -47,95 +49,92 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	}
 	
 	private void transformEntityPlayerSP(ClassNode node){
-		transformOnLivingUpdate(node.methods
+		MethodNode onLivingUpdate = node.methods
 			.stream()
 			.filter(method -> method.desc.equals(DESC_ONLIVINGUPDATE) && ArrayUtils.contains(NAMES_ONLIVINGUPDATE, method.name))
 			.findAny()
 			.<IllegalStateException>orElseThrow(() -> {
 				logMethods("onLivingUpdate", node);
 				return new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report.");
-			})
-		);
+			});
 		
-		node.methods.add(bridgePushOutOfBlocks(node.methods
-			.stream()
-			.filter(method -> method.desc.equals(DESC_PUSHOUTOFBLOCKS) && ArrayUtils.contains(NAMES_PUSHOUTOFBLOCKS, method.name))
-			.findAny()
-			.<IllegalStateException>orElseThrow(() -> {
-				logMethods("pushOutOfBlocks", node);
-				throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find pushOutOfBlocks. The mod has generated logs to help pinpointing the issue, please include them in your report.");
-			})
-		));
+		try{
+			transformOnLivingUpdate(onLivingUpdate);
+		}catch(Throwable t){
+			logInstructions(onLivingUpdate);
+			throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP. The mod has generated logs to help pinpointing the issue, please include them in your report.", t);
+		}
 	}
 	
-	private int findInsertionPointOnLivingUpdate(MethodNode method){
-		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
-		
-		for(int index = 0, count = method.instructions.size(); index < count; index++){
-			AbstractInsnNode node = method.instructions.get(index);
-			
-			if (node instanceof FieldInsnNode && ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)node).desc)){
-				while(++index < count && !(method.instructions.get(index) instanceof LabelNode));
-				while(++index < count && !(method.instructions.get(index) instanceof LabelNode));
-				return index;
-			}
-		}
-		
-		Log.error("Finding insertion point - $0", String.join(" / ", clsMovementInput));
-		logInstructions(method);
-		
-		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find an insertion point into onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report.");
-	}
-	
-	private int findSkipPointOnLivingUpdate(MethodNode method, int insertionPoint){
-		String[] clsEntityEquipmentSlot = getClassNames("net/minecraft/inventory/EntityEquipmentSlot");
-		
-		for(int index = method.instructions.size() - 1; index >= insertionPoint; index--){
-			AbstractInsnNode node = method.instructions.get(index);
-			
-			if (node instanceof FieldInsnNode && ArrayUtils.contains(clsEntityEquipmentSlot, ((FieldInsnNode)node).desc)){
-				while(--index >= insertionPoint && !(method.instructions.get(index) instanceof LabelNode));
-				while(--index >= insertionPoint && !(method.instructions.get(index) instanceof LabelNode));
-				return index;
-			}
-		}
-		
-		Log.error("Finding skip point - $0", String.join(" / ", clsEntityEquipmentSlot));
-		logInstructions(method);
-		
-		throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP - could not find a skip point in onLivingUpdate. The mod has generated logs to help pinpointing the issue, please include them in your report.");
-	}
+	// EntityPlayerSP.onLivingUpdate()
 	
 	private void transformOnLivingUpdate(MethodNode method){
-		int insertionPoint = findInsertionPointOnLivingUpdate(method);
-		int skipPoint = findSkipPointOnLivingUpdate(method, insertionPoint);
+		InsnList instructions = method.instructions;
+		int instrcount = instructions.size();
 		
-		AbstractInsnNode insertTarget = method.instructions.get(insertionPoint);
-		LabelNode skipTarget = (LabelNode)method.instructions.get(skipPoint);
+		int insertionPoint = -1;
+		int skipPoint = -1;
 		
-		InsnList instructions = new InsnList();
-		instructions.add(new LabelNode());
-		instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
-		instructions.add(new JumpInsnNode(Opcodes.GOTO, skipTarget));
+		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
 		
-		method.instructions.insertBefore(insertTarget, instructions);
+		for(int index = 0; index < instrcount; index++){
+			AbstractInsnNode instruction = instructions.get(index);
+			
+			if (instruction.getOpcode() == GETFIELD &&
+				ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)instruction).desc) &&
+				checkOpcodeChain(instructions, index - 1, new int[]{ ALOAD, GETFIELD, GETFIELD, ISTORE }) &&
+				checkOpcodeChain(instructions, index + 5, new int[]{ ALOAD, GETFIELD, GETFIELD, ISTORE })
+			){
+				insertionPoint = index + 9;
+				break;
+			}
+		}
+		
+		if (insertionPoint == -1){
+			throw new IllegalStateException("Could not find insertion point.");
+		}
+		
+		Log.debug("Found insertion point at index: $0", insertionPoint);
+		
+		for(int index = insertionPoint; index < instrcount; index++){
+			AbstractInsnNode instruction = instructions.get(index);
+			
+			if (instruction.getOpcode() == GETSTATIC &&
+				((FieldInsnNode)instruction).name.equals("CHEST") &&
+				checkOpcodeChain(instructions, index - 1, new int[]{ ALOAD, GETSTATIC, INVOKEVIRTUAL, ASTORE }) &&
+				checkOpcodeChain(instructions, index - 24, new int[]{ ALOAD, GETFIELD, GETFIELD, IFEQ }
+			)){
+				skipPoint = index - 27;
+				break;
+			}
+		}
+		
+		if (skipPoint == -1){
+			throw new IllegalStateException("Could not find skip point.");
+		}
+		
+		Log.debug("Found skip point at index: $0", insertionPoint);
+		
+		AbstractInsnNode insertNode = instructions.get(insertionPoint);
+		AbstractInsnNode skipNode = instructions.get(skipPoint);
+		
+		if (!(insertNode instanceof LabelNode)){
+			throw new IllegalStateException("invalid insertion point node, expected label, got " + insertNode.getClass().getSimpleName());
+		}
+		
+		if (!(skipNode instanceof LabelNode)){
+			throw new IllegalStateException("invalid insertion point node, expected label, got " + skipNode.getClass().getSimpleName());
+		}
+		
+		InsnList inserted = new InsnList();
+		inserted.add(new VarInsnNode(ALOAD, 0));
+		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
+		inserted.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode)skipNode));
+		
+		instructions.insert(insertNode, inserted);
 	}
 	
-	private MethodNode bridgePushOutOfBlocks(MethodNode target){
-		String targetName = target.name.equals("pushOutOfBlocks") ? target.name : SRG_PUSHOUTOFBLOCKS;
-		MethodNode m = new MethodNode(Opcodes.ACC_PUBLIC, "_bsm_pushOutOfBlocks", "(DDD)V", null, null);
-		
-		m.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		m.instructions.add(new VarInsnNode(Opcodes.DLOAD, 1));
-		m.instructions.add(new VarInsnNode(Opcodes.DLOAD, 3));
-		m.instructions.add(new VarInsnNode(Opcodes.DLOAD, 5));
-		m.instructions.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/client/entity/EntityPlayerSP", targetName, target.desc, false));
-		m.instructions.add(new InsnNode(Opcodes.POP));
-		m.instructions.add(new InsnNode(Opcodes.RETURN));
-		
-		return m;
-	}
+	// Helpers
 	
 	private static String[] getClassNames(String name){
 		String obf = FMLDeobfuscatingRemapper.INSTANCE.unmap(name);
@@ -144,6 +143,19 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			"L" + name + ";",
 			"L" + obf + ";"
 		};
+	}
+	
+	private static boolean checkOpcodeChain(InsnList instructions, int start, int[] chain){
+		for(int offset = 0; offset < chain.length; offset++){
+			AbstractInsnNode instruction = instructions.get(start + offset);
+			
+			if (instruction.getOpcode() != chain[offset]){
+				Log.warn("Mismatched opcode chain, $0 != $1", instruction.getOpcode(), chain[offset]);
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private static void logMethods(String missingMethod, ClassNode owner){

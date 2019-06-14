@@ -6,25 +6,13 @@ import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 
 @SideOnly(Side.CLIENT)
 public final class LivingUpdate{
-	private static final Minecraft mc;
-	private static final MethodHandle mPushOutOfBlocks;
+	private static final Minecraft mc = Minecraft.getMinecraft();
+	
 	private static PlayerLogicHandler currentHandler;
 	private static boolean hasTriggered;
-	
-	static{
-		mc = Minecraft.getMinecraft();
-		
-		try{
-			mPushOutOfBlocks = MethodHandles.lookup().unreflect(EntityPlayerSP.class.getMethod("_bsm_pushOutOfBlocks", double.class, double.class, double.class));
-		}catch(Exception e){
-			throw new RuntimeException(e);
-		}
-	}
 	
 	public static boolean checkIntegrity(){
 		return hasTriggered;
@@ -43,7 +31,8 @@ public final class LivingUpdate{
 		}
 		
 		boolean flag = this.movementInput.jump;
-		boolean flag1 = this.movementInput.sneak;    <<< INSERTED HERE
+		boolean flag1 = this.movementInput.sneak;
+		<<< INSERTED HERE
 		float f = 0.8F;
 		boolean flag2 = this.movementInput.moveForward >= 0.8F;
 		 */
@@ -76,14 +65,10 @@ public final class LivingUpdate{
 		PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
 		
 		if (!MinecraftForge.EVENT_BUS.post(event)){
-			try{
-				mPushOutOfBlocks.invokeExact($this, $this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
-			}catch(Throwable e){
-				throw new RuntimeException(e);
-			}
+			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
+			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
+			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
+			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
 		}
 		
 		// CUSTOM
@@ -111,9 +96,8 @@ public final class LivingUpdate{
 		
 		/*
 		}
-		    <<< SKIPPED TO HERE
-		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.capabilities.isFlying)
-		{
+		<<< SKIPPED TO HERE
+		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.capabilities.isFlying){
 			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		*/
 	}
