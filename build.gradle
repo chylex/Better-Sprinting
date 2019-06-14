@@ -40,6 +40,10 @@ processResources{
 jar{
     archiveName = modid+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
     
+    from('./'){
+        include 'LICENSE'
+    }
+    
     manifest{
         attributes 'FMLAT': 'bs_at.cfg'
     }
