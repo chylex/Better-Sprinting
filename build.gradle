@@ -41,6 +41,10 @@ processResources{
 jar{
     archiveName = modname+"-"+project.minecraft.version+"-v"+modver+".jar"
     
+    from('./'){
+        include 'LICENSE'
+    }
+    
     manifest{
         attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.BetterSprintingCore'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
