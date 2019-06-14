@@ -1,11 +1,11 @@
 package chylex.bettersprinting.client;
+import chylex.bettersprinting.system.PacketPipeline;
+import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 
 @SideOnly(Side.CLIENT)
 public class ClientNetwork implements INetworkHandler{

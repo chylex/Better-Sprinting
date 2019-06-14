@@ -1,10 +1,10 @@
 package chylex.bettersprinting.server;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.system.PacketPipeline;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class ServerProxy extends BetterSprintingProxy{	
 	@Override

@@ -90,7 +90,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	private int findSkipPointOnLivingUpdate(MethodNode method, int insertionPoint){
 		String[] clsEntityEquipmentSlot = getClassNames("net/minecraft/inventory/EntityEquipmentSlot");
 		
-		for(int index = method.instructions.size()-1; index >= insertionPoint; index--){
+		for(int index = method.instructions.size() - 1; index >= insertionPoint; index--){
 			AbstractInsnNode node = method.instructions.get(index);
 			
 			if (node instanceof FieldInsnNode && ArrayUtils.contains(clsEntityEquipmentSlot, ((FieldInsnNode)node).desc)){
@@ -141,8 +141,8 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		String obf = FMLDeobfuscatingRemapper.INSTANCE.unmap(name);
 		
 		return new String[]{
-			"L"+name+";",
-			"L"+obf+";"
+			"L" + name + ";",
+			"L" + obf + ";"
 		};
 	}
 	

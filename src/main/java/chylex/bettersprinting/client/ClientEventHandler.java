@@ -1,5 +1,10 @@
 package chylex.bettersprinting.client;
-import java.util.stream.IntStream;
+import chylex.bettersprinting.client.gui.GuiButtonInteractive;
+import chylex.bettersprinting.client.gui.GuiSprint;
+import chylex.bettersprinting.client.player.IntegrityCheck;
+import chylex.bettersprinting.client.player.LivingUpdate;
+import chylex.bettersprinting.client.update.UpdateNotificationManager;
+import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiKeyBindingList;
@@ -18,12 +23,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
-import chylex.bettersprinting.client.gui.GuiButtonSprint;
-import chylex.bettersprinting.client.gui.GuiSprint;
-import chylex.bettersprinting.client.player.IntegrityCheck;
-import chylex.bettersprinting.client.player.LivingUpdate;
-import chylex.bettersprinting.client.update.UpdateNotificationManager;
-import chylex.bettersprinting.system.PacketPipeline;
+import java.util.stream.IntStream;
 
 @SideOnly(Side.CLIENT)
 public final class ClientEventHandler{
@@ -42,7 +42,9 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
-		if (stopChecking || e.getEntity() != mc.player)return;
+		if (stopChecking || e.getEntity() != mc.player){
+			return;
+		}
 		
 		stopChecking = true;
 		

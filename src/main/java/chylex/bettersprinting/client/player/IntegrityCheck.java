@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client.player;
+import chylex.bettersprinting.client.ClientModManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
@@ -8,7 +9,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.client.ClientModManager;
 
 @SideOnly(Side.CLIENT)
 public final class IntegrityCheck{
@@ -29,7 +29,7 @@ public final class IntegrityCheck{
 	public void onPlayerTick(ClientTickEvent e){
 		if (e.phase == Phase.END && mc.player != null && mc.player.ticksExisted > 1){
 			if (!LivingUpdate.checkIntegrity()){
-				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix+I18n.format("bs.game.integrity")));
+				mc.player.sendMessage(new TextComponentString(ClientModManager.chatPrefix + I18n.format("bs.game.integrity")));
 			}
 			
 			unregister();

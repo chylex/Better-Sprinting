@@ -1,13 +1,13 @@
 package chylex.bettersprinting.system.core;
-import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion(BetterSprintingCore.supportedMinecraftVersion)
 @IFMLLoadingPlugin.SortingIndex(1000)
 public final class BetterSprintingCore implements IFMLLoadingPlugin{
 	public static final String supportedMinecraftVersion = "1.12.2";
 	
-	static boolean wasInitialized;
+	private static boolean wasInitialized;
 	
 	public static boolean wasInitialized(){
 		return wasInitialized;

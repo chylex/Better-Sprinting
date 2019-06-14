@@ -1,6 +1,4 @@
 package chylex.bettersprinting;
-import java.io.File;
-import java.util.List;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
@@ -10,6 +8,8 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEve
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import java.io.File;
+import java.util.List;
 
 public class BetterSprintingConfig{
 	private final Configuration config;
@@ -51,39 +51,39 @@ public class BetterSprintingConfig{
 		this.currentCategory = newCategory;
 	}
 	
-	public Property getBool(String name, boolean defValue){
+	public Property get(String name, boolean defValue){
 		return config.get(currentCategory, name, defValue, "");
 	}
 	
-	public Property getBool(String name, boolean defValue, String comment){
+	public Property get(String name, boolean defValue, String comment){
 		return config.get(currentCategory, name, defValue, comment);
 	}
 	
-	public Property getInt(String name, int defValue){
+	public Property get(String name, int defValue){
 		return config.get(currentCategory, name, defValue, "");
 	}
 	
-	public Property getInt(String name, int defValue, String comment){
+	public Property get(String name, int defValue, String comment){
 		return config.get(currentCategory, name, defValue, comment);
 	}
 	
-	public Property getString(String name, String defValue){
+	public Property get(String name, String defValue){
 		return config.get(currentCategory, name, defValue, "");
 	}
 	
-	public Property getString(String name, String defValue, String comment){
+	public Property get(String name, String defValue, String comment){
 		return config.get(currentCategory, name, defValue, comment);
 	}
 	
-	public void setBool(String name, boolean value){
+	public void set(String name, boolean value){
 		config.get(currentCategory, name, value).set(value);
 	}
 	
-	public void setInt(String name, int value){
+	public void set(String name, int value){
 		config.get(currentCategory, name, value).set(value);
 	}
 	
-	public void setString(String name, String value){
+	public void set(String name, String value){
 		config.get(currentCategory, name, value).set(value);
 	}
 }

@@ -94,11 +94,5 @@ public class ServerNetwork implements INetworkHandler{
 		if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
 			sendToPlayer(player, writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
 		}
-		
-		/*byte type = data.readByte();
-		
-		if (type == 0){
-			// might be useful later
-		}*/
 	}
 }

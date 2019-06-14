@@ -8,17 +8,17 @@ public class ServerSettings{
 	
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("server");
-		enableSurvivalFlyBoost = config.getBool("enableSurvivalFlyBoost", enableSurvivalFlyBoost).getBoolean();
-		enableAllDirs = config.getBool("enableAllDirs", enableAllDirs).getBoolean();
-		disableClientMod = config.getBool("disableClientMod", disableClientMod).getBoolean();
+		enableSurvivalFlyBoost = config.get("enableSurvivalFlyBoost", enableSurvivalFlyBoost).getBoolean();
+		enableAllDirs = config.get("enableAllDirs", enableAllDirs).getBoolean();
+		disableClientMod = config.get("disableClientMod", disableClientMod).getBoolean();
 		config.update();
 	}
 	
 	public static void update(BetterSprintingConfig config){
 		config.setCategory("server");
-		config.setBool("enableSurvivalFlyBoost", enableSurvivalFlyBoost);
-		config.setBool("enableAllDirs", enableAllDirs);
-		config.setBool("disableClientMod", disableClientMod);
+		config.set("enableSurvivalFlyBoost", enableSurvivalFlyBoost);
+		config.set("enableAllDirs", enableAllDirs);
+		config.set("disableClientMod", disableClientMod);
 		config.update();
 	}
 }

@@ -1,6 +1,4 @@
 package chylex.bettersprinting.client.player;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -8,6 +6,8 @@ import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 
 @SideOnly(Side.CLIENT)
 public final class LivingUpdate{
@@ -75,16 +75,16 @@ public final class LivingUpdate{
 		AxisAlignedBB playerBoundingBox = $this.getEntityBoundingBox();
 		PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
 		
-        if (!MinecraftForge.EVENT_BUS.post(event)){
+		if (!MinecraftForge.EVENT_BUS.post(event)){
 			try{
-				mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX-$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ-$this.width*0.35D);
-				mPushOutOfBlocks.invokeExact($this, $this.posX+$this.width*0.35D, playerBoundingBox.minY+0.5D, $this.posZ+$this.width*0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
+				mPushOutOfBlocks.invokeExact($this, $this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
 			}catch(Throwable e){
 				throw new RuntimeException(e);
 			}
-        }
+		}
 		
 		// CUSTOM
 		currentHandler.updateLiving();

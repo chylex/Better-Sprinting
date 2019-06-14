@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class ClientModManager{
 	private static final Minecraft mc = Minecraft.getMinecraft();
-	public static final String chatPrefix = TextFormatting.GREEN+"[Better Sprinting]"+TextFormatting.RESET+" ";
+	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + " ";
 	public static final String categoryName = "key.categories.bettersprinting.hidden";
 	
 	public static boolean showDisableWarningWhenPossible;

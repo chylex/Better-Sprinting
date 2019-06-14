@@ -1,10 +1,10 @@
 package chylex.bettersprinting.client.update;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import chylex.bettersprinting.system.Log;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 final class VersionEntry implements Comparable<VersionEntry>{
 	public final String versionIdentifier;
@@ -39,7 +39,7 @@ final class VersionEntry implements Comparable<VersionEntry>{
 			}
 		}
 		
-		orderId = Byte.valueOf(i);
+		orderId = i;
 		modVersionName = tmp;
 	}
 	

@@ -1,4 +1,7 @@
 package chylex.bettersprinting.client.player;
+import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
+import chylex.bettersprinting.client.gui.GuiSprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiGameOver;
@@ -7,9 +10,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.ForgeHooksClient;
-import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.ClientSettings;
-import chylex.bettersprinting.client.gui.GuiSprint;
 
 final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getMinecraft();

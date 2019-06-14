@@ -1,5 +1,7 @@
 package chylex.bettersprinting.client.gui;
-import java.io.IOException;
+import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
@@ -12,9 +14,7 @@ import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import chylex.bettersprinting.BetterSprintingMod;
-import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.ClientSettings;
+import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{

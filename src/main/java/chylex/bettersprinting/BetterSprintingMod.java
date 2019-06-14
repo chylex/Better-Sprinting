@@ -1,12 +1,11 @@
 package chylex.bettersprinting;
+import chylex.bettersprinting.system.Log;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import chylex.bettersprinting.system.Log;
 
 @Mod(modid = BetterSprintingMod.modId,
      name = "Better Sprinting",
@@ -16,9 +15,6 @@ import chylex.bettersprinting.system.Log;
      acceptableRemoteVersions = "*",
      updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
 public class BetterSprintingMod{
-	@Instance(BetterSprintingMod.modId)
-	public static BetterSprintingMod instance;
-	
 	@SidedProxy(clientSide = "chylex.bettersprinting.client.ClientProxy", serverSide = "chylex.bettersprinting.server.ServerProxy")
 	public static BetterSprintingProxy proxy;
 	

@@ -1,21 +1,21 @@
 package chylex.bettersprinting.client.update;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
-import org.apache.commons.io.IOUtils;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.system.Log;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.io.IOUtils;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class UpdateThread extends Thread{
 	private static final String url = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateNotificationData.txt";
