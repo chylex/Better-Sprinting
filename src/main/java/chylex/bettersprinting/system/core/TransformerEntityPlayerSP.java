@@ -78,6 +78,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		int skipPoint = -1;
 		
 		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
+		String[] fldChest = new String[]{ "CHEST", "e" };
 		
 		for(int index = 0; index < instrcount; index++){
 			AbstractInsnNode instruction = instructions.get(index);
@@ -102,7 +103,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			AbstractInsnNode instruction = instructions.get(index);
 			
 			if (instruction.getOpcode() == GETSTATIC &&
-				((FieldInsnNode)instruction).name.equals("CHEST") &&
+				ArrayUtils.contains(fldChest, ((FieldInsnNode)instruction).name) &&
 				checkOpcodeChain(instructions, index - 1, new int[]{ ALOAD, GETSTATIC, INVOKEVIRTUAL, ASTORE }) &&
 				checkOpcodeChain(instructions, index - 24, new int[]{ ALOAD, GETFIELD, GETFIELD, IFEQ }
 			)){
@@ -143,7 +144,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		int insertionPoint = -1;
 		int skipPoint = -1;
 		
-		String[] mtdSendPlayerAbilities = new String[]{ "sendPlayerAbilities", "func_71016_p" };
+		String[] mtdSendPlayerAbilities = new String[]{ "sendPlayerAbilities", "w" };
 		
 		for(int index = instrcount - 1; index >= 0; index--){
 			AbstractInsnNode instruction = instructions.get(index);
@@ -163,9 +164,13 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		for(int index = insertionPoint; index < instrcount; index++){
 			AbstractInsnNode instruction = instructions.get(index);
 			
-			if (instruction.getOpcode() == INVOKEVIRTUAL && ArrayUtils.contains(mtdSendPlayerAbilities, ((MethodInsnNode)instruction).name)){
-				skipPoint = index + 1;
-				break;
+			if (instruction.getOpcode() == INVOKEVIRTUAL){
+				MethodInsnNode methodInsn = (MethodInsnNode)instruction;
+				
+				if (ArrayUtils.contains(mtdSendPlayerAbilities, methodInsn.name) && methodInsn.desc.equals("()V")){
+					skipPoint = index + 1;
+					break;
+				}
 			}
 		}
 		
