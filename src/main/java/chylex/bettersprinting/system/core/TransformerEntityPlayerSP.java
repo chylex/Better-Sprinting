@@ -24,6 +24,7 @@ import static org.objectweb.asm.Opcodes.ASTORE;
 import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.GETSTATIC;
 import static org.objectweb.asm.Opcodes.IFEQ;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.ISTORE;
 
@@ -60,6 +61,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		
 		try{
 			transformOnLivingUpdate(onLivingUpdate);
+			transformOnLivingUpdateEnd(onLivingUpdate);
 		}catch(Throwable t){
 			logInstructions(onLivingUpdate);
 			throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP. The mod has generated logs to help pinpointing the issue, please include them in your report.", t);
@@ -129,6 +131,64 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 		InsnList inserted = new InsnList();
 		inserted.add(new VarInsnNode(ALOAD, 0));
 		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
+		inserted.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode)skipNode));
+		
+		instructions.insert(insertNode, inserted);
+	}
+	
+	private void transformOnLivingUpdateEnd(MethodNode method){
+		InsnList instructions = method.instructions;
+		int instrcount = instructions.size();
+		
+		int insertionPoint = -1;
+		int skipPoint = -1;
+		
+		String[] mtdSendPlayerAbilities = new String[]{ "sendPlayerAbilities", "func_71016_p" };
+		
+		for(int index = instrcount - 1; index >= 0; index--){
+			AbstractInsnNode instruction = instructions.get(index);
+			
+			if (instruction.getOpcode() == INVOKESPECIAL && ((MethodInsnNode)instruction).name.equals(method.name)){
+				insertionPoint = index + 1;
+				break;
+			}
+		}
+		
+		if (insertionPoint == -1){
+			throw new IllegalStateException("Could not find insertion point.");
+		}
+		
+		Log.debug("Found insertion point at index: $0", insertionPoint);
+		
+		for(int index = insertionPoint; index < instrcount; index++){
+			AbstractInsnNode instruction = instructions.get(index);
+			
+			if (instruction.getOpcode() == INVOKEVIRTUAL && ArrayUtils.contains(mtdSendPlayerAbilities, ((MethodInsnNode)instruction).name)){
+				skipPoint = index + 1;
+				break;
+			}
+		}
+		
+		if (skipPoint == -1){
+			throw new IllegalStateException("Could not find skip point.");
+		}
+		
+		Log.debug("Found skip point at index: $0", insertionPoint);
+		
+		AbstractInsnNode insertNode = instructions.get(insertionPoint);
+		AbstractInsnNode skipNode = instructions.get(skipPoint);
+		
+		if (!(insertNode instanceof LabelNode)){
+			throw new IllegalStateException("invalid insertion point node, expected label, got " + insertNode.getClass().getSimpleName());
+		}
+		
+		if (!(skipNode instanceof LabelNode)){
+			throw new IllegalStateException("invalid insertion point node, expected label, got " + skipNode.getClass().getSimpleName());
+		}
+		
+		InsnList inserted = new InsnList();
+		inserted.add(new VarInsnNode(ALOAD, 0));
+		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
 		inserted.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode)skipNode));
 		
 		instructions.insert(insertNode, inserted);

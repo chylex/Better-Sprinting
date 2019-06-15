@@ -22,13 +22,14 @@ public class GuiSprint extends GuiScreen{
 	private static final int idDoubleTap = 199;
 	private static final int idAllDirs = 198;
 	private static final int idFlyBoost = 197;
-	private static final int idDisableMod = 196;
-	private static final int idAutoJump = 195;
-	private static final int idControls = 194;
+	private static final int idFlyOnGround = 196;
+	private static final int idDisableMod = 195;
+	private static final int idAutoJump = 194;
+	private static final int idControls = 193;
 	
 	private final GuiScreen parentScreen;
 	
-	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnAllDirs, btnDisableMod;
+	private GuiButton btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
 	private int buttonId = -1;
 	private long pressTime;
 	
@@ -54,12 +55,14 @@ public class GuiSprint extends GuiScreen{
 		btnDoubleTap = addButton(new GuiButtonInputOption(idDoubleTap, left, top + 60, "bs.doubleTapping"));
 		btnAllDirs = addButton(new GuiButtonInputOption(idAllDirs, left + 160, top + 60, "bs.runAllDirs"));
 		btnFlyBoost = addButton(new GuiButtonInputOption(idFlyBoost, left, top + 84, "bs.flyBoost"));
-		btnDisableMod = addButton(new GuiButtonInputOption(idDisableMod, left + 160, top + 84, "bs.disableMod"));
+		btnFlyOnGround = addButton(new GuiButtonInputOption(idFlyOnGround, left + 160, top + 84, "bs.flyOnGround"));
+		btnDisableMod = addButton(new GuiButtonInputOption(idDisableMod, left + 160, top + 108, "bs.disableMod"));
 		btnAutoJump = addButton(new GuiButtonInputOption(idAutoJump, left, top + 108, "bs.autoJump"));
 		
 		if (ClientModManager.isModDisabled())btnDoubleTap.enabled = false;
 		if (!ClientModManager.canRunInAllDirs())btnAllDirs.enabled = false;
 		if (!ClientModManager.canBoostFlying())btnFlyBoost.enabled = false;
+		if (!ClientModManager.canFlyOnGround())btnFlyOnGround.enabled = false;
 		if (!ClientModManager.inMenu())btnDisableMod.enabled = false;
 		
 		addButton(new GuiButtonInteractive(idDone, width / 2 - 100, top + 168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done"), this::onClickedDone));
@@ -74,6 +77,7 @@ public class GuiSprint extends GuiScreen{
 	private void updateButtons(){
 		btnDoubleTap.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.displayString = I18n.format(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost + 1) + "x") : "gui.unavailable");
+		btnFlyOnGround.displayString = I18n.format(ClientModManager.canFlyOnGround() ? (ClientSettings.flyOnGround ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnAllDirs.displayString = I18n.format(ClientModManager.canRunInAllDirs() ? (ClientSettings.enableAllDirs ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.displayString = I18n.format(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
 		btnAutoJump.displayString = I18n.format(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
@@ -119,6 +123,13 @@ public class GuiSprint extends GuiScreen{
 			case idFlyBoost:
 				if (ClientModManager.canBoostFlying() && ++ClientSettings.flySpeedBoost == 8){
 					ClientSettings.flySpeedBoost = 0;
+				}
+				
+				break;
+			
+			case idFlyOnGround:
+				if (ClientModManager.canFlyOnGround()){
+					ClientSettings.flyOnGround = !ClientSettings.flyOnGround;
 				}
 				
 				break;

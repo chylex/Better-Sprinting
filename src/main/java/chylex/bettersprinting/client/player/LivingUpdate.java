@@ -1,4 +1,6 @@
 package chylex.bettersprinting.client.player;
+import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -41,6 +43,10 @@ public final class LivingUpdate{
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
 			currentHandler = new PlayerLogicHandler($this);
 			hasTriggered = true;
+		}
+		
+		if (mc.playerController.isInCreativeMode() && $this.capabilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround){
+			$this.onGround = false;
 		}
 		
 		boolean wasJumping = $this.movementInput.jump;
@@ -100,6 +106,28 @@ public final class LivingUpdate{
 		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.capabilities.isFlying){
 			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		*/
+	}
+	
+	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
+	public static void injectOnLivingUpdateEnd(EntityPlayerSP $this){
+		/*
+		else{
+			this.horseJumpPower = 0.0F;
+		}
+		
+		super.onLivingUpdate();
+		<<< INSERTED HERE
+		if (this.onGround && this.capabilities.isFlying && !this.mc.playerController.isSpectatorMode())
+		*/
+		
+		if ($this.onGround && $this.capabilities.isFlying && !mc.playerController.isSpectatorMode()){
+			boolean shouldFlyOnGround = mc.playerController.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround;
+			
+			if (!shouldFlyOnGround){
+				$this.capabilities.isFlying = false;
+				$this.sendPlayerAbilities();
+			}
+		}
 	}
 	
 	private LivingUpdate(){}

@@ -19,6 +19,7 @@ public class ClientSettings{
 	public static KeyModifier keyModOptionsMenu = KeyModifier.NONE;
 	
 	public static int flySpeedBoost = 3;
+	public static boolean flyOnGround = false;
 	public static boolean enableDoubleTap = false;
 	public static boolean enableAllDirs = false;
 	public static boolean disableMod = false;
@@ -40,6 +41,7 @@ public class ClientSettings{
 		keyModOptionsMenu = KeyModifier.valueOf(config.get("keyModOptionsMenu", keyModOptionsMenu.name()).setShowInGui(false).getString());
 		
 		flySpeedBoost = MathHelper.clamp(config.get("flySpeedBoost", flySpeedBoost).setShowInGui(false).getInt(), 0, 7);
+		flyOnGround = config.get("flyOnGround", flyOnGround).setShowInGui(false).getBoolean();
 		enableDoubleTap = config.get("enableDoubleTap", enableDoubleTap).setShowInGui(false).getBoolean();
 		enableAllDirs = config.get("enableAllDirs", enableAllDirs).setShowInGui(false).getBoolean();
 		disableMod = config.get("disableMod", disableMod).setShowInGui(false).getBoolean();
@@ -69,6 +71,7 @@ public class ClientSettings{
 		config.set("keyModOptionsMenu", keyModOptionsMenu.name());
 		
 		config.set("flySpeedBoost", flySpeedBoost);
+		config.set("flyOnGround", flyOnGround);
 		config.set("enableDoubleTap", enableDoubleTap);
 		config.set("enableAllDirs", enableAllDirs);
 		config.set("disableMod", disableMod);
