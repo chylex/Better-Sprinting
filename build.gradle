@@ -18,28 +18,25 @@ buildscript{
 
 apply plugin: 'forge'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft{
-    version = "1.7.10-10.13.3.1408-1.7.10"
-    runDir = "eclipse"
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir = "run"
 }
-
-String modid = ""
-String modver = ""
 
 processResources{
     File info = new File(sourceSets.main.resources.srcDirs.iterator().next(), "mcmod.info")
     def slurp = new groovy.json.JsonSlurper()
     def data = slurp.parseText(info.getText())[0]
-    modid = data.modid
-    modver = data.version
+
+    archivesBaseName = data.name.replaceAll(" ", "")
+    version = data.version
 }
 
 jar{
-    archiveName = modid+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
-    
+    archiveName = archivesBaseName + '-' + project.minecraft.version + '-v' + version + '.jar'
+
     from('./'){
         include 'LICENSE'
     }
