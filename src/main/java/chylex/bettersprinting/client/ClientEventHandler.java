@@ -1,8 +1,19 @@
 package chylex.bettersprinting.client;
+import chylex.bettersprinting.client.gui.GuiButtonInteractive;
+import chylex.bettersprinting.client.gui.GuiSprint;
+import chylex.bettersprinting.client.player.IntegrityCheck;
+import chylex.bettersprinting.client.player.LivingUpdate;
+import chylex.bettersprinting.client.update.UpdateNotificationManager;
+import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
+import net.minecraft.client.gui.GuiKeyBindingList;
+import net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry;
+import net.minecraft.client.gui.GuiKeyBindingList.KeyEntry;
+import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings.Options;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -11,10 +22,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.client.gui.GuiButtonSprint;
-import chylex.bettersprinting.client.gui.GuiSprint;
-import chylex.bettersprinting.client.update.UpdateNotificationManager;
-import chylex.bettersprinting.system.PacketPipeline;
+import org.apache.commons.lang3.ArrayUtils;
+import java.util.stream.IntStream;
 
 @SideOnly(Side.CLIENT)
 public final class ClientEventHandler{
@@ -27,12 +36,15 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onPlayerLoginClient(PlayerLoggedInEvent e){
+		IntegrityCheck.register();
 		UpdateNotificationManager.run();
 	}
 	
 	@SubscribeEvent
 	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
-		if (stopChecking || e.getEntity() != mc.player)return;
+		if (stopChecking || e.getEntity() != mc.player){
+			return;
+		}
 		
 		stopChecking = true;
 		
@@ -43,7 +55,9 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public void onClientDisconnectedFromServer(ClientDisconnectionFromServerEvent e){
-		ClientModManager.svSurvivalFlyingBoost = ClientModManager.svRunInAllDirs = ClientModManager.svDisableMod = false;
+		ClientModManager.onDisconnectedFromServer();
+		IntegrityCheck.unregister();
+		LivingUpdate.cleanup();
 		stopChecking = false;
 	}
 	
@@ -52,10 +66,24 @@ public final class ClientEventHandler{
 		GuiScreen gui = e.getGui();
 		
 		if (gui instanceof GuiControls){
-			gui.buttonList.stream().filter(btn -> btn.id == GameSettings.Options.AUTO_JUMP.returnEnumOrdinal()).findFirst().ifPresent(gui.buttonList::remove);
+			GuiControls controls = (GuiControls)gui;
+			controls.buttonList.removeIf(btn -> btn.id == Options.AUTO_JUMP.returnEnumOrdinal());
 			
-			if (!(((GuiControls)gui).parentScreen instanceof GuiSprint)){
-				gui.buttonList.add(0, new GuiButtonSprint(205, gui.width/2+5, 18+24, 150, 20, "Better Sprinting"));
+			GuiKeyBindingList keyList = controls.keyBindingList;
+			IGuiListEntry[] entries = keyList.listEntries;
+			
+			int[] keyIndices = IntStream
+				.range(0, entries.length)
+				.filter(index -> (entries[index] instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entries[index]).keybinding)) ||
+				                 (entries[index] instanceof CategoryEntry && ((CategoryEntry)entries[index]).labelText.equals(I18n.format(ClientModManager.categoryName))))
+				.toArray();
+			
+			keyList.listEntries = ArrayUtils.removeAll(keyList.listEntries, keyIndices);
+			
+			if (!(controls.parentScreen instanceof GuiSprint)){
+				controls.buttonList.add(0, new GuiButtonInteractive(205, (controls.width / 2) + 5, 42, 150, 20, "Better Sprinting", __ -> {
+					mc.displayGuiScreen(new GuiSprint(mc.currentScreen));
+				}));
 			}
 		}
 	}

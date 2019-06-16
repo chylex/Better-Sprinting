@@ -1,12 +1,12 @@
 package chylex.bettersprinting.server;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.system.PacketPipeline;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-public class ServerProxy extends BetterSprintingProxy{	
+public class ServerProxy extends BetterSprintingProxy{
 	@Override
 	public void loadSidedConfig(BetterSprintingConfig config){
 		ServerSettings.reload(config);
@@ -17,7 +17,7 @@ public class ServerProxy extends BetterSprintingProxy{
 		ServerEventHandler.register();
 		PacketPipeline.initialize(new ServerNetwork());
 	}
-
+	
 	@Override
 	public void onInit(FMLInitializationEvent e){}
 	

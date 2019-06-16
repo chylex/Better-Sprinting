@@ -1,9 +1,10 @@
 package chylex.bettersprinting.client;
-import net.minecraft.client.Minecraft;
+import chylex.bettersprinting.BetterSprintingConfig;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import chylex.bettersprinting.BetterSprintingConfig;
 
 @SideOnly(Side.CLIENT)
 public class ClientSettings{
@@ -12,7 +13,13 @@ public class ClientSettings{
 	public static int keyCodeSneakToggle = 21;
 	public static int keyCodeOptionsMenu = 24;
 	
-	public static byte flySpeedBoost = 3;
+	public static KeyModifier keyModSprintHold = KeyModifier.NONE;
+	public static KeyModifier keyModSprintToggle = KeyModifier.NONE;
+	public static KeyModifier keyModSneakToggle = KeyModifier.NONE;
+	public static KeyModifier keyModOptionsMenu = KeyModifier.NONE;
+	
+	public static int flySpeedBoost = 3;
+	public static boolean flyOnGround = false;
 	public static boolean enableDoubleTap = false;
 	public static boolean enableAllDirs = false;
 	public static boolean disableMod = false;
@@ -23,47 +30,55 @@ public class ClientSettings{
 	public static void reload(BetterSprintingConfig config){
 		config.setCategory("client");
 		
-		keyCodeSprintHold = config.getInt("keySprintHold", keyCodeSprintHold).setShowInGui(false).getInt();
-		keyCodeSprintToggle = config.getInt("keySprintToggle", keyCodeSprintToggle).setShowInGui(false).getInt();
-		keyCodeSneakToggle = config.getInt("keySneakToggle", keyCodeSneakToggle).setShowInGui(false).getInt();
-		keyCodeOptionsMenu = config.getInt("keyOptionsMenu", keyCodeOptionsMenu).setShowInGui(false).getInt();
+		keyCodeSprintHold = config.get("keySprintHold", keyCodeSprintHold).setShowInGui(false).getInt();
+		keyCodeSprintToggle = config.get("keySprintToggle", keyCodeSprintToggle).setShowInGui(false).getInt();
+		keyCodeSneakToggle = config.get("keySneakToggle", keyCodeSneakToggle).setShowInGui(false).getInt();
+		keyCodeOptionsMenu = config.get("keyOptionsMenu", keyCodeOptionsMenu).setShowInGui(false).getInt();
 		
-		flySpeedBoost = (byte)config.getInt("flySpeedBoost", flySpeedBoost).setShowInGui(false).getInt();
-		enableDoubleTap = config.getBool("enableDoubleTap", enableDoubleTap).setShowInGui(false).getBoolean();
-		enableAllDirs = config.getBool("enableAllDirs", enableAllDirs).setShowInGui(false).getBoolean();
-		disableMod = config.getBool("disableMod", disableMod).setShowInGui(false).getBoolean();
+		keyModSprintHold = KeyModifier.valueOf(config.get("keyModSprintHold", keyModSprintHold.name()).setShowInGui(false).getString());
+		keyModSprintToggle = KeyModifier.valueOf(config.get("keyModSprintToggle", keyModSprintToggle.name()).setShowInGui(false).getString());
+		keyModSneakToggle = KeyModifier.valueOf(config.get("keyModSneakToggle", keyModSneakToggle.name()).setShowInGui(false).getString());
+		keyModOptionsMenu = KeyModifier.valueOf(config.get("keyModOptionsMenu", keyModOptionsMenu.name()).setShowInGui(false).getString());
 		
-		enableUpdateNotifications = config.getBool("enableUpdateNotifications", enableUpdateNotifications, I18n.format("bs.config.notifications")).getBoolean();
-		enableBuildCheck = config.getBool("enableBuildCheck", enableBuildCheck, I18n.format("bs.config.buildCheck")).getBoolean();
+		flySpeedBoost = MathHelper.clamp(config.get("flySpeedBoost", flySpeedBoost).setShowInGui(false).getInt(), 0, 7);
+		flyOnGround = config.get("flyOnGround", flyOnGround).setShowInGui(false).getBoolean();
+		enableDoubleTap = config.get("enableDoubleTap", enableDoubleTap).setShowInGui(false).getBoolean();
+		enableAllDirs = config.get("enableAllDirs", enableAllDirs).setShowInGui(false).getBoolean();
+		disableMod = config.get("disableMod", disableMod).setShowInGui(false).getBoolean();
 		
-		ClientModManager.keyBindSprintHold.setKeyCode(keyCodeSprintHold);
-		ClientModManager.keyBindSprintToggle.setKeyCode(keyCodeSprintToggle);
-		ClientModManager.keyBindSneakToggle.setKeyCode(keyCodeSneakToggle);
-		ClientModManager.keyBindOptionsMenu.setKeyCode(keyCodeOptionsMenu);
+		enableUpdateNotifications = config.get("enableUpdateNotifications", enableUpdateNotifications, I18n.format("bs.config.notifications")).getBoolean();
+		enableBuildCheck = config.get("enableBuildCheck", enableBuildCheck, I18n.format("bs.config.buildCheck")).getBoolean();
+		
+		ClientModManager.keyBindSprintHold.setKeyModifierAndCode(keyModSprintHold, keyCodeSprintHold);
+		ClientModManager.keyBindSprintToggle.setKeyModifierAndCode(keyModSprintToggle, keyCodeSprintToggle);
+		ClientModManager.keyBindSneakToggle.setKeyModifierAndCode(keyModSneakToggle, keyCodeSneakToggle);
+		ClientModManager.keyBindOptionsMenu.setKeyModifierAndCode(keyModOptionsMenu, keyCodeOptionsMenu);
 		
 		config.update();
-		
-		Minecraft.getMinecraft().gameSettings.keyBindSprint.setKeyCode(ClientSettings.keyCodeSprintHold);
 	}
 	
 	public static void update(BetterSprintingConfig config){
 		config.setCategory("client");
 		
-		config.setInt("keySprintHold", keyCodeSprintHold);
-		config.setInt("keySprintToggle", keyCodeSprintToggle);
-		config.setInt("keySneakToggle", keyCodeSneakToggle);
-		config.setInt("keyOptionsMenu", keyCodeOptionsMenu);
+		config.set("keySprintHold", keyCodeSprintHold);
+		config.set("keySprintToggle", keyCodeSprintToggle);
+		config.set("keySneakToggle", keyCodeSneakToggle);
+		config.set("keyOptionsMenu", keyCodeOptionsMenu);
 		
-		config.setInt("flySpeedBoost", flySpeedBoost);
-		config.setBool("enableDoubleTap", enableDoubleTap);
-		config.setBool("enableAllDirs", enableAllDirs);
-		config.setBool("disableMod", disableMod);
+		config.set("keyModSprintHold", keyModSprintHold.name());
+		config.set("keyModSprintToggle", keyModSprintToggle.name());
+		config.set("keyModSneakToggle", keyModSneakToggle.name());
+		config.set("keyModOptionsMenu", keyModOptionsMenu.name());
 		
-		config.setBool("enableUpdateNotifications", enableUpdateNotifications);
-		config.setBool("enableBuildCheck", enableBuildCheck);
+		config.set("flySpeedBoost", flySpeedBoost);
+		config.set("flyOnGround", flyOnGround);
+		config.set("enableDoubleTap", enableDoubleTap);
+		config.set("enableAllDirs", enableAllDirs);
+		config.set("disableMod", disableMod);
+		
+		config.set("enableUpdateNotifications", enableUpdateNotifications);
+		config.set("enableBuildCheck", enableBuildCheck);
 		
 		config.update();
-		
-		Minecraft.getMinecraft().gameSettings.keyBindSprint.setKeyCode(ClientSettings.keyCodeSprintHold);
 	}
 }

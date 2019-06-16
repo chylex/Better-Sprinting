@@ -36,7 +36,7 @@ bs.autoJump.info=Opção que faz você pular automáticamente perto de obstácul
 
 # In-game messages
 
-bs.game.integrity=Erro na verificação, outro mod está conflitando com Better Sprinting: $. Tente instalar PlayerAPI para resolver.
+bs.game.integrity=Erro na verificação, outro mod está conflitando com Better Sprinting.
 bs.game.disabled=O servidor pediu para desabilitar o mod, as mecânicas de corrida serão desabilitadas até você desconectar.
 bs.game.reenabled=O servidor reativou o mod, mecânicas ativadas.
 

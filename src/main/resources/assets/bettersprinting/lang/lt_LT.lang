@@ -42,7 +42,7 @@ bs.autoJump.info=Standartinio Minecraft galimybė automatiškai pašokti priėju
 
 # In-game messages
 
-bs.game.integrity=Modo integralumo patikrinimas nepavyko, kitas modas nedera kartu su Better Sprinting. Pabandykite įdiegti PlayerAPI modą, kad išspresti šį konfliktą. Konfliktuojanti klase: $
+bs.game.integrity=Modo integralumo patikrinimas nepavyko, kitas modas nedera kartu su Better Sprinting.
 bs.game.disabled=Serveris reikalavo išjungti modą, iki kol atsijungsite bėgimo ir sėlinimo mechanika perjungta i standartinę.
 bs.game.reenabled=Serveris įjungė modą vėl, bėgimo mechanikos perjungtos į Better Sprinting modo.
 
