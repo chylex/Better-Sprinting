@@ -1,5 +1,7 @@
 package chylex.bettersprinting.client.gui;
-import java.io.IOException;
+import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientSettings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -10,9 +12,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import chylex.bettersprinting.BetterSprintingMod;
-import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.ClientSettings;
+import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class GuiSprint extends GuiScreen{
@@ -185,7 +185,7 @@ public class GuiSprint extends GuiScreen{
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTickTime){
 		drawDefaultBackground();
-		drawCenteredString(fontRendererObj, "Better Sprinting", width/2, 20, 16777215);
+		drawCenteredString(fontRenderer, "Better Sprinting", width/2, 20, 16777215);
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
@@ -230,12 +230,12 @@ public class GuiSprint extends GuiScreen{
 		for(int a = 0, top = height/6; a < buttonList.size(); a++){
 			GuiButton btn = buttonList.get(a);
 			
-			if (mouseX >= btn.xPosition && mouseX < btn.xPosition+btn.getButtonWidth() && mouseY >= btn.yPosition && mouseY < btn.yPosition+20){
+			if (mouseX >= btn.x && mouseX < btn.x+btn.getButtonWidth() && mouseY >= btn.y && mouseY < btn.y+20){
 				String info = a < buttonTitles.length ? buttonTitles[a] : "";
 				String[] spl = I18n.format(info).split("#");
 				
 				for(int line = 0; line < spl.length; line++){
-					drawCenteredString(fontRendererObj, spl[line], width/2, top+148+10*line-(fontRendererObj.FONT_HEIGHT*spl.length/2), -1);
+					drawCenteredString(fontRenderer, spl[line], width/2, top+148+10*line-(fontRenderer.FONT_HEIGHT*spl.length/2), -1);
 				}
 				
 				break;
@@ -254,7 +254,7 @@ public class GuiSprint extends GuiScreen{
 	}
 	
 	private void drawButtonTitle(String title, GuiButton btn, int maxWidth){
-		int lines = fontRendererObj.listFormattedStringToWidth(title, maxWidth).size();
-		fontRendererObj.drawSplitString(title, btn.xPosition+76, btn.yPosition+7-5*(lines-1), maxWidth, -1);
+		int lines = fontRenderer.listFormattedStringToWidth(title, maxWidth).size();
+		fontRenderer.drawSplitString(title, btn.x+76, btn.y+7-5*(lines-1), maxWidth, -1);
 	}
 }

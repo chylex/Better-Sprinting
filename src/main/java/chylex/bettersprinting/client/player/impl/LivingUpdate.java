@@ -110,7 +110,7 @@ final class LivingUpdate{
 		if (player.movementInput.jump && !wasJumping && !player.onGround && player.motionY < 0D && !player.isElytraFlying() && !player.capabilities.isFlying){
 			ItemStack chestIS = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isBroken(chestIS)){
+			if (chestIS.getItem() == Items.ELYTRA && ItemElytra.isUsable(chestIS)){
 				player.connection.sendPacket(new CPacketEntityAction(player, CPacketEntityAction.Action.START_FALL_FLYING));
 			}
 		}

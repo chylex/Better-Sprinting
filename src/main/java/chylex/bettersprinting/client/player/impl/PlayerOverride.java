@@ -131,7 +131,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (Math.abs(motionY) < 0.003D)motionY = 0D;
 		if (Math.abs(motionZ) < 0.003D)motionZ = 0D;
 		
-		world.theProfiler.startSection("ai");
+		world.profiler.startSection("ai");
 
 		if (isMovementBlocked()){
 			isJumping = false;
@@ -140,13 +140,13 @@ public class PlayerOverride extends EntityPlayerSP{
 			randomYawVelocity = 0F;
 		}
 		else if (isServerWorld()){ // isAIEnabled is false
-			world.theProfiler.startSection("newAi");
+			world.profiler.startSection("newAi");
             updateEntityActionState();
-            world.theProfiler.endSection();
+            world.profiler.endSection();
 		}
 
-		world.theProfiler.endSection();
-		world.theProfiler.startSection("jump");
+		world.profiler.endSection();
+		world.profiler.startSection("jump");
 
 		if (isJumping){
 			if (isInWater()){
@@ -164,8 +164,8 @@ public class PlayerOverride extends EntityPlayerSP{
 			jumpTicks = 0;
 		}
 
-		world.theProfiler.endSection();
-		world.theProfiler.startSection("travel");
+		world.profiler.endSection();
+		world.profiler.startSection("travel");
 		
 		moveStrafing *= 0.98F;
 		moveForward *= 0.98F;
@@ -173,12 +173,12 @@ public class PlayerOverride extends EntityPlayerSP{
 		updateElytra$EntityLivingBase();
 		moveEntityWithHeading(moveStrafing, moveForward);
 		
-		world.theProfiler.endSection();
-		world.theProfiler.startSection("push");
+		world.profiler.endSection();
+		world.profiler.startSection("push");
 		
 		collideWithNearbyEntities();
 		
-		world.theProfiler.endSection();
+		world.profiler.endSection();
 	}
 	
 	// UPDATE | EntityLivingBase.updateElytra | 1.11
@@ -188,7 +188,7 @@ public class PlayerOverride extends EntityPlayerSP{
 		if (flag && !onGround && !isRiding()){
 			ItemStack is = getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			
-			if (is.getItem() == Items.ELYTRA && ItemElytra.isBroken(is)){
+			if (is.getItem() == Items.ELYTRA && ItemElytra.isUsable(is)){
 				flag = true;
 				
 				if (!world.isRemote && (ticksElytraFlying+1)%20 == 0){
