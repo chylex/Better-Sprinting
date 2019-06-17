@@ -1,6 +1,4 @@
 package chylex.bettersprinting.client.update;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -8,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.CommandBase;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,7 +35,7 @@ public class UpdateThread extends Thread{
 		try{
 			Thread.sleep(1337L);
 			
-			JsonElement root = new JsonParser().parse(IOUtils.toString(new URL(url),StandardCharsets.UTF_8));
+			JsonElement root = new JsonParser().parse(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
 			
 			List<VersionEntry> versionList = Lists.newArrayList();
 			VersionEntry newestVersionForCurrentMC = null;
@@ -47,21 +43,23 @@ public class UpdateThread extends Thread{
 			String buildId = "";
 			boolean isInDev = true;
 			
-			String downloadURL = "http://bsprint.chylex.com/";
+			String downloadURL = "https://bsprint.chylex.com/";
 			
 			Log.debug("Detecting Better Sprinting updates...");
 			
-			for(Entry<String,JsonElement> entry:root.getAsJsonObject().entrySet()){
+			for(Entry<String, JsonElement> entry:root.getAsJsonObject().entrySet()){
 				if (entry.getKey().charAt(0) == '~'){
-					if (entry.getKey().substring(1).equals("URL"))downloadURL = entry.getValue().getAsString();
+					if (entry.getKey().substring(1).equals("URL")){
+						downloadURL = entry.getValue().getAsString();
+					}
 				}
-				else versionList.add(new VersionEntry(entry.getKey(),entry.getValue().getAsJsonObject()));
+				else versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
 			}
 			
 			Collections.sort(versionList);
 			
 			for(VersionEntry version:versionList){
-				Log.debug("Reading update data: $0",version.versionIdentifier);
+				Log.debug("Reading update data: $0", version.versionIdentifier);
 				
 				if (version.isSupportedByMC(mcVersion)){
 					if (newestVersionForCurrentMC == null)newestVersionForCurrentMC = version;
@@ -98,12 +96,15 @@ public class UpdateThread extends Thread{
 			
 			if (message != null){
 				message.append("\n ").append(EnumChatFormatting.GOLD).append("Click to download: ").append(downloadURL);
-				for(String s:message.toString().split("\n"))Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+				
+				for(String s:message.toString().split("\n")){
+					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+				}
 			}
 		}
 		catch(UnknownHostException e){}
 		catch(Exception e){
-			Log.throwable(e,"Error detecting updates!");
+			Log.throwable(e, "Error detecting updates!");
 		}
 	}
 }

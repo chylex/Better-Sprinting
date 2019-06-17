@@ -1,0 +1,59 @@
+# Generic GUI titles
+
+gui.enabled=Activado
+gui.disabled=Desactivado
+gui.unavailable=No Disponible
+
+# Titles for controls
+
+bs.sprint.hold=Correr (Mantener)
+bs.sprint.toggle=Correr (Conmutar)
+bs.sneak.toggle=Agacharse (Conmutar)
+bs.menu=Menú de Correr
+
+bs.doubleTapping=Pulsación doble
+bs.runAllDirs=Correr en todas direcciones
+bs.flyBoost=Correr en modo vuelo
+bs.disableMod=Desactivar la funcionalidad del mod.
+bs.autoJump=Salto Automático
+
+# Tooltips for controls (use the '#' character for splitting lines)
+
+bs.sprint.hold.info=Manten pulsado para correr.
+bs.sprint.toggle.info=Pulsa la tecla para empezar a correr. Vuelve a pulsar para parar.
+bs.sneak.toggle.info=Pulsa la tecla para empezar a agacharse. Vuelve a pulsar para parar.#Cuando abras cualquier tipo de interfaz,#dejarás de estar agachado hasta cerrarla.
+bs.menu.info=Tecla para abrir este menú en el juego
+
+bs.doubleTapping.info=Activa o desactiva la opción de correr pulsando#dos veces sobre la tecla Caminar hacia adelante.
+bs.runAllDirs.info=Correr en todas las direcciones.#No puedes utilizar esta opción en multijugador si el servidor no lo permite.
+bs.flyBoost.info=Manten pulsado cuando vueles en modo creativo para volar más rápido.
+bs.disableMod.info=Deshabilita toda la funcionalidad de Better Sprinting.#Esta opción puede ser utilizada si un servidor no permite el uso del mod.
+bs.autoJump.info=Funcionalidad incluida en Minecraft que salta#de forma automática cerca de un obstáculo.
+
+# If you need to translate fly speed boost, use the following pattern (from 2x to 8x)
+
+2x=2x
+
+# In-game messages
+
+bs.game.integrity=La comprobación de integridad ha fallado, otro mod ha entrado en conflicto con Better Sprinting.
+bs.game.disabled=El servidor ha desactivado el uso del mod, la funcionalidad de correr se ha cambiado a las originales de Minecraft hasta que te desconectes.
+bs.game.reenabled=El servidor ha activado el uso del mod, la funcionalidad de correr se ha cambiado a Better Sprinting.
+
+# Server messages (translated on client)
+
+bs.server.kick=El servidor no permite el uso de Better Sprinting. Las últimas versiones del mod pueden desactivarse automáticamente sin tener que expulsar jugadores.
+
+bs.command.invalidSyntax=Comando desconocido. Escribe /bettersprinting para ver la lista de comandos.
+bs.command.info=Puedes utilizar el comando para activar o desactivar el mod, o cambiar ajustes específicos del mod. Estos cambios se guardarán incluso tras reiniciar el servidor, además de afectar de manera inmediata a los jugadores conectados.
+bs.command.disableMod=Better Sprinting será desactivado de forma automática cuando un jugador se conecta al servidor.
+bs.command.enableMod=Better Sprinting se ha activado en el servidor.
+bs.command.disableFlyBoost=Correr en modo vuelo está desactivado cuando el jugador está en modo supervivencia.
+bs.command.enableFlyBoost=Correr en modo vuelo está activado cuando el jugador está en modo supervivencia.
+bs.command.disableAllDirs=Correr en todas direcciones ha sido desactivado.
+bs.command.enableAllDirs=Correr en todas direcciones ha sido activado.
+
+# Configuration
+
+bs.config.notifications=Notifica al usuario de nuevas actualizaciones. La comprobación de actualizaciones solo se realiza una vez al día, y no perjudica el rendimiento del juego.
+bs.config.buildCheck=Es recomendable dejar esta opción activada. Detectará versiones defectuosas del mod, que pueden provocar fallos críticos que afecten a la estabilidad del juego. Estos fallos se suelen solucionar muy rápido, pero es importante poder notificar a quienes se descargaron una versión defectuosa.

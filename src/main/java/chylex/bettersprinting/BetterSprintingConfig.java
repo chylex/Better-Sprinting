@@ -23,7 +23,9 @@ public class BetterSprintingConfig{
 	
 	@SubscribeEvent
 	public void onConfigChanged(OnConfigChangedEvent e){
-		if (e.modID.equals("BetterSprinting"))reload();
+		if (e.modID.equals(BetterSprintingMod.modId)){
+			reload();
+		}
 	}
 	
 	private void reload(){
@@ -31,7 +33,9 @@ public class BetterSprintingConfig{
 	}
 	
 	public void update(){
-		if (config.hasChanged())config.save();
+		if (config.hasChanged()){
+			config.save();
+		}
 	}
 	
 	public String getFileName(){
@@ -47,23 +51,40 @@ public class BetterSprintingConfig{
 		this.currentCategory = newCategory;
 	}
 	
-	public void setComment(String name, String comment){
-		config.getCategory(currentCategory).get(name).comment = comment;
+	public Property get(String name, boolean defValue){
+		return config.get(currentCategory, name, defValue, "");
 	}
 	
-	public Property getBool(String name, boolean defValue){
-		return config.get(currentCategory,name,defValue,"");
+	public Property get(String name, boolean defValue, String comment){
+		return config.get(currentCategory, name, defValue, comment);
 	}
 	
-	public Property getInt(String name, int defValue){
-		return config.get(currentCategory,name,defValue,"");
+	public Property get(String name, int defValue){
+		return config.get(currentCategory, name, defValue, "");
 	}
 	
-	public void setBool(String name, boolean value){
-		config.get(currentCategory,name,value).set(value);
+	public Property get(String name, int defValue, String comment){
+		return config.get(currentCategory, name, defValue, comment);
 	}
 	
-	public void setInt(String name, int value){
-		config.get(currentCategory,name,value).set(value);
+	public Property get(String name, String defValue){
+		return config.get(currentCategory, name, defValue, "");
+	}
+	
+	public Property get(String name, String defValue, String comment){
+		return config.get(currentCategory, name, defValue, comment);
+	}
+	
+	public void set(String name, boolean value){
+		config.get(currentCategory, name, value).set(value);
+	}
+	
+	public void set(String name, int value){
+		config.get(currentCategory, name, value).set(value);
+	}
+	
+	public void set(String name, String value){
+		config.get(currentCategory, name, value).set(value);
 	}
 }
+

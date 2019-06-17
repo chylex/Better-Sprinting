@@ -1,6 +1,8 @@
 package chylex.bettersprinting.server;
 import io.netty.buffer.ByteBuf;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,10 +53,14 @@ public class ServerNetwork implements INetworkHandler{
 	 * Since all versions send a packet on BSprint channel, existing solutions for older versions are not broken by the change.
 	 */
 	
-	private static final Set<UUID> players = new HashSet<>();
+	private static final Set<UUID> players = Collections.synchronizedSet(new HashSet<>());
 	
 	public static boolean hasBetterSprinting(EntityPlayer player){
 		return players.contains(player.getUniqueID());
+	}
+	
+	public static void onDisconnected(EntityPlayer player){
+		players.remove(player.getUniqueID());
 	}
 	
 	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
@@ -69,15 +75,28 @@ public class ServerNetwork implements INetworkHandler{
 		return buffer;
 	}
 	
+	public static void sendToPlayer(EntityPlayer player, PacketBuffer packet){
+		if (hasBetterSprinting(player)){
+			PacketPipeline.sendToPlayer(packet, player);
+		}
+	}
+	
+	public static void sendToAll(List<? extends EntityPlayer> players, PacketBuffer packet){
+		for(EntityPlayer player:players){
+			sendToPlayer(player, packet);
+		}
+	}
+	
 	@Override
 	public void onPacket(Side side, ByteBuf data, EntityPlayer player){
 		players.add(player.getUniqueID());
 		
-		/*byte type = data.readByte();
+		if (ServerSettings.disableClientMod){
+			sendToPlayer(player, writeDisableMod(true));
+		}
 		
-		if (type == 0){
-			// might be useful later; maybe keep a list of players with the mod installed
-			// setting packet is sent in the login event
-		}*/
+		if (ServerSettings.enableSurvivalFlyBoost || ServerSettings.enableAllDirs){
+			sendToPlayer(player, writeSettings(ServerSettings.enableSurvivalFlyBoost, ServerSettings.enableAllDirs));
+		}
 	}
 }

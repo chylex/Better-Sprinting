@@ -2,12 +2,9 @@ package chylex.bettersprinting.client.update;
 import java.util.Calendar;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.system.Log;
-import com.google.common.base.Joiner;
 
 public final class UpdateNotificationManager{
 	private static final Preferences globalData = Preferences.userRoot().node("chylex");
@@ -16,19 +13,22 @@ public final class UpdateNotificationManager{
 	private static boolean hasRun; // assume nobody keeps Minecraft running for more than 24 hours
 	
 	public static void run(){
-		if (hasRun)return;
+		if (hasRun){
+			return;
+		}
+		
 		hasRun = true;
 		
 		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
 			long time = Calendar.getInstance().getTimeInMillis();
 			
-			if (time-globalData.getLong(prefKey,0L) > 86400000L){ // 24 hours
+			if (time - globalData.getLong(prefKey,0L) > 86400000L){ // 24 hours
 				globalData.putLong(prefKey,time);
 				
 				try{
 					globalData.flush();
 				}catch(BackingStoreException ex){
-					Log.throwable(ex,"Could not update last update notification time, stopping the process to avoid excessive spamming.");
+					Log.throwable(ex, "Could not update last update notification time, stopping the process to avoid excessive spamming.");
 					return;
 				}
 				

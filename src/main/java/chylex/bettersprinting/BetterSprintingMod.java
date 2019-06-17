@@ -2,33 +2,34 @@ package chylex.bettersprinting;
 import java.util.Map;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import chylex.bettersprinting.server.ServerSettings;
 import chylex.bettersprinting.system.Log;
 
-@Mod(modid="BetterSprinting", name="Better Sprinting", useMetadata = true, guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory", acceptableRemoteVersions = "*", updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
+@Mod(modid = BetterSprintingMod.modId,
+     version = BetterSprintingMod.modVersion,
+     name = "Better Sprinting",
+     useMetadata = true,
+     guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory",
+     acceptableRemoteVersions = "*",
+     updateJSON = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json")
 public class BetterSprintingMod{
-	@Instance("BetterSprinting")
-	public static BetterSprintingMod instance;
-	
-	@SidedProxy(clientSide="chylex.bettersprinting.client.ClientProxy", serverSide="chylex.bettersprinting.server.ServerProxy")
+	@SidedProxy(clientSide = "chylex.bettersprinting.client.ClientProxy", serverSide = "chylex.bettersprinting.server.ServerProxy")
 	public static BetterSprintingProxy proxy;
 	
 	public static BetterSprintingConfig config;
-	
-	public static final String buildId = "03-12-2015-0";
-	public static String modVersion;
+
+	public static final String modId = "bettersprinting";
+	public static final String modVersion = "2.3.0";
+	public static final String buildId = "2019-1";
 	
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent e){
 		Log.load();
-		modVersion = e.getModMetadata().version;
 		config = new BetterSprintingConfig(e.getSuggestedConfigurationFile());
 		proxy.onPreInit(e);
 	}
@@ -45,9 +46,7 @@ public class BetterSprintingMod{
 	
 	@NetworkCheckHandler
 	public boolean onNetworkCheck(Map<String,String> versions, Side side){
-		if (side == Side.SERVER || !ServerSettings.disableClientMod)return true;
-		
-		String version = versions.get("bettersprinting");
-		return !("1.0".equals(version) || "1.0.1".equals(version));
+		String version = versions.get(modId);
+		return version == null || modVersion.equals(version);
 	}
 }
