@@ -28,7 +28,7 @@ public class ModGuiFactory implements IModGuiFactory{
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public class GuiGeneralConfig extends GuiConfig{
+	public static class GuiGeneralConfig extends GuiConfig{
 		public GuiGeneralConfig(GuiScreen parent){
 			super(parent, BetterSprintingMod.config.getClientGuiElements("client"), "BetterSprinting", false, false, GuiConfig.getAbridgedConfigPath(BetterSprintingMod.config.getFileName()));
 		}

@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.Side;
      guiFactory = "chylex.bettersprinting.client.gui.ModGuiFactory",
      acceptableRemoteVersions = "*")
 public class BetterSprintingMod{
-	@SidedProxy(clientSide="chylex.bettersprinting.client.ClientProxy", serverSide="chylex.bettersprinting.server.ServerProxy")
+	@SidedProxy(clientSide = "chylex.bettersprinting.client.ClientProxy", serverSide = "chylex.bettersprinting.server.ServerProxy")
 	public static BetterSprintingProxy proxy;
 	
 	public static BetterSprintingConfig config;
