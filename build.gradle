@@ -42,6 +42,10 @@ jar{
     }
     
     manifest{
+        attributes 'FMLCorePlugin': 'chylex.bettersprinting.system.core.BetterSprintingCore'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
         attributes 'FMLAT': 'bs_at.cfg'
     }
 }
+
+project.getTasks().getByName("runClient").jvmArgs(["-Dfml.coreMods.load=chylex.bettersprinting.system.core.BetterSprintingCore"])

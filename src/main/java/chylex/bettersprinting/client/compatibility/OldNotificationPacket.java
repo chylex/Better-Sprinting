@@ -8,6 +8,6 @@ public class OldNotificationPacket{
 	public static void sendServerNotification(NetHandlerPlayClient netHandler){
 		PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
 		buffer.writeByte(5);
-		netHandler.addToSendQueue(new C17PacketCustomPayload("BSprint",buffer));
+		netHandler.addToSendQueue(new C17PacketCustomPayload("BSprint", buffer));
 	}
 }

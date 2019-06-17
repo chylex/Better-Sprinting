@@ -31,7 +31,10 @@ public class OldNotificationPacketReceiver{
 		
 		for(String id:instance.users){
 			EntityPlayerMP player = manager.func_152612_a(id);
-			if (player != null)kickPlayer(player.playerNetServerHandler,"bs.server.kick");
+			
+			if (player != null){
+				kickPlayer(player.playerNetServerHandler,"bs.server.kick");
+			}
 		}
 		
 		instance.users.clear();
@@ -52,8 +55,12 @@ public class OldNotificationPacketReceiver{
 		if (data.readByte() == 4){
 			NetHandlerPlayServer handler = (NetHandlerPlayServer)e.handler;
 			
-			if (ServerSettings.disableClientMod)kickPlayer(handler,"bs.server.kick");
-			else users.add(handler.playerEntity.getCommandSenderName());
+			if (ServerSettings.disableClientMod){
+				kickPlayer(handler, "bs.server.kick");
+			}
+			else{
+				users.add(handler.playerEntity.getCommandSenderName());
+			}
 		}
 	}
 	
@@ -65,7 +72,7 @@ public class OldNotificationPacketReceiver{
 	private static void kickPlayer(final NetHandlerPlayServer netHandler, String translationName){
 		final ChatComponentTranslation msg = new ChatComponentTranslation(translationName);
 		
-		netHandler.netManager.scheduleOutboundPacket(new S40PacketDisconnect(msg),new GenericFutureListener[]{
+		netHandler.netManager.scheduleOutboundPacket(new S40PacketDisconnect(msg), new GenericFutureListener[]{
 			new GenericFutureListener(){
 				@Override
 				public void operationComplete(Future isBright){

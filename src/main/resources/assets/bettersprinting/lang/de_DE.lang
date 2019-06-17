@@ -2,7 +2,7 @@
 
 gui.enabled=Aktiviert
 gui.disabled=Deaktiviert
-gui.unavailable=Nicht verfügbar
+gui.unavailable=Kein Zugriff
 
 # Titles for controls
 
@@ -34,7 +34,7 @@ bs.disableMod.info=Deaktiviert alle nicht standardmäßigen Funktionen von Bette
 
 # In-game messages
 
-bs.game.integrity=Integrity verification failed, another mod is conflicting with Better Sprinting. Try installing PlayerAPI to resolve the conflict. Conflicting class: $
+bs.game.integrity=Integrity verification failed, another mod is conflicting with Better Sprinting.
 bs.game.disabled=Der Server hat diese mod deaktiviert. Die Sprintfunktionen werden auf Standard zurückgesetzt, solange du auf diesem Server bist.
 bs.game.reenabled=Der Server hat die Mod wieder aktiviert, Sprintfunktionen werden auf BetterSprinting-Standard gesetzt.
 
