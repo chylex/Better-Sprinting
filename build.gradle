@@ -23,24 +23,21 @@ dependencies{
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft{
-    version = "1.8.8-11.15.0.1602-1.8.8"
+    version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
-    mappings = "snapshot_20151122"
+    mappings = "snapshot_20151128"
 }
-
-String modid = ""
-String modver = ""
 
 processResources{
     File info = new File(sourceSets.main.resources.srcDirs.iterator().next(), "mcmod.info")
     def slurp = new groovy.json.JsonSlurper()
     def data = slurp.parseText(info.getText())[0]
-    modid = data.modid
-    modver = data.version
+
+    archivesBaseName = data.name.replaceAll(" ", "")
+    version = data.version
 }
 
 reobf{
@@ -50,7 +47,7 @@ reobf{
 }
 
 jar{
-    archiveName = modid+"  MC-"+project.minecraft.version+"  v"+modver+".jar"
+    archiveName = archivesBaseName + '-' + project.minecraft.version + '-v' + version + '.jar'
     
     configurations.shade.each{ dep ->
         from(project.zipTree(dep)){
