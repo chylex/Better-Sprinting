@@ -48,6 +48,7 @@ public class ClientProxy extends BetterSprintingProxy{
 					case "disableMod":                value = ClientSettings.disableMod; break;
 					case "enableDoubleTap":           value = ClientSettings.enableDoubleTap; break;
 					case "enableAllDirs":             value = ClientSettings.enableAllDirs; break;
+					case "flyOnGround":               value = ClientSettings.flyOnGround; break;
 					case "enableUpdateNotifications": value = ClientSettings.enableUpdateNotifications; break;
 					case "enableBuildCheck":          value = ClientSettings.enableBuildCheck; break;
 					default: continue;
