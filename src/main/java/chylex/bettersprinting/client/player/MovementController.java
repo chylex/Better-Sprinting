@@ -56,12 +56,12 @@ final class MovementController{
 			sneakToggle = sprintToggle = false;
 		}
 		else{
-			if (movementInput.sneak && sneakToggle && mc.field_71462_r != null && !(mc.field_71462_r instanceof DeathScreen)){
+			if (movementInput.sneak && sneakToggle && mc.currentScreen != null && !(mc.currentScreen instanceof DeathScreen)){
 				shouldRestoreSneakToggle = true;
 				sneakToggle = false;
 			}
 			
-			if (shouldRestoreSneakToggle && mc.field_71462_r == null){
+			if (shouldRestoreSneakToggle && mc.currentScreen == null){
 				sneakToggle = true;
 				shouldRestoreSneakToggle = false;
 			}

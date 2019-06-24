@@ -27,7 +27,7 @@ final class PlayerLogicHandler{
 	
 	public PlayerLogicHandler(ClientPlayerEntity player){
 		this.player = player;
-		this.abilities = player.playerAbilities;
+		this.abilities = player.abilities;
 		this.movementInput = player.movementInput;
 		this.movementController = new MovementController(movementInput);
 	}
@@ -49,7 +49,7 @@ final class PlayerLogicHandler{
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
-		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.field_76440_q);
+		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
 		
 		if (ClientModManager.isModDisabled()){
 			if ((player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !player.isSprinting() && enoughHunger && !isSprintBlocked){

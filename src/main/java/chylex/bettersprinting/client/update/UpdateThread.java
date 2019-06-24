@@ -106,7 +106,7 @@ public class UpdateThread extends Thread{
 				message.append("\n ").append(TextFormatting.GOLD).append("Click to download: ").append(downloadURL);
 				
 				for(String s:message.toString().split("\n")){
-					Minecraft.getInstance().field_71456_v.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
+					Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(ForgeHooks.newChatWithLinks(s));
 				}
 			}
 		}

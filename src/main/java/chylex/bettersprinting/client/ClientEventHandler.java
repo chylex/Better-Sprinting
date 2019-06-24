@@ -69,19 +69,19 @@ final class ClientEventHandler{
 		if (gui instanceof ControlsScreen){
 			ControlsScreen controls = (ControlsScreen)gui;
 			
-			controls.buttons.stream().filter(btn -> btn instanceof OptionButton && ((OptionButton)btn).field_146137_o == AbstractOption.field_216719_z).findFirst().ifPresent(btn -> {
+			controls.buttons.stream().filter(btn -> btn instanceof OptionButton && ((OptionButton)btn).enumOptions == AbstractOption.AUTO_JUMP).findFirst().ifPresent(btn -> {
 				controls.buttons.remove(btn);
 				controls.children().remove(btn);
 			});
 			
-			controls.field_146494_r.children.removeIf(entry ->
+			controls.keyBindingList.children.removeIf(entry ->
 				(entry instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entry).keybinding)) ||
 				(entry instanceof CategoryEntry && ((CategoryEntry)entry).labelText.equals(I18n.format(ClientModManager.categoryName)))
 			);
 			
-			if (!(controls.field_146496_h instanceof GuiSprint)){
+			if (!(controls.parentScreen instanceof GuiSprint)){
 				e.addWidget(new GuiButtonExt((controls.width / 2) + 5, 18, 150, 20, "Better Sprinting", __ -> {
-					mc.displayGuiScreen(new GuiSprint(mc.field_71462_r));
+					mc.displayGuiScreen(new GuiSprint(mc.currentScreen));
 				}));
 			}
 		}

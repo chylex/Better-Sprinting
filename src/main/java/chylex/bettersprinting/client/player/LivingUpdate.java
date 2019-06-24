@@ -41,7 +41,7 @@ public final class LivingUpdate{
 			hasTriggered = true;
 		}
 		
-		if (mc.field_71442_b.isInCreativeMode() && $this.playerAbilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
+		if (mc.playerController.isInCreativeMode() && $this.abilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
 			$this.onGround = false;
 		}
 		
@@ -69,10 +69,10 @@ public final class LivingUpdate{
 			
 			if (!MinecraftForge.EVENT_BUS.post(event)){
 				playerBoundingBox = event.getEntityBoundingBox();
-				$this.func_213282_i($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
-				$this.func_213282_i($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
-				$this.func_213282_i($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
-				$this.func_213282_i($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
+				$this.pushOutOfBlocks($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
+				$this.pushOutOfBlocks($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
+				$this.pushOutOfBlocks($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
+				$this.pushOutOfBlocks($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
 			}
 		}
 		
@@ -80,10 +80,10 @@ public final class LivingUpdate{
 		currentHandler.updateLiving();
 		
 		// VANILLA
-		if ($this.playerAbilities.allowFlying){
-			if (mc.field_71442_b.isSpectatorMode()){
-				if (!$this.playerAbilities.isFlying){
-					$this.playerAbilities.isFlying = true;
+		if ($this.abilities.allowFlying){
+			if (mc.playerController.isSpectatorMode()){
+				if (!$this.abilities.isFlying){
+					$this.abilities.isFlying = true;
 					$this.sendPlayerAbilities();
 				}
 			}
@@ -92,7 +92,7 @@ public final class LivingUpdate{
 					$this.flyToggleTimer = 7;
 				}
 				else if (!$this.isSwimming()){
-					$this.playerAbilities.isFlying = !$this.playerAbilities.isFlying;
+					$this.abilities.isFlying = !$this.abilities.isFlying;
 					$this.sendPlayerAbilities();
 					$this.flyToggleTimer = 0;
 				}
@@ -120,11 +120,11 @@ public final class LivingUpdate{
 		if (this.onGround && this.playerAbilities.isFlying && !this.mc.field_71442_b.isSpectatorMode()){
 		*/
 		
-		if ($this.onGround && $this.playerAbilities.isFlying && !mc.field_71442_b.isSpectatorMode()){
-			boolean shouldFlyOnGround = mc.field_71442_b.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
+		if ($this.onGround && $this.abilities.isFlying && !mc.playerController.isSpectatorMode()){
+			boolean shouldFlyOnGround = mc.playerController.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
 			
 			if (!shouldFlyOnGround){
-				$this.playerAbilities.isFlying = false;
+				$this.abilities.isFlying = false;
 				$this.sendPlayerAbilities();
 			}
 		}
