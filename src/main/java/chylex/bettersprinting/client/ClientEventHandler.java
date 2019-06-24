@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ControlsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.OptionButton;
+import net.minecraft.client.gui.widget.list.KeyBindingList;
 import net.minecraft.client.gui.widget.list.KeyBindingList.CategoryEntry;
 import net.minecraft.client.gui.widget.list.KeyBindingList.KeyEntry;
 import net.minecraft.client.resources.I18n;
@@ -69,15 +70,21 @@ final class ClientEventHandler{
 		if (gui instanceof ControlsScreen){
 			ControlsScreen controls = (ControlsScreen)gui;
 			
-			controls.buttons.stream().filter(btn -> btn instanceof OptionButton && ((OptionButton)btn).enumOptions == AbstractOption.AUTO_JUMP).findFirst().ifPresent(btn -> {
-				controls.buttons.remove(btn);
-				controls.children().remove(btn);
-			});
+			e.getWidgetList()
+			 .stream()
+			 .filter(btn -> btn instanceof OptionButton && ((OptionButton)btn).enumOptions == AbstractOption.AUTO_JUMP)
+			 .findFirst()
+			 .ifPresent(e::removeWidget);
 			
-			controls.keyBindingList.children.removeIf(entry ->
-				(entry instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entry).keybinding)) ||
-				(entry instanceof CategoryEntry && ((CategoryEntry)entry).labelText.equals(I18n.format(ClientModManager.categoryName)))
-			);
+			controls.children()
+			        .stream()
+			        .filter(widget -> widget instanceof KeyBindingList)
+			        .map(widget -> ((KeyBindingList)widget).children())
+			        .findFirst()
+			        .ifPresent(children -> children.removeIf(entry ->
+			        	(entry instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entry).keybinding)) ||
+			        	(entry instanceof CategoryEntry && ((CategoryEntry)entry).labelText.equals(I18n.format(ClientModManager.categoryName)))
+			        ));
 			
 			if (!(controls.parentScreen instanceof GuiSprint)){
 				e.addWidget(new GuiButtonExt((controls.width / 2) + 5, 18, 150, 20, "Better Sprinting", __ -> {
