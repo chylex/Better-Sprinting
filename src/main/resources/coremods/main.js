@@ -307,14 +307,15 @@ function initializeCoreMod(){
 
         print("Found entry point at " + index + ".");
 
-        var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", api.MethodType.STATIC);
-
         var toRemove = instructions.get(index - 4);
         var toReplace = instructions.get(index);
 
-        instructions.remove(toRemove);
-        instructions.set(toReplace, call);
-        return true;
+        return function(){
+            var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", api.MethodType.STATIC);
+
+            instructions.remove(toRemove);
+            instructions.set(toReplace, call);
+        };
     };
     
     var transformSprinting = function(method){
@@ -347,12 +348,13 @@ function initializeCoreMod(){
             return false;
         }
 
-        var helper = api.getMethodNode();
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "()Z", false);
-        helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
+        return function(){
+            var helper = api.getMethodNode();
+            helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "()Z", false);
+            helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
 
-        instructions.insert(labels[0], helper.instructions);
-        return true;
+            instructions.insert(labels[0], helper.instructions);
+        };
     };
     
     var transformAfterSuperCall = function(method){
@@ -382,11 +384,26 @@ function initializeCoreMod(){
             return false;
         }
 
-        var helper = api.getMethodNode();
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "()Z", false);
-        helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
+        return function(){
+            var helper = api.getMethodNode();
+            helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "()Z", false);
+            helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
 
-        instructions.insert(labels[0], helper.instructions);
+            instructions.insert(labels[0], helper.instructions);
+        };
+    };
+
+    var transformAll = function(method){
+        var f1 = transformMovementInputUpdate(method);
+        if (f1 === false) return false;
+
+        var f2 = transformSprinting(method);
+        if (f2 === false) return false;
+
+        var f3 = transformAfterSuperCall(method);
+        if (f3 === false) return false;
+
+        f1(); f2(); f3();
         return true;
     };
     
@@ -401,7 +418,7 @@ function initializeCoreMod(){
             "transformer": function(methodNode){
                 print("Setting up BetterSprintingCore...");
 
-                if (!(transformMovementInputUpdate(methodNode) && transformSprinting(methodNode) && transformAfterSuperCall(methodNode))){
+                if (!transformAll(methodNode)){
                     print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
                     printInstructions(methodNode.instructions);
                 }
