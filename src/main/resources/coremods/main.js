@@ -193,7 +193,7 @@ function initializeCoreMod(){
     };
     
     var printInstructions = function(instructions){
-        for(var index = 0; index < instructions.size(); index++){
+        for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
             var instruction = instructions.get(index);
             
             var indexStr = index + ": ";
@@ -215,7 +215,7 @@ function initializeCoreMod(){
                     var name = instruction.name;
                     
                     if (name){
-                        opcodeName += ", " + instruction.name;
+                        opcodeName += ", " + name;
                     }
                 }catch(e){}
                 
@@ -223,7 +223,20 @@ function initializeCoreMod(){
                     var desc = instruction.desc;
                     
                     if (desc){
-                        opcodeName += ", " + instruction.desc;
+                        opcodeName += ", " + desc;
+                    }
+                }catch(e){}
+
+                try{
+                    var label = instruction.label;
+
+                    if (label){
+                        for(var search = 0; search < instrcount; search++){
+                            if (instructions.get(search) == label){
+                                opcodeName += ", " + search;
+                                break;
+                            }
+                        }
                     }
                 }catch(e){}
             }
@@ -363,6 +376,8 @@ function initializeCoreMod(){
                     print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
                     printInstructions(methodNode.instructions);
                 }
+
+                // printInstructions(methodNode.instructions);
 
                 print("Finished BetterSprintingCore.");
                 return methodNode;
