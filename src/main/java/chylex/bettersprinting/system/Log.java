@@ -36,16 +36,6 @@ public final class Log{
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */
-	public static void info(String message, Object...data){
-		logger.info(getMessage(message, data));
-	}
-
-	/** Use $x where x is between 0 and data.length-1 to input variables. */
-	public static void warn(String message, Object...data){
-		logger.warn(getMessage(message, data));
-	}
-
-	/** Use $x where x is between 0 and data.length-1 to input variables. */
 	public static void error(String message, Object...data){
 		logger.error(getMessage(message, data));
 	}

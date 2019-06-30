@@ -1,4 +1,5 @@
 package chylex.bettersprinting.client;
+import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.gui.GuiSprint;
 import chylex.bettersprinting.client.player.IntegrityCheck;
 import chylex.bettersprinting.client.player.LivingUpdate;
@@ -17,31 +18,28 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
 @OnlyIn(Dist.CLIENT)
-final class ClientEventHandler{
-	public static void register(){
-		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-	}
-	
-	private final Minecraft mc = Minecraft.getInstance();
-	private boolean stopChecking;
+@EventBusSubscriber(value = Dist.CLIENT, modid = BetterSprintingMod.modId)
+public final class ClientEventHandler{
+	private static final Minecraft mc = Minecraft.getInstance();
+	private static boolean stopChecking;
 	
 	@SubscribeEvent
-	public void onPlayerLoginClient(PlayerLoggedInEvent e){
+	public static void onPlayerLoginClient(PlayerLoggedInEvent e){
 		IntegrityCheck.register();
 		UpdateNotificationManager.run();
 	}
 	
 	@SubscribeEvent
-	public void onPlayerJoinWorld(EntityJoinWorldEvent e){
+	public static void onPlayerJoinWorld(EntityJoinWorldEvent e){
 		if (stopChecking || e.getEntity() != mc.player){
 			return;
 		}
@@ -54,7 +52,7 @@ final class ClientEventHandler{
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-	public void onGuiOpen(GuiOpenEvent e){
+	public static void onGuiOpen(GuiOpenEvent e){
 		if (stopChecking && mc.getRenderViewEntity() == null){
 			ClientModManager.onDisconnectedFromServer();
 			IntegrityCheck.unregister();
@@ -64,7 +62,7 @@ final class ClientEventHandler{
 	}
 	
 	@SubscribeEvent
-	public void onGuiInitPost(GuiScreenEvent.InitGuiEvent.Post e){
+	public static void onGuiInitPost(GuiScreenEvent.InitGuiEvent.Post e){
 		Screen gui = e.getGui();
 		
 		if (gui instanceof ControlsScreen){

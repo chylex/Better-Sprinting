@@ -17,7 +17,6 @@ public class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void onConstructed(ModLoadingContext ctx){
 		ClientSettings.register(ctx);
-		ClientEventHandler.register();
 		PacketPipeline.initialize(new ClientNetwork());
 	}
 	

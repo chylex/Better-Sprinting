@@ -12,7 +12,6 @@ public final class ServerProxy extends BetterSprintingProxy{
 	@Override
 	public void onConstructed(ModLoadingContext ctx){
 		ServerSettings.register(ctx);
-		ServerEventHandler.register();
 		PacketPipeline.initialize(new ServerNetwork());
 	}
 
