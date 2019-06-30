@@ -1,14 +1,11 @@
 package chylex.bettersprinting.client.player;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
-import chylex.bettersprinting.client.gui.GuiSprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.text.StringTextComponent;
 
 final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -37,75 +34,63 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
 	public void updateMovementInput(boolean slowMovement, boolean isSpectator){
+		if (mc.playerController.isInCreativeMode() && abilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
+			player.onGround = false;
+		}
+		
 		wasSneaking = movementInput.sneak;
 		wasMovingForward = player.func_223110_ee();
 		movementController.update(slowMovement, isSpectator);
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
-	public void updateLiving(){
+	public void updateSprinting(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
 		
-		if (ClientModManager.isModDisabled()){
-			if ((player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !player.isSprinting() && enoughHunger && !isSprintBlocked){
-				if (player.sprintToggleTimer <= 0 && !ClientModManager.keyBindSprintHold.isKeyDown()){
-					player.sprintToggleTimer = 7;
-				}
-				else{
-					player.setSprinting(true);
-				}
+		boolean prevHeld = isHeld;
+		boolean sprint = movementController.sprint && !(movementInput.sneak && !abilities.isFlying);
+		boolean dblTap = ClientSettings.enableDoubleTap.get();
+		
+		if ((!dblTap || !player.isSprinting()) && (player.onGround || player.canSwim()) && enoughHunger && !isSprintBlocked){
+			player.setSprinting(sprint);
+		}
+		
+		isHeld = sprint;
+		
+		if (dblTap && !isHeld && stopTimer == 0 && (player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !player.isSprinting() && enoughHunger && !isSprintBlocked){
+			if (player.sprintToggleTimer <= 0){
+				player.sprintToggleTimer = 7;
 			}
-			
-			if (!player.isSprinting() && (!player.isInWater() || player.canSwim()) && player.func_223110_ee() && enoughHunger && !isSprintBlocked && ClientModManager.keyBindSprintHold.isKeyDown()){
+			else{
 				player.setSprinting(true);
+				player.sprintToggleTimer = 0;
 			}
 		}
-		else{
-			boolean prevHeld = isHeld;
-			boolean sprint = movementController.sprint && !(movementInput.sneak && !abilities.isFlying);
-			boolean dblTap = ClientSettings.enableDoubleTap.get();
-			
-			if ((!dblTap || !player.isSprinting()) && (player.onGround || player.canSwim()) && enoughHunger && !isSprintBlocked){
-				player.setSprinting(sprint);
+		
+		if (dblTap){
+			if (prevHeld && !isHeld){
+				stopTimer = 1;
 			}
 			
-			isHeld = sprint;
-			
-			if (dblTap && !isHeld && stopTimer == 0 && (player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !player.isSprinting() && enoughHunger && !isSprintBlocked){
-				if (player.sprintToggleTimer <= 0){
-					player.sprintToggleTimer = 7;
-				}
-				else{
-					player.setSprinting(true);
-					player.sprintToggleTimer = 0;
-				}
+			if (stopTimer > 0){
+				stopTimer--;
+				player.setSprinting(false);
 			}
-			
-			if (dblTap){
-				if (prevHeld && !isHeld){
-					stopTimer = 1;
-				}
-				
-				if (stopTimer > 0){
-					stopTimer--;
-					player.setSprinting(false);
-				}
+		}
+		
+		int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
+		
+		if (flySpeedBoostMultiplier > 0){
+			if (sprint && abilities.isFlying && ClientModManager.canBoostFlying()){
+				abilities.setFlySpeed(0.05F + 0.075F * flySpeedBoostMultiplier);
 			}
-			
-			int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
-			
-			if (flySpeedBoostMultiplier > 0){
-				if (sprint && abilities.isFlying && ClientModManager.canBoostFlying()){
-					abilities.setFlySpeed(0.05F + 0.075F * flySpeedBoostMultiplier);
-				}
-				else{
-					abilities.setFlySpeed(0.05F);
-				}
-			}
-			else if (abilities.getFlySpeed() > 0.05F){
+			else{
 				abilities.setFlySpeed(0.05F);
 			}
+		}
+		else if (abilities.getFlySpeed() > 0.05F){
+			abilities.setFlySpeed(0.05F);
 		}
 		
 		if (player.isSprinting()){
@@ -123,18 +108,17 @@ final class PlayerLogicHandler{
 				player.setSprinting(false);
 			}
 		}
-		
-		postLogic();
 	}
 	
-	private void postLogic(){
-		if (ClientModManager.showDisableWarningWhenPossible){
-			player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
-			ClientModManager.showDisableWarningWhenPossible = false;
-		}
-		
-		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
-			mc.displayGuiScreen(new GuiSprint(null));
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	public void updateFlight(){
+		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode()){
+			boolean shouldFlyOnGround = mc.playerController.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
+			
+			if (!shouldFlyOnGround){
+				abilities.isFlying = false;
+				player.sendPlayerAbilities();
+			}
 		}
 	}
 }

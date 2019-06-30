@@ -14,6 +14,7 @@ import net.minecraft.client.gui.widget.list.KeyBindingList.CategoryEntry;
 import net.minecraft.client.gui.widget.list.KeyBindingList.KeyEntry;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.AbstractOption;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -24,6 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.apache.commons.lang3.ArrayUtils;
 
 @OnlyIn(Dist.CLIENT)
@@ -58,6 +61,22 @@ public final class ClientEventHandler{
 			IntegrityCheck.unregister();
 			LivingUpdate.cleanup();
 			stopChecking = false;
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onClientTick(ClientTickEvent e){
+		if (e.phase != Phase.END || mc.player == null){
+			return;
+		}
+		
+		if (ClientModManager.showDisableWarningWhenPossible){
+			mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
+			ClientModManager.showDisableWarningWhenPossible = false;
+		}
+		
+		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
+			mc.displayGuiScreen(new GuiSprint(null));
 		}
 	}
 	

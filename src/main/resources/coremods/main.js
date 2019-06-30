@@ -290,26 +290,31 @@ function initializeCoreMod(){
         print("Transforming livingTick (movement update)");
 
         var instructions = method.instructions;
+        var entry = null;
 
         for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
             if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "func_217607_a") &&
                 checkOpcodeChain(instructions, index - 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.ILOAD, opcodes.ALOAD ])
             ){
-                print("Found entry point at " + index + ".");
-
-                var toRemove = instructions.get(index - 4);
-                var toReplace = instructions.get(index);
-
-                var helper = api.getMethodNode();
-                helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", false);
-
-                instructions.remove(toRemove);
-                instructions.set(toReplace, helper.instructions.get(0));
-                return true;
+                entry = index;
+                break;
             }
         }
 
-        return false;
+        if (entry === null){
+            return false;
+        }
+
+        print("Found entry point at " + index + ".");
+
+        var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", api.MethodType.STATIC);
+
+        var toRemove = instructions.get(index - 4);
+        var toReplace = instructions.get(index);
+
+        instructions.remove(toRemove);
+        instructions.set(toReplace, call);
+        return true;
     };
     
     var transformSprinting = function(method){
@@ -341,12 +346,11 @@ function initializeCoreMod(){
         if (!validateLabels(labels)){
             return false;
         }
-        
+
         var helper = api.getMethodNode();
-        helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
-        helper.visitJumpInsn(opcodes.GOTO, getSkipInst(labels[1]));
-        
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "()Z", false);
+        helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
+
         instructions.insert(labels[0], helper.instructions);
         return true;
     };
@@ -379,10 +383,9 @@ function initializeCoreMod(){
         }
 
         var helper = api.getMethodNode();
-        helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
-        helper.visitJumpInsn(opcodes.GOTO, getSkipInst(labels[1]));
-        
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "()Z", false);
+        helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
+
         instructions.insert(labels[0], helper.instructions);
         return true;
     };
