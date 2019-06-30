@@ -390,60 +390,27 @@ function initializeCoreMod(){
         return true;
     };
     
-    var transformPushOutOfBlocks = function(method){
-        method.access &= ~opcodes.ACC_PROTECTED;
-        method.access |= opcodes.ACC_PUBLIC;
-    };
-    
-    var matchMethod = function(name1, name2, desc){
-        return function(method){
-            return (method.name.equals(name1) || method.name.equals(name2)) && method.desc.equals(desc);
-        };
-    };
-    
     return {
         "BetterSprintingCore": {
             "target": {
-                "type": "CLASS",
-                "name": "net.minecraft.client.entity.player.ClientPlayerEntity"
+                "type": "METHOD",
+                "class": "net.minecraft.client.entity.player.ClientPlayerEntity",
+                "methodName": "func_70636_d",
+                "methodDesc": "()V"
             },
-            "transformer": function(classNode){
+            "transformer": function(methodNode){
                 print("Setting up BetterSprintingCore...");
-                
-                var livingTick = classNode.methods
-                                          .stream()
-                                          .filter(matchMethod("livingTick", "func_70636_d", "()V"))
-                                          .toArray();
-                
-                var pushOutOfBlocks = classNode.methods
-                                               .stream()
-                                               .filter(matchMethod("pushOutOfBlocks", "func_213282_i", "(DDD)V"))
-                                               .toArray();
-                
-                if (livingTick.length == 1 && pushOutOfBlocks.length == 1){
-                    var mLivingTick = livingTick[0];
-                    
-                    if (transformLivingTick(mLivingTick) && transformLivingTickEnd(mLivingTick)){
-                        print("Transformed ClientPlayerEntity.livingTick().");
-                    }
-                    else{
-                        print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
-                        printInstructions(mLivingTick.instructions);
-                    }
-                    
-                    transformPushOutOfBlocks(pushOutOfBlocks[0]);
-                    print("Transformed ClientPlayerEntity.pushOutOfBlocks().");
+
+                if (transformLivingTick(methodNode) && transformLivingTickEnd(methodNode)){
+                    print("Transformed ClientPlayerEntity.livingTick().");
                 }
                 else{
-                    print("Could not find ClientPlayerEntity.livingTick() and/or ClientPlayerEntity.pushOutOfBlocks(), printing all methods...");
-
-                    classNode.methods.forEach(function(method){
-                        print(method.name + method.desc);
-                    });
+                    print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
+                    printInstructions(methodNode.instructions);
                 }
-                
+
                 print("Finished BetterSprintingCore.");
-                return classNode;
+                return methodNode;
             }
         }
     };
