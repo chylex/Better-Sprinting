@@ -188,7 +188,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public boolean keyReleased(int keyCode, int scanCode, int modifiers){
+	public boolean func_223281_a_(int keyCode, int scanCode, int modifiers){
 		if (selectedBinding != null){
 			selectedBinding.setKeyModifierAndCode(KeyModifier.NONE, InputMappings.getInputByCode(keyCode, scanCode));
 			selectedBinding = null;
@@ -197,7 +197,7 @@ public class GuiSprint extends Screen{
 			return true;
 		}
 		else{
-			return super.keyReleased(keyCode, scanCode, modifiers);
+			return super.func_223281_a_(keyCode, scanCode, modifiers);
 		}
 	}
 	
