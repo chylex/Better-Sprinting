@@ -1,7 +1,7 @@
 function initializeCoreMod(){
     var api = Java.type("net.minecraftforge.coremod.api.ASMAPI");
     var opcodes = Java.type("org.objectweb.asm.Opcodes");
-    
+
     var getInstructionTypeName = function(instruction){
         var type = instruction.getType();
         
@@ -231,16 +231,18 @@ function initializeCoreMod(){
             print(indexStr + typeName + opcodeName);
         }
     };
+
+    // Helpers
     
-    var checkInstructionName = function(instruction, name1, name2){
-        return instruction.name.equals(name1) || instruction.name.equals(name2);
+    var checkInstruction = function(instruction, opcode, name1, name2){
+        return instruction.getOpcode() === opcode && (instruction.name.equals(name1) || (name2 && instruction.name.equals(name2)));
     };
     
     var checkOpcodeChain = function(instructions, start, chain){
         for(var offset = 0; offset < chain.length; offset++){
             var instruction = instructions.get(start + offset);
             
-            if (instruction.getOpcode() != chain[offset]){
+            if (instruction.getOpcode() !== chain[offset]){
                 print("Mismatched opcode chain, " + instruction.getOpcode() + " != " + chain[offset]);
                 return false;
             }
@@ -248,77 +250,65 @@ function initializeCoreMod(){
         
         return true;
     };
+
+    var validateLabels = function(labels){
+        if (labels[0].getType() != 8){
+            print("Insertion point is not a label!");
+            return false;
+        }
+
+        if (labels[1].getType() != 8){
+            print("Skip point is not a label!");
+            return false;
+        }
+
+        return true;
+    };
+
+    var getSkipInst = function(label){
+        var labelInst = label.getLabel();
+        labelInst.info = label;
+        return labelInst;
+    };
+
+    // Transformers
     
     var transformLivingTick = function(method){
         print("Transforming livingTick (start)...")
         
         var instructions = method.instructions;
-        var instrcount = instructions.size();
-        
-        var insertionPoint = -1;
-        var skipPoint = -1;
-        
-        for(var index = 0; index < instrcount; index++){
-            var instruction = instructions.get(index);
+        var bounds = null;
 
-            if (instruction.getOpcode() == opcodes.INVOKESPECIAL &&
-                checkInstructionName(instruction, "func_213839_ed", "func_213839_ed") &&
+        for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
+            if (checkInstruction(instructions.get(index), opcodes.INVOKESPECIAL, "func_213839_ed", "func_213839_ed") &&
                 checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD ]) &&
                 checkOpcodeChain(instructions, index + 3, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
-                checkOpcodeChain(instructions, index + 9, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
+                checkOpcodeChain(instructions, index + 9, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
+                checkInstruction(instructions.get(index + 524), opcodes.PUTFIELD, "flyToggleTimer", "field_71101_bC")
             ){
-                insertionPoint = index + 13;
+                bounds = [ index + 13, index + 525 ];
                 break;
             }
         }
         
-        if (insertionPoint == -1){
+        if (bounds === null){
             return false;
         }
-        
-        print("Found insertion point at index " + insertionPoint + ".");
-        
-        for(var index = insertionPoint; index < instrcount; index++){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.GETSTATIC &&
-                instruction.name.equals("CHEST") &&
-                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETSTATIC, opcodes.INVOKEVIRTUAL, opcodes.ASTORE ]) &&
-                checkOpcodeChain(instructions, index - 25, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.IFEQ ])
-            ){
-                skipPoint = index - 28;
-                break;
-            }
-        }
-        
-        if (skipPoint == -1){
+
+        print("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
+
+        var labels = [ instructions.get(bounds[0]), instructions.get(bounds[1]) ];
+
+        if (!validateLabels(labels)){
             return false;
         }
-        
-        print("Found skip point at index " + skipPoint + ".");
-        
-        var insertionPointLabel = instructions.get(insertionPoint);
-        var skipPointLabel = instructions.get(skipPoint);
-        
-        if (insertionPointLabel.getType() != 8){
-            print("Insertion point is not a label!");
-            return false;
-        }
-        
-        if (skipPointLabel.getType() != 8){
-            print("Skip point is not a label!");
-            return false;
-        }
-        
-        var skipPointLabelInst = skipPointLabel.getLabel();
-        skipPointLabelInst.info = skipPointLabel;
         
         var helper = api.getMethodNode();
         helper.visitVarInsn(opcodes.ALOAD, 0);
         helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
-        helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
+        helper.visitJumpInsn(opcodes.GOTO, getSkipInst(labels[1]));
         
-        instructions.insert(insertionPointLabel, helper.instructions);
+        instructions.insert(labels[0], helper.instructions);
         return true;
     };
     
@@ -326,67 +316,35 @@ function initializeCoreMod(){
         print("Transforming livingTick (end)...")
         
         var instructions = method.instructions;
-        var instrcount = instructions.size();
+        var bounds = null;
         
-        var insertionPoint = -1;
-        var skipPoint = -1;
-        
-        for(var index = instrcount - 1; index > skipPoint; index--){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.INVOKESPECIAL &&
-                checkInstructionName(instruction, "livingTick", "func_70636_d")
+        for(var index = instructions.size() - 1; index >= 0; index--){
+            if (checkInstruction(instructions.get(index), opcodes.INVOKESPECIAL, "livingTick", "func_70636_d") &&
+                checkInstruction(instructions.get(index + 24), opcodes.INVOKEVIRTUAL, "sendPlayerAbilities", "func_71016_p")
             ){
-                insertionPoint = index + 1;
+                bounds = [ index + 1, index + 25 ];
                 break;
             }
         }
         
-        if (insertionPoint == -1){
+        if (bounds === null){
             return false;
         }
-        
-        print("Found insertion point at index " + insertionPoint + ".");
-        
-        for(var index = insertionPoint; index < instrcount; index++){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.INVOKEVIRTUAL &&
-                checkInstructionName(instruction, "sendPlayerAbilities", "func_71016_p")
-            ){
-                skipPoint = index + 1;
-                break;
-            }
-        }
-        
-        if (skipPoint == -1){
+
+        print("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
+
+        var labels = [ instructions.get(bounds[0]), instructions.get(bounds[1]) ];
+
+        if (!validateLabels(labels)){
             return false;
         }
-        
-        print("Found skip point at index " + skipPoint + ".");
-        
-        var insertionPointLabel = instructions.get(insertionPoint);
-        var skipPointLabel = instructions.get(skipPoint);
-        
-        if (insertionPointLabel.getType() != 8){
-            print("Insertion point is not a label!");
-            return false;
-        }
-        
-        if (skipPointLabel.getType() != 8){
-            print("Skip point is not a label!");
-            return false;
-        }
-        
-        var skipPointLabelInst = skipPointLabel.getLabel();
-        skipPointLabelInst.info = skipPointLabel;
-        
+
         var helper = api.getMethodNode();
         helper.visitVarInsn(opcodes.ALOAD, 0);
         helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
-        helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
+        helper.visitJumpInsn(opcodes.GOTO, getSkipInst(labels[1]));
         
-        instructions.insert(insertionPointLabel, helper.instructions);
+        instructions.insert(labels[0], helper.instructions);
         return true;
     };
     
@@ -401,10 +359,7 @@ function initializeCoreMod(){
             "transformer": function(methodNode){
                 print("Setting up BetterSprintingCore...");
 
-                if (transformLivingTick(methodNode) && transformLivingTickEnd(methodNode)){
-                    print("Transformed ClientPlayerEntity.livingTick().");
-                }
-                else{
+                if (!(transformLivingTick(methodNode) && transformLivingTickEnd(methodNode))){
                     print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
                     printInstructions(methodNode.instructions);
                 }
