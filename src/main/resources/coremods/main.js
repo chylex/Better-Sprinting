@@ -285,21 +285,47 @@ function initializeCoreMod(){
     };
 
     // Transformers
+
+    var transformMovementInputUpdate = function(method){
+        print("Transforming livingTick (movement update)");
+
+        var instructions = method.instructions;
+
+        for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
+            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "func_217607_a") &&
+                checkOpcodeChain(instructions, index - 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.ILOAD, opcodes.ALOAD ])
+            ){
+                print("Found entry point at " + index + ".");
+
+                var toRemove = instructions.get(index - 4);
+                var toReplace = instructions.get(index);
+
+                var helper = api.getMethodNode();
+                helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", false);
+
+                instructions.remove(toRemove);
+                instructions.set(toReplace, helper.instructions.get(0));
+                return true;
+            }
+        }
+
+        return false;
+    };
     
-    var transformLivingTick = function(method){
-        print("Transforming livingTick (start)...")
+    var transformSprinting = function(method){
+        print("Transforming livingTick (sprinting)...");
         
         var instructions = method.instructions;
         var bounds = null;
 
         for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
-            if (checkInstruction(instructions.get(index), opcodes.INVOKESPECIAL, "func_213839_ed", "func_213839_ed") &&
-                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD ]) &&
-                checkOpcodeChain(instructions, index + 3, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
-                checkOpcodeChain(instructions, index + 9, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
-                checkInstruction(instructions.get(index + 524), opcodes.PUTFIELD, "flyToggleTimer", "field_71101_bC")
+            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index - 24), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index - 48), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index - 72), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index + 198), opcodes.INVOKEVIRTUAL, "setSprinting", "func_70031_b")
             ){
-                bounds = [ index + 13, index + 525 ];
+                bounds = [ index + 1, index + 199 ];
                 break;
             }
         }
@@ -318,15 +344,15 @@ function initializeCoreMod(){
         
         var helper = api.getMethodNode();
         helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
         helper.visitJumpInsn(opcodes.GOTO, getSkipInst(labels[1]));
         
         instructions.insert(labels[0], helper.instructions);
         return true;
     };
     
-    var transformLivingTickEnd = function(method){
-        print("Transforming livingTick (end)...")
+    var transformAfterSuperCall = function(method){
+        print("Transforming livingTick (super call)...");
         
         var instructions = method.instructions;
         var bounds = null;
@@ -354,7 +380,7 @@ function initializeCoreMod(){
 
         var helper = api.getMethodNode();
         helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
+        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false);
         helper.visitJumpInsn(opcodes.GOTO, getSkipInst(labels[1]));
         
         instructions.insert(labels[0], helper.instructions);
@@ -372,7 +398,7 @@ function initializeCoreMod(){
             "transformer": function(methodNode){
                 print("Setting up BetterSprintingCore...");
 
-                if (!(transformLivingTick(methodNode) && transformLivingTickEnd(methodNode))){
+                if (!(transformMovementInputUpdate(methodNode) && transformSprinting(methodNode) && transformAfterSuperCall(methodNode))){
                     print("Could not inject into ClientPlayerEntity.livingTick(), printing all instructions...");
                     printInstructions(methodNode.instructions);
                 }

@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.client.ForgeHooksClient;
 
 final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -36,17 +35,14 @@ final class PlayerLogicHandler{
 		return player;
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
-	public void updateMovementInput(){
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	public void updateMovementInput(boolean slowMovement, boolean isSpectator){
 		wasSneaking = movementInput.sneak;
 		wasMovingForward = player.func_223110_ee();
-		movementController.update(player.func_213287_bg() || player.func_213300_bk(), player.isSpectator());
-		
-		ForgeHooksClient.onInputUpdate(player, movementInput);
-		mc.getTutorial().handleMovement(movementInput);
+		movementController.update(slowMovement, isSpectator);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
 	public void updateLiving(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);

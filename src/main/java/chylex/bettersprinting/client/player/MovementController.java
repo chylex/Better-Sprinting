@@ -19,7 +19,7 @@ final class MovementController{
 		this.movementInput = movementInput;
 	}
 	
-	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.14.2
+	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.14.3
 	public void update(boolean slowMovement, boolean isSpectator){
 		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		

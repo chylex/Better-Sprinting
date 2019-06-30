@@ -3,11 +3,8 @@ import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 @OnlyIn(Dist.CLIENT)
 public final class LivingUpdate{
@@ -25,17 +22,8 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
-	public static void injectOnLivingUpdate(ClientPlayerEntity $this){
-		/*
-		this.func_213839_ed();
-		boolean flag = this.movementInput.jump;
-		boolean flag1 = this.movementInput.sneak;
-		<<< INSERTED HERE
-		boolean flag2 = this.func_223110_ee();
-		*/
-		
-		// CUSTOM
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	public static void injectMovementInputUpdate(ClientPlayerEntity $this, boolean slowMovement, boolean isSpectator){
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
 			currentHandler = new PlayerLogicHandler($this);
 			hasTriggered = true;
@@ -45,79 +33,46 @@ public final class LivingUpdate{
 			$this.onGround = false;
 		}
 		
-		boolean wasJumping = $this.movementInput.jump;
-		currentHandler.updateMovementInput();
-		
-		// VANILLA
-		if ($this.isHandActive() && !$this.isPassenger()){
-			$this.movementInput.moveStrafe *= 0.2F;
-			$this.movementInput.moveForward *= 0.2F;
-			$this.sprintToggleTimer = 0;
-		}
-		
-		boolean hasAutoJumped = false;
-		
-		if ($this.autoJumpTime > 0){
-			--$this.autoJumpTime;
-			hasAutoJumped = true;
-			$this.movementInput.jump = true;
-		}
-		
-		if (!$this.noClip){
-			AxisAlignedBB playerBoundingBox = $this.getBoundingBox();
-			PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
-			
-			if (!MinecraftForge.EVENT_BUS.post(event)){
-				playerBoundingBox = event.getEntityBoundingBox();
-				$this.pushOutOfBlocks($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
-				$this.pushOutOfBlocks($this.posX - $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
-				$this.pushOutOfBlocks($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.getWidth() * 0.35D);
-				$this.pushOutOfBlocks($this.posX + $this.getWidth() * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.getWidth() * 0.35D);
+		/*
+		this.movementInput.func_217607_a(flag3, this.isSpectator()); <<< REPLACE
+		*/
+		currentHandler.updateMovementInput(slowMovement, isSpectator);
+	}
+	
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	public static void injectSprinting(ClientPlayerEntity $this){
+		/*
+				this.pushOutOfBlocks(this.posX + (double)this.getWidth() * 0.35D, axisalignedbb.minY + 0.5D, this.posZ + (double)this.getWidth() * 0.35D);
 			}
 		}
 		
-		// CUSTOM
+		<<< INSERTED HERE
+		
+		boolean flag7 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.abilities.allowFlying;
+		if ((this.onGround || this.canSwim()) && !flag1 && !flag2 && this.func_223110_ee() && !this.isSprinting() && flag7 && !this.isHandActive() && !this.isPotionActive(Effects.BLINDNESS)) {
+		*/
+		
 		currentHandler.updateLiving();
 		
-		// VANILLA
-		if ($this.abilities.allowFlying){
-			if (mc.playerController.isSpectatorMode()){
-				if (!$this.abilities.isFlying){
-					$this.abilities.isFlying = true;
-					$this.sendPlayerAbilities();
-				}
-			}
-			else if (!wasJumping && $this.movementInput.jump && !hasAutoJumped){
-				if ($this.flyToggleTimer == 0){
-					$this.flyToggleTimer = 7;
-				}
-				else if (!$this.isSwimming()){
-					$this.abilities.isFlying = !$this.abilities.isFlying;
-					$this.sendPlayerAbilities();
-					$this.flyToggleTimer = 0;
-				}
+		/*
+				this.setSprinting(false);
 			}
 		}
 		
-		/*
-		}
 		<<< SKIPPED TO HERE
-		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.playerAbilities.isFlying){
-			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		
+		if (this.abilities.allowFlying) {
 		*/
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.2
-	public static void injectOnLivingUpdateEnd(ClientPlayerEntity $this){
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	public static void injectAfterSuperCall(ClientPlayerEntity $this){
 		/*
-		else{
-			this.horseJumpPower = 0.0F;
-		}
-		
 		super.livingTick();
+		
 		<<< INSERTED HERE
 		
-		if (this.onGround && this.playerAbilities.isFlying && !this.mc.field_71442_b.isSpectatorMode()){
+		if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode()) {
 		*/
 		
 		if ($this.onGround && $this.abilities.isFlying && !mc.playerController.isSpectatorMode()){
@@ -128,6 +83,12 @@ public final class LivingUpdate{
 				$this.sendPlayerAbilities();
 			}
 		}
+		/*
+			this.sendPlayerAbilities();
+		}
+		
+		<<< SKIPPED TO HERE
+		*/
 	}
 	
 	private LivingUpdate(){}
