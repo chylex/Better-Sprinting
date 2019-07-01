@@ -4,7 +4,6 @@ import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -27,13 +26,13 @@ public class ClientProxy extends BetterSprintingProxy{
 		mc.execute(() -> {
 			GameSettings settings = mc.gameSettings;
 			
-			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
+			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings,
 				ClientModManager.keyBindSprintToggle,
 				ClientModManager.keyBindSneakToggle,
-				ClientModManager.keyBindOptionsMenu,
-			});
+				ClientModManager.keyBindOptionsMenu
+			);
 			
-			ClientSettings.updateKeyBindings();
+			ClientSettings.updateKeyBindings(); // UPDATE | Ensure this doesn't override vanilla sprint key on start | 1.14.3
 		});
 	}
 	
