@@ -37,11 +37,11 @@ public class ClientNetwork implements INetworkHandler{
 		}
 		else if (type == 1 && !ClientSettings.disableMod.get()){
 			ClientModManager.svDisableMod = true;
-			ClientModManager.showDisableWarningWhenPossible = true;
+			ClientEventHandler.showDisableWarningWhenPossible = true;
 		}
 		else if (type == 2 && !ClientSettings.disableMod.get()){
 			ClientModManager.svDisableMod = false;
-			ClientModManager.showDisableWarningWhenPossible = true;
+			ClientEventHandler.showDisableWarningWhenPossible = true;
 		}
 	}
 }

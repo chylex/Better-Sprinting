@@ -13,8 +13,6 @@ public final class ClientModManager{
 	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + " ";
 	public static final String categoryName = "key.categories.bettersprinting.hidden";
 	
-	public static boolean showDisableWarningWhenPossible;
-	
 	public static final KeyBinding keyBindSprintHold = mc.gameSettings.keyBindSprint;
 	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", -1, categoryName);
 	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", -1, categoryName);

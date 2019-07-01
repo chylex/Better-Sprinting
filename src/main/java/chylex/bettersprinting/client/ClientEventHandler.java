@@ -33,7 +33,9 @@ import org.apache.commons.lang3.ArrayUtils;
 @EventBusSubscriber(value = Dist.CLIENT, modid = BetterSprintingMod.modId)
 public final class ClientEventHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
-	private static boolean stopChecking;
+	private static boolean stopCheckingNewServer;
+	
+	public static boolean showDisableWarningWhenPossible;
 	
 	@SubscribeEvent
 	public static void onPlayerLoginClient(PlayerLoggedInEvent e){
@@ -43,11 +45,11 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent
 	public static void onPlayerJoinWorld(EntityJoinWorldEvent e){
-		if (stopChecking || e.getEntity() != mc.player){
+		if (stopCheckingNewServer || e.getEntity() != mc.player){
 			return;
 		}
 		
-		stopChecking = true;
+		stopCheckingNewServer = true;
 		
 		if (!mc.isIntegratedServerRunning() && mc.getCurrentServerData() != null && !ClientSettings.disableMod.get()){
 			PacketPipeline.sendToServer(ClientNetwork.writeModNotification(10));
@@ -56,11 +58,12 @@ public final class ClientEventHandler{
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
 	public static void onGuiOpen(GuiOpenEvent e){
-		if (stopChecking && mc.getRenderViewEntity() == null){
+		if (stopCheckingNewServer && mc.getRenderViewEntity() == null){
 			ClientModManager.onDisconnectedFromServer();
 			IntegrityCheck.unregister();
 			LivingUpdate.cleanup();
-			stopChecking = false;
+			stopCheckingNewServer = false;
+			showDisableWarningWhenPossible = false;
 		}
 	}
 	
@@ -70,9 +73,9 @@ public final class ClientEventHandler{
 			return;
 		}
 		
-		if (ClientModManager.showDisableWarningWhenPossible){
+		if (showDisableWarningWhenPossible){
 			mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
-			ClientModManager.showDisableWarningWhenPossible = false;
+			showDisableWarningWhenPossible = false;
 		}
 		
 		if (ClientModManager.keyBindOptionsMenu.isKeyDown()){
