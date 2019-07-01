@@ -32,7 +32,7 @@ public class ClientNetwork implements INetworkHandler{
 		byte type = data.readByte();
 		
 		if (type == 0){
-			ClientModManager.svSurvivalFlyingBoost = data.readBoolean();
+			ClientModManager.svSurvivalFlyBoost = data.readBoolean();
 			ClientModManager.svRunInAllDirs = data.readBoolean();
 		}
 		else if (type == 1 && !ClientSettings.disableMod.get()){

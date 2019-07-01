@@ -30,29 +30,17 @@ public final class ClientModManager{
 		}
 	}
 	
-	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
+	static boolean svSurvivalFlyBoost = false, svRunInAllDirs = false, svDisableMod = false;
 	
 	static void onDisconnectedFromServer(){
-		svSurvivalFlyingBoost = svRunInAllDirs = svDisableMod = false;
+		svSurvivalFlyBoost = svRunInAllDirs = svDisableMod = false;
 	}
 	
 	private static boolean notInGame(){
 		return mc.player == null || mc.world == null;
 	}
 	
-	public static boolean canRunInAllDirs(){
-		return !isModDisabled() && (notInGame() || mc.isSingleplayer() || svRunInAllDirs);
-	}
-	
-	public static boolean canBoostFlying(){
-		return !isModDisabled() && (notInGame() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
-	}
-	
-	public static boolean canFlyOnGround(){
-		return !isModDisabled() && (notInGame() || mc.player.isCreative());
-	}
-	
-	public static boolean canEnableMod(){
+	public static boolean canManuallyEnableMod(){
 		return notInGame() || mc.isSingleplayer();
 	}
 	
@@ -60,7 +48,37 @@ public final class ClientModManager{
 		return ClientSettings.disableMod.get() || svDisableMod;
 	}
 	
-	public static boolean isModDisabledByServer(){
-		return svDisableMod;
+	public enum Feature{
+		FLY_BOOST{
+			@Override protected boolean checkTriggerCondition(){
+				return mc.player.abilities.isFlying && keyBindSprintHold.isKeyDown() && (mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyBoost);
+			}
+		},
+		
+		FLY_ON_GROUND{
+			@Override protected boolean checkTriggerCondition(){
+				return mc.player.abilities.isFlying && ClientSettings.flyOnGround.get() && mc.player.isCreative();
+			}
+		},
+		
+		RUN_IN_ALL_DIRS{
+			@Override protected boolean checkTriggerCondition(){
+				return ClientSettings.enableAllDirs.get();
+			}
+			
+			@Override public boolean isAvailable(){
+				return super.isAvailable() && (notInGame() || mc.isSingleplayer() || svRunInAllDirs);
+			}
+		};
+		
+		protected abstract boolean checkTriggerCondition();
+		
+		public final boolean isTriggered(){
+			return isAvailable() && checkTriggerCondition();
+		}
+		
+		public boolean isAvailable(){
+			return !isModDisabled();
+		}
 	}
 }

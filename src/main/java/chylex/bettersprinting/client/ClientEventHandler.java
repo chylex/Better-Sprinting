@@ -74,7 +74,7 @@ public final class ClientEventHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.isModDisabledByServer() ? "bs.game.disabled" : "bs.game.reenabled")));
+			mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.svDisableMod ? "bs.game.disabled" : "bs.game.reenabled")));
 			showDisableWarningWhenPossible = false;
 		}
 		

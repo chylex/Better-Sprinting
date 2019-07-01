@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.player;
 import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientModManager.Feature;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.input.SprintState;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,7 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
 	public void updateMovementInput(boolean slowMovement, boolean isSpectator){
-		if (mc.playerController.isInCreativeMode() && abilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
+		if (Feature.FLY_ON_GROUND.isTriggered()){
 			player.onGround = false;
 		}
 		
@@ -107,7 +108,7 @@ final class PlayerLogicHandler{
 		// Stop conditions
 		
 		if (sprinting.active()){
-			boolean isSlow = (ClientModManager.canRunInAllDirs() && ClientSettings.enableAllDirs.get()) ? !movementController.isMovingAnywhere() : !movementInput.func_223135_b();
+			boolean isSlow = Feature.RUN_IN_ALL_DIRS.isTriggered() ? !movementController.isMovingAnywhere() : !movementInput.func_223135_b();
 			
 			boolean isSlowOrHungry = isSlow || !enoughHunger;
 			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
@@ -140,7 +141,7 @@ final class PlayerLogicHandler{
 		int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
 		
 		if (flySpeedBoostMultiplier > 0){
-			if (isSprintHeld && abilities.isFlying && ClientModManager.canBoostFlying()){
+			if (Feature.FLY_BOOST.isTriggered()){
 				abilities.setFlySpeed(flySpeedBase + 0.075F * flySpeedBoostMultiplier);
 			}
 			else{
@@ -154,13 +155,9 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
 	public void updateFlight(){
-		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode()){
-			boolean shouldFlyOnGround = mc.playerController.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
-			
-			if (!shouldFlyOnGround){
-				abilities.isFlying = false;
-				player.sendPlayerAbilities();
-			}
+		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isTriggered()){
+			abilities.isFlying = false;
+			player.sendPlayerAbilities();
 		}
 	}
 }

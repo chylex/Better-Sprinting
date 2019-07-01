@@ -1,6 +1,7 @@
 package chylex.bettersprinting.client.gui;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
+import chylex.bettersprinting.client.ClientModManager.Feature;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.input.SprintKeyMode;
 import net.minecraft.client.Minecraft;
@@ -64,10 +65,10 @@ public class GuiSprint extends Screen{
 		
 		btnSprintMode.active = !ClientModManager.isModDisabled();
 		btnDoubleTap.active = !ClientModManager.isModDisabled();
-		btnAllDirs.active = ClientModManager.canRunInAllDirs();
-		btnFlyBoost.active = ClientModManager.canBoostFlying();
-		btnFlyOnGround.active = ClientModManager.canFlyOnGround();
-		btnDisableMod.active = ClientModManager.canEnableMod();
+		btnAllDirs.active = Feature.RUN_IN_ALL_DIRS.isAvailable();
+		btnFlyBoost.active = Feature.FLY_BOOST.isAvailable();
+		btnFlyOnGround.active = Feature.FLY_ON_GROUND.isAvailable();
+		btnDisableMod.active = ClientModManager.canManuallyEnableMod();
 		
 		addButton(new Button((width / 2) - 100, top + 168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done"), this::onClickedDone));
 		
@@ -81,9 +82,9 @@ public class GuiSprint extends Screen{
 	private void updateButtons(){
 		btnSprintMode.setMessage(I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : ClientSettings.sprintKeyMode.get().translationKey));
 		btnDoubleTap.setTitleKey(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
-		btnFlyBoost.setTitleKey(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
-		btnFlyOnGround.setTitleKey(ClientModManager.canFlyOnGround() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
-		btnAllDirs.setTitleKey(ClientModManager.canRunInAllDirs() ? (ClientSettings.enableAllDirs.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
+		btnFlyBoost.setTitleKey(Feature.FLY_BOOST.isAvailable() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
+		btnFlyOnGround.setTitleKey(Feature.FLY_ON_GROUND.isAvailable() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
+		btnAllDirs.setTitleKey(Feature.RUN_IN_ALL_DIRS.isAvailable() ? (ClientSettings.enableAllDirs.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
 		btnDisableMod.setTitleKey(ClientModManager.isModDisabled() ? "gui.yes" : "gui.no");
 		btnAutoJump.setTitleKey(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
 	}
@@ -121,23 +122,23 @@ public class GuiSprint extends Screen{
 				break;
 				
 			case idDisableMod:
-				if (ClientModManager.canEnableMod()){
+				if (ClientModManager.canManuallyEnableMod()){
 					BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
 					init();
 				} break;
 				
 			case idFlyBoost:
-				if (ClientModManager.canBoostFlying()){
+				if (Feature.FLY_BOOST.isAvailable()){
 					BetterSprintingMod.config.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
 				} break;
 			
 			case idFlyOnGround:
-				if (ClientModManager.canFlyOnGround()){
+				if (Feature.FLY_ON_GROUND.isAvailable()){
 					BetterSprintingMod.config.update(ClientSettings.flyOnGround, value -> !value);
 				} break;
 				
 			case idAllDirs:
-				if (ClientModManager.canRunInAllDirs()){
+				if (Feature.RUN_IN_ALL_DIRS.isAvailable()){
 					BetterSprintingMod.config.update(ClientSettings.enableAllDirs, value -> !value);
 				} break;
 				
