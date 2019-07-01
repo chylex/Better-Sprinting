@@ -19,6 +19,11 @@
     "bs.disableMod": "Disable mod functionality",
     "bs.autoJump": "Auto-jump",
 
+    "_comment": "Advanced controls",
+
+    "bs.sprint.mode.tap": "Tap",
+    "bs.sprint.mode.hold": "Hold",
+
     "_comment": "Tooltips for controls (use the '#' character for splitting lines)",
 
     "bs.sprint.hold.info": "Hold to sprint.",

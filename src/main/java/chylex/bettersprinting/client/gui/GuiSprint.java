@@ -2,6 +2,7 @@ package chylex.bettersprinting.client.gui;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientSettings;
+import chylex.bettersprinting.client.input.SprintKeyMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ControlsScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -28,6 +29,7 @@ public class GuiSprint extends Screen{
 	private final Minecraft mc = Minecraft.getInstance();
 	private final Screen parentScreen;
 	
+	private Button btnSprintMode;
 	private GuiButtonInputOption btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
 	private GuiButtonInputBinding selectedBinding;
 	
@@ -52,6 +54,7 @@ public class GuiSprint extends Screen{
 			}
 		}
 		
+		btnSprintMode = addButton(new Button(left - 52, top, 50, 20, "", this::onClickedSprintMode)); // TODO make proper UI
 		btnDoubleTap = addButton(new GuiButtonInputOption(idDoubleTap, left, top + 60, "bs.doubleTapping", this::onButtonClicked));
 		btnAllDirs = addButton(new GuiButtonInputOption(idAllDirs, left + 160, top + 60, "bs.runAllDirs", this::onButtonClicked));
 		btnFlyBoost = addButton(new GuiButtonInputOption(idFlyBoost, left, top + 84, "bs.flyBoost", this::onButtonClicked));
@@ -59,6 +62,7 @@ public class GuiSprint extends Screen{
 		btnDisableMod = addButton(new GuiButtonInputOption(idDisableMod, left + 160, top + 108, "bs.disableMod", this::onButtonClicked));
 		btnAutoJump = addButton(new GuiButtonInputOption(idAutoJump, left, top + 108, "bs.autoJump", this::onButtonClicked));
 		
+		btnSprintMode.active = !ClientModManager.isModDisabled();
 		btnDoubleTap.active = !ClientModManager.isModDisabled();
 		btnAllDirs.active = ClientModManager.canRunInAllDirs();
 		btnFlyBoost.active = ClientModManager.canBoostFlying();
@@ -75,6 +79,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	private void updateButtons(){
+		btnSprintMode.setMessage(I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : ClientSettings.sprintKeyMode.get().translationKey));
 		btnDoubleTap.setTitleKey(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.setTitleKey(ClientModManager.canBoostFlying() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
 		btnFlyOnGround.setTitleKey(ClientModManager.canFlyOnGround() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
@@ -100,6 +105,12 @@ public class GuiSprint extends Screen{
 		
 		selectedBinding = binding;
 		selectedBinding.setSelected(true);
+	}
+	
+	private void onClickedSprintMode(@SuppressWarnings("unused") Button button){
+		BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
+		BetterSprintingMod.config.save();
+		updateButtons();
 	}
 	
 	private void onButtonClicked(int id){

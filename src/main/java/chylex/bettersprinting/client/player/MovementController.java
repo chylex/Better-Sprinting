@@ -5,9 +5,9 @@ import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.util.MovementInput;
 
 final class MovementController{
-	public boolean sprint;
+	public boolean sprintToggle;
 	
-	private boolean sprintToggle, sneakToggle;
+	private boolean sneakToggle;
 	private boolean hasToggledSprint, hasToggledSneak;
 	private boolean shouldRestoreSneakToggle;
 	
@@ -21,23 +21,14 @@ final class MovementController{
 	
 	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.14.3
 	public void update(boolean slowMovement, boolean isSpectator){
-		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
-		
-		if (!sprint){
-			if (ClientModManager.keyBindSprintToggle.isKeyDown()){
-				if (!hasToggledSprint){
-					sprintToggle = !sprintToggle;
-					hasToggledSprint = true;
-				}
+		if (ClientModManager.keyBindSprintToggle.isKeyDown()){
+			if (!hasToggledSprint){
+				sprintToggle = !sprintToggle;
+				hasToggledSprint = true;
 			}
-			else{
-				hasToggledSprint = false;
-			}
-			
-			sprint = sprintToggle;
 		}
 		else{
-			sprintToggle = false;
+			hasToggledSprint = false;
 		}
 		
 		if (!mc.gameSettings.keyBindSneak.isKeyDown()){

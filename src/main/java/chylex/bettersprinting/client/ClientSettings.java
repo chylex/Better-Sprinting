@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
+import chylex.bettersprinting.client.input.SprintKeyMode;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,6 +30,8 @@ public class ClientSettings{
 	public static final EnumValue<InputMappings.Type> keyTypeSprintToggle;
 	public static final EnumValue<InputMappings.Type> keyTypeSneakToggle;
 	public static final EnumValue<InputMappings.Type> keyTypeOptionsMenu;
+	
+	public static final EnumValue<SprintKeyMode> sprintKeyMode;
 	
 	public static final IntValue flySpeedBoost;
 	public static final BooleanValue flyOnGround;
@@ -64,6 +67,8 @@ public class ClientSettings{
 		keyTypeSprintToggle = builder.defineEnum("keyTypeSprintToggle", InputMappings.Type.KEYSYM);
 		keyTypeSneakToggle  = builder.defineEnum("keyTypeSneakToggle", InputMappings.Type.KEYSYM);
 		keyTypeOptionsMenu  = builder.defineEnum("keyTypeOptionsMenu", InputMappings.Type.KEYSYM);
+		
+		sprintKeyMode = builder.defineEnum("sprintKeyMode", SprintKeyMode.TAP);
 		
 		flySpeedBoost   = builder.defineInRange("flySpeedBoost", 3, 0, 7);
 		flyOnGround     = builder.define("flyOnGround", false);
