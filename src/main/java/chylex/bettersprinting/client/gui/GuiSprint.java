@@ -64,7 +64,7 @@ public class GuiSprint extends Screen{
 		if (!ClientModManager.canRunInAllDirs())btnAllDirs.active = false;
 		if (!ClientModManager.canBoostFlying())btnFlyBoost.active = false;
 		if (!ClientModManager.canFlyOnGround())btnFlyOnGround.active = false;
-		if (!ClientModManager.inMenu())btnDisableMod.active = false;
+		if (!ClientModManager.canEnableMod())btnDisableMod.active = false;
 		
 		addButton(new GuiButtonExt(width / 2 - 100, top + 168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done"), this::onClickedDone));
 		
@@ -106,7 +106,7 @@ public class GuiSprint extends Screen{
 				break;
 				
 			case idDisableMod:
-				if (ClientModManager.inMenu()){
+				if (ClientModManager.canEnableMod()){
 					BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
 					init();
 				}

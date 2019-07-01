@@ -38,20 +38,24 @@ public final class ClientModManager{
 		svSurvivalFlyingBoost = svRunInAllDirs = svDisableMod = false;
 	}
 	
-	public static boolean inMenu(){
+	private static boolean notInGame(){
 		return mc.player == null || mc.world == null;
 	}
 	
 	public static boolean canRunInAllDirs(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || svRunInAllDirs);
+		return !isModDisabled() && (notInGame() || mc.isSingleplayer() || svRunInAllDirs);
 	}
 	
 	public static boolean canBoostFlying(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
+		return !isModDisabled() && (notInGame() || mc.isSingleplayer() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
 	}
 	
 	public static boolean canFlyOnGround(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.isCreative());
+		return !isModDisabled() && (notInGame() || mc.isSingleplayer() || mc.player.isCreative());
+	}
+	
+	public static boolean canEnableMod(){
+		return notInGame() || mc.isSingleplayer();
 	}
 	
 	public static boolean isModDisabled(){
