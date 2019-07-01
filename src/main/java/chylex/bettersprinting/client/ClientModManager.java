@@ -47,11 +47,11 @@ public final class ClientModManager{
 	}
 	
 	public static boolean canBoostFlying(){
-		return !isModDisabled() && (notInGame() || mc.isSingleplayer() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
+		return !isModDisabled() && (notInGame() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
 	}
 	
 	public static boolean canFlyOnGround(){
-		return !isModDisabled() && (notInGame() || mc.isSingleplayer() || mc.player.isCreative());
+		return !isModDisabled() && (notInGame() || mc.player.isCreative());
 	}
 	
 	public static boolean canEnableMod(){
