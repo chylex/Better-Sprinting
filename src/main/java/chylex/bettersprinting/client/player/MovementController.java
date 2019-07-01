@@ -24,7 +24,7 @@ final class MovementController{
 		sprint = ClientModManager.keyBindSprintHold.isKeyDown();
 		
 		if (!sprint){
-			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSprintToggle.isKeyDown()){
+			if (ClientModManager.keyBindSprintToggle.isKeyDown()){
 				if (!hasToggledSprint){
 					sprintToggle = !sprintToggle;
 					hasToggledSprint = true;
@@ -41,7 +41,7 @@ final class MovementController{
 		}
 		
 		if (!mc.gameSettings.keyBindSneak.isKeyDown()){
-			if (!ClientModManager.isModDisabled() && ClientModManager.keyBindSneakToggle.isKeyDown()){
+			if (ClientModManager.keyBindSneakToggle.isKeyDown()){
 				if (!hasToggledSneak){
 					sneakToggle = !sneakToggle;
 					hasToggledSneak = true;
@@ -52,19 +52,14 @@ final class MovementController{
 			}
 		}
 		
-		if (ClientModManager.isModDisabled()){
-			sneakToggle = sprintToggle = false;
+		if (movementInput.sneak && sneakToggle && mc.currentScreen != null && !(mc.currentScreen instanceof DeathScreen)){
+			shouldRestoreSneakToggle = true;
+			sneakToggle = false;
 		}
-		else{
-			if (movementInput.sneak && sneakToggle && mc.currentScreen != null && !(mc.currentScreen instanceof DeathScreen)){
-				shouldRestoreSneakToggle = true;
-				sneakToggle = false;
-			}
-			
-			if (shouldRestoreSneakToggle && mc.currentScreen == null){
-				sneakToggle = true;
-				shouldRestoreSneakToggle = false;
-			}
+		
+		if (shouldRestoreSneakToggle && mc.currentScreen == null){
+			sneakToggle = true;
+			shouldRestoreSneakToggle = false;
 		}
 		
 		movementInput.func_217607_a(slowMovement || sneakToggle, isSpectator);
