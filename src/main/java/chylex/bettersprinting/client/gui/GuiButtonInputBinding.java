@@ -17,8 +17,9 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput<GuiButtonI
 	private boolean isSelected;
 	
 	public GuiButtonInputBinding(int x, int y, KeyBinding binding, Consumer<GuiButtonInputBinding> onClick){
-		super(x, y, binding.getLocalizedName(), binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription(), onClick);
+		super(x, y, "", binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription(), onClick);
 		this.binding = binding;
+		updateKeyBindingText();
 	}
 	
 	@Override
@@ -38,16 +39,14 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput<GuiButtonI
 	public void setBinding(InputMappings.Input input){
 		binding.bind(input);
 		isSelected = false;
-		updateKeyBindingText();
 	}
 	
 	public void setBinding(KeyModifier modifier, InputMappings.Input input){
 		binding.setKeyModifierAndCode(modifier, input);
 		isSelected &= KeyModifier.isKeyCodeModifier(input) && modifier != KeyModifier.NONE;
-		updateKeyBindingText();
 	}
 	
-	private void updateKeyBindingText(){
+	public void updateKeyBindingText(){
 		boolean hasConflict = false;
 		boolean hasOnlyModifierConflict = true;
 		

@@ -204,6 +204,12 @@ public class GuiSprint extends Screen{
 			selectedBinding = null;
 		}
 		
+		for(Widget button:buttons){
+			if (button instanceof GuiButtonInputBinding){
+				((GuiButtonInputBinding)button).updateKeyBindingText();
+			}
+		}
+		
 		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintHold, ClientModManager.keyBindSprintHold.getKey().getKeyCode());
 		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintToggle, ClientModManager.keyBindSprintToggle.getKey().getKeyCode());
 		BetterSprintingMod.config.set(ClientSettings.keyCodeSneakToggle, ClientModManager.keyBindSneakToggle.getKey().getKeyCode());
