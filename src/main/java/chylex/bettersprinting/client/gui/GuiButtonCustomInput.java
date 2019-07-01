@@ -1,22 +1,31 @@
 package chylex.bettersprinting.client.gui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
+import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class GuiButtonCustomInput extends GuiButtonExt{
-	public final int id;
+public abstract class GuiButtonCustomInput<T> extends Button{
 	private final String titleKey;
+	private final Consumer<T> onClick;
 	
-	public GuiButtonCustomInput(int id, int x, int y, String buttonText, String titleKey){
+	public GuiButtonCustomInput(int x, int y, String buttonText, String titleKey, Consumer<T> onClick){
 		super(x, y, 70, 20, buttonText, null);
-		this.id = id;
 		this.titleKey = titleKey;
+		this.onClick = onClick;
 	}
 	
+	protected abstract T getContext();
+	
 	@Override
-	public void onPress(){}
+	public void onPress(){
+		onClick.accept(getContext());
+	}
+	
+	public void setTitleKey(String translationKey){
+		setMessage(I18n.format(translationKey));
+	}
 	
 	public String getTitle(){
 		return I18n.format(titleKey);
