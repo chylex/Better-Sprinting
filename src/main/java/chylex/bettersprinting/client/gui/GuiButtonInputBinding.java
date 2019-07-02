@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public final class GuiButtonInputBinding extends GuiButtonCustomInput<GuiButtonInputBinding>{
 	private static final GameSettings settings = Minecraft.getInstance().gameSettings;
 	
-	private final KeyBinding binding;
+	public final KeyBinding binding;
 	private boolean isSelected;
 	
 	public GuiButtonInputBinding(int x, int y, KeyBinding binding, Consumer<GuiButtonInputBinding> onClick){

@@ -14,8 +14,6 @@ public class GuiButton extends Button{
 	
 	@Override
 	public void onPress(){
-		if (active){
-			onClick.run();
-		}
+		onClick.run();
 	}
 }

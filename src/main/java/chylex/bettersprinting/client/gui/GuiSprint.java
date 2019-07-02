@@ -46,13 +46,8 @@ public class GuiSprint extends Screen{
 		int left = (width / 2) - 155;
 		int top = height / 6;
 		
-		for(int a = 0; a < ClientModManager.keyBindings.length; a++){
-			KeyBinding binding = ClientModManager.keyBindings[a];
-			Button btn = addButton(new GuiButtonInputBinding(left + 160 * (a % 2), top + 24 * (a / 2), binding, this::onBindingClicked));
-			
-			if ((binding == ClientModManager.keyBindSprintToggle || binding == ClientModManager.keyBindSneakToggle) && ClientModManager.isModDisabled()){
-				btn.active = false;
-			}
+		for(int index = 0; index < ClientModManager.keyBindings.length; index++){
+			addButton(new GuiButtonInputBinding(left + 160 * (index % 2), top + 24 * (index / 2), ClientModManager.keyBindings[index], this::onBindingClicked));
 		}
 		
 		btnSprintMode = addButton(new GuiButton(left - 50, top, 48, "", this::onClickedSprintMode));
@@ -63,23 +58,36 @@ public class GuiSprint extends Screen{
 		btnDisableMod = addButton(new GuiButtonInputOption(idDisableMod, left + 160, top + 108, "bs.disableMod", this::onButtonClicked));
 		btnAutoJump = addButton(new GuiButtonInputOption(idAutoJump, left, top + 108, "bs.autoJump", this::onButtonClicked));
 		
-		btnSprintMode.active = !ClientModManager.isModDisabled();
-		btnDoubleTap.active = !ClientModManager.isModDisabled();
-		btnAllDirs.active = Feature.RUN_IN_ALL_DIRS.isAvailable();
-		btnFlyBoost.active = Feature.FLY_BOOST.isAvailable();
-		btnFlyOnGround.active = Feature.FLY_ON_GROUND.isAvailable();
-		btnDisableMod.active = ClientModManager.canManuallyEnableMod();
-		
 		addButton(new GuiButton((width / 2) - 100, top + 168, parentScreen == null ? 98 : 200, I18n.format("gui.done"), this::onClickedDone));
 		
 		if (parentScreen == null){
 			addButton(new GuiButton((width / 2) + 2, top + 168, 98, I18n.format("options.controls"), this::onClickedControls));
 		}
 		
-		updateButtons();
+		updateButtonState();
+		updateButtonText();
 	}
 	
-	private void updateButtons(){
+	private void updateButtonState(){
+		for(Widget button:buttons){
+			if (button instanceof GuiButtonInputBinding){
+				KeyBinding binding = ((GuiButtonInputBinding)button).binding;
+				
+				if (binding == ClientModManager.keyBindSprintToggle || binding == ClientModManager.keyBindSneakToggle){
+					button.active = !ClientModManager.isModDisabled();
+				}
+			}
+		}
+		
+		btnSprintMode.active = !ClientModManager.isModDisabled();
+		btnDoubleTap.active = !ClientModManager.isModDisabled();
+		btnAllDirs.active = Feature.RUN_IN_ALL_DIRS.isAvailable();
+		btnFlyBoost.active = Feature.FLY_BOOST.isAvailable();
+		btnFlyOnGround.active = Feature.FLY_ON_GROUND.isAvailable();
+		btnDisableMod.active = ClientModManager.canManuallyEnableMod();
+	}
+	
+	private void updateButtonText(){
 		btnSprintMode.setMessage(I18n.format((ClientModManager.isModDisabled() ? SprintKeyMode.TAP : ClientSettings.sprintKeyMode.get()).translationKey));
 		btnDoubleTap.setTitleKey(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.setTitleKey(Feature.FLY_BOOST.isAvailable() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
@@ -102,7 +110,7 @@ public class GuiSprint extends Screen{
 	private void onClickedSprintMode(){
 		BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
 		BetterSprintingMod.config.save();
-		updateButtons();
+		updateButtonText();
 	}
 	
 	private void onBindingClicked(GuiButtonInputBinding binding){
@@ -124,7 +132,8 @@ public class GuiSprint extends Screen{
 			case idDisableMod:
 				if (ClientModManager.canManuallyEnableMod()){
 					BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
-					init();
+					updateButtonState();
+					updateButtonText();
 				} break;
 				
 			case idFlyBoost:
@@ -152,7 +161,7 @@ public class GuiSprint extends Screen{
 		}
 		
 		BetterSprintingMod.config.save();
-		updateButtons();
+		updateButtonText();
 	}
 	
 	@Override
