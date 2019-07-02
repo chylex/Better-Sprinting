@@ -214,9 +214,10 @@ public class GuiSprint extends Screen{
 		ClientSettings.keyInfoSprintToggle.readFrom(ClientModManager.keyBindSprintToggle);
 		ClientSettings.keyInfoSneakToggle.readFrom(ClientModManager.keyBindSneakToggle);
 		ClientSettings.keyInfoOptionsMenu.readFrom(ClientModManager.keyBindOptionsMenu);
-		
-		BetterSprintingMod.config.save();
 		KeyBinding.resetKeyBindingArrayAndHash();
+		
+		mc.gameSettings.saveOptions();
+		BetterSprintingMod.config.save();
 	}
 	
 	@Override
