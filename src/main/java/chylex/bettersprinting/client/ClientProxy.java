@@ -33,6 +33,10 @@ public class ClientProxy extends BetterSprintingProxy{
 				ClientModManager.keyBindOptionsMenu
 			);
 			
+			if (BetterSprintingMod.config.isNew()){
+				ClientSettings.firstTimeSetup();
+			}
+			
 			// UPDATE | Ensure this doesn't override vanilla sprint key on start (settings are reloaded after mods load) | 1.14.3
 			ClientSettings.keyInfoSprintHold.writeInto(ClientModManager.keyBindSprintHold);
 			ClientSettings.keyInfoSprintToggle.writeInto(ClientModManager.keyBindSprintToggle);

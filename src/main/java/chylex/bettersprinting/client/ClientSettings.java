@@ -1,7 +1,11 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
+import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.input.KeyBindingInfo;
 import chylex.bettersprinting.client.input.SprintKeyMode;
+import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -95,5 +99,35 @@ public class ClientSettings{
 		keyInfoSprintToggle = new KeyBindingInfo(keyCodeSprintToggle, keyModSprintToggle, keyTypeSprintToggle);
 		keyInfoSneakToggle = new KeyBindingInfo(keyCodeSneakToggle, keyModSneakToggle, keyTypeSneakToggle);
 		keyInfoOptionsMenu = new KeyBindingInfo(keyCodeOptionsMenu, keyModOptionsMenu, keyTypeOptionsMenu);
+	}
+	
+	public static void firstTimeSetup(){
+		GameSettings settings = Minecraft.getInstance().gameSettings;
+		
+		KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
+		KeyModifier sneakModifier = getVanillaKeyModifier(settings.keyBindSneak);
+		
+		if (sprintModifier != KeyModifier.NONE){
+			keyInfoSprintToggle.set(sprintModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));
+		}
+		
+		if (sneakModifier != KeyModifier.NONE){
+			keyInfoSneakToggle.set(sneakModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));
+		}
+		
+		BetterSprintingMod.config.save();
+	}
+	
+	private static KeyModifier getVanillaKeyModifier(KeyBinding binding){
+		if (binding.getKeyModifier() != KeyModifier.NONE || binding.getKey().getType() != InputMappings.Type.KEYSYM){
+			return KeyModifier.NONE;
+		}
+		
+		switch(binding.getKey().getKeyCode()){
+			case GLFW.GLFW_KEY_LEFT_CONTROL: return KeyModifier.CONTROL;
+			case GLFW.GLFW_KEY_LEFT_SHIFT: return KeyModifier.SHIFT;
+			case GLFW.GLFW_KEY_LEFT_ALT: return KeyModifier.ALT;
+			default: return KeyModifier.NONE;
+		}
 	}
 }
