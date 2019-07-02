@@ -14,7 +14,6 @@ import static chylex.bettersprinting.client.input.SprintState.INACTIVE;
 import static chylex.bettersprinting.client.input.SprintState.TAPPED_SPRINT_KEY;
 import static chylex.bettersprinting.client.input.SprintState.TAPPING_SPRINT_KEY;
 import static chylex.bettersprinting.client.input.SprintState.TOGGLED;
-import static chylex.bettersprinting.client.input.SprintState.TOGGLED_WHILE_HOLDING_SPRINT_KEY;
 
 final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -80,23 +79,17 @@ final class PlayerLogicHandler{
 		
 		// Sprint state
 		
-		if (movementController.sprintToggle){
-			if (!sprinting.toggled()){
-				sprinting = isSprintHeld ? TOGGLED_WHILE_HOLDING_SPRINT_KEY : TOGGLED; // allow releasing sprint key
-			}
+		if (movementController.isSprintToggled()){
+			sprinting = TOGGLED;
 		}
-		else if (sprinting.toggled()){
+		else if (sprinting == TOGGLED){
 			sprinting = INACTIVE;
 		}
 		
 		if (isSprintHeld){
-			if (sprinting != TAPPING_SPRINT_KEY && sprinting != TOGGLED_WHILE_HOLDING_SPRINT_KEY){
-				sprinting = HOLDING_SPRINT_KEY; // reset locked sprint after tapping the sprint key
-				movementController.sprintToggle = false;
+			if (sprinting != TAPPING_SPRINT_KEY && sprinting != TOGGLED){
+				sprinting = HOLDING_SPRINT_KEY;
 			}
-		}
-		else if (sprinting == TOGGLED_WHILE_HOLDING_SPRINT_KEY){
-			sprinting = TOGGLED;
 		}
 		else if (sprinting == TAPPING_SPRINT_KEY){
 			sprinting = TAPPED_SPRINT_KEY;
