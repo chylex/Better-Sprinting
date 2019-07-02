@@ -20,7 +20,9 @@ public abstract class GuiButtonCustomInput<T> extends Button{
 	
 	@Override
 	public void onPress(){
-		onClick.accept(getContext());
+		if (active){
+			onClick.accept(getContext());
+		}
 	}
 	
 	public void setTitleKey(String translationKey){

@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.gui.GuiButton;
 import chylex.bettersprinting.client.gui.GuiSprint;
 import chylex.bettersprinting.client.player.IntegrityCheck;
 import chylex.bettersprinting.client.player.LivingUpdate;
@@ -22,7 +23,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -107,9 +107,7 @@ public final class ClientEventHandler{
 			        ));
 			
 			if (!(controls.parentScreen instanceof GuiSprint)){
-				e.addWidget(new GuiButtonExt((controls.width / 2) + 5, 18, 150, 20, "Better Sprinting", __ -> {
-					mc.displayGuiScreen(new GuiSprint(mc.currentScreen));
-				}));
+				e.addWidget(new GuiButton((controls.width / 2) + 5, 18, 150, "Better Sprinting", () -> mc.displayGuiScreen(new GuiSprint(mc.currentScreen))));
 			}
 		}
 	}

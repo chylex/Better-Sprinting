@@ -70,10 +70,10 @@ public class GuiSprint extends Screen{
 		btnFlyOnGround.active = Feature.FLY_ON_GROUND.isAvailable();
 		btnDisableMod.active = ClientModManager.canManuallyEnableMod();
 		
-		addButton(new Button((width / 2) - 100, top + 168, parentScreen == null ? 98 : 200, 20, I18n.format("gui.done"), this::onClickedDone));
+		addButton(new GuiButton((width / 2) - 100, top + 168, parentScreen == null ? 98 : 200, I18n.format("gui.done"), this::onClickedDone));
 		
 		if (parentScreen == null){
-			addButton(new Button((width / 2) + 2, top + 168, 98, 20, I18n.format("options.controls"), this::onClickedControls));
+			addButton(new GuiButton((width / 2) + 2, top + 168, 98, I18n.format("options.controls"), this::onClickedControls));
 		}
 		
 		updateButtons();
@@ -89,12 +89,12 @@ public class GuiSprint extends Screen{
 		btnAutoJump.setTitleKey(mc.gameSettings.autoJump ? "gui.yes" : "gui.no");
 	}
 	
-	private void onClickedControls(@SuppressWarnings("unused") Button button){
+	private void onClickedControls(){
 		mc.displayGuiScreen(new ControlsScreen(this, mc.gameSettings));
 		BetterSprintingMod.config.save();
 	}
 	
-	private void onClickedDone(@SuppressWarnings("unused") Button button){
+	private void onClickedDone(){
 		mc.displayGuiScreen(parentScreen);
 		BetterSprintingMod.config.save();
 	}
