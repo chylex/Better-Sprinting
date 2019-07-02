@@ -210,23 +210,13 @@ public class GuiSprint extends Screen{
 			}
 		}
 		
-		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintHold, ClientModManager.keyBindSprintHold.getKey().getKeyCode());
-		BetterSprintingMod.config.set(ClientSettings.keyCodeSprintToggle, ClientModManager.keyBindSprintToggle.getKey().getKeyCode());
-		BetterSprintingMod.config.set(ClientSettings.keyCodeSneakToggle, ClientModManager.keyBindSneakToggle.getKey().getKeyCode());
-		BetterSprintingMod.config.set(ClientSettings.keyCodeOptionsMenu, ClientModManager.keyBindOptionsMenu.getKey().getKeyCode());
-		
-		BetterSprintingMod.config.set(ClientSettings.keyModSprintHold, ClientModManager.keyBindSprintHold.getKeyModifier());
-		BetterSprintingMod.config.set(ClientSettings.keyModSprintToggle, ClientModManager.keyBindSprintToggle.getKeyModifier());
-		BetterSprintingMod.config.set(ClientSettings.keyModSneakToggle, ClientModManager.keyBindSneakToggle.getKeyModifier());
-		BetterSprintingMod.config.set(ClientSettings.keyModOptionsMenu, ClientModManager.keyBindOptionsMenu.getKeyModifier());
-		
-		BetterSprintingMod.config.set(ClientSettings.keyTypeSprintHold, ClientModManager.keyBindSprintHold.getKey().getType());
-		BetterSprintingMod.config.set(ClientSettings.keyTypeSprintToggle, ClientModManager.keyBindSprintToggle.getKey().getType());
-		BetterSprintingMod.config.set(ClientSettings.keyTypeSneakToggle, ClientModManager.keyBindSneakToggle.getKey().getType());
-		BetterSprintingMod.config.set(ClientSettings.keyTypeOptionsMenu, ClientModManager.keyBindOptionsMenu.getKey().getType());
+		ClientSettings.keyInfoSprintHold.readFrom(ClientModManager.keyBindSprintHold);
+		ClientSettings.keyInfoSprintToggle.readFrom(ClientModManager.keyBindSprintToggle);
+		ClientSettings.keyInfoSneakToggle.readFrom(ClientModManager.keyBindSneakToggle);
+		ClientSettings.keyInfoOptionsMenu.readFrom(ClientModManager.keyBindOptionsMenu);
 		
 		BetterSprintingMod.config.save();
-		ClientSettings.updateKeyBindings();
+		KeyBinding.resetKeyBindingArrayAndHash();
 	}
 	
 	@Override

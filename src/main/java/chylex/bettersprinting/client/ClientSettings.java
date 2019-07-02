@@ -1,7 +1,7 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
+import chylex.bettersprinting.client.input.KeyBindingInfo;
 import chylex.bettersprinting.client.input.SprintKeyMode;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,20 +16,25 @@ import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientSettings{
-	public static final IntValue keyCodeSprintHold;
-	public static final IntValue keyCodeSprintToggle;
-	public static final IntValue keyCodeSneakToggle;
-	public static final IntValue keyCodeOptionsMenu;
+	private static final IntValue keyCodeSprintHold;
+	private static final IntValue keyCodeSprintToggle;
+	private static final IntValue keyCodeSneakToggle;
+	private static final IntValue keyCodeOptionsMenu;
 	
-	public static final EnumValue<KeyModifier> keyModSprintHold;
-	public static final EnumValue<KeyModifier> keyModSprintToggle;
-	public static final EnumValue<KeyModifier> keyModSneakToggle;
-	public static final EnumValue<KeyModifier> keyModOptionsMenu;
+	private static final EnumValue<KeyModifier> keyModSprintHold;
+	private static final EnumValue<KeyModifier> keyModSprintToggle;
+	private static final EnumValue<KeyModifier> keyModSneakToggle;
+	private static final EnumValue<KeyModifier> keyModOptionsMenu;
 	
-	public static final EnumValue<InputMappings.Type> keyTypeSprintHold;
-	public static final EnumValue<InputMappings.Type> keyTypeSprintToggle;
-	public static final EnumValue<InputMappings.Type> keyTypeSneakToggle;
-	public static final EnumValue<InputMappings.Type> keyTypeOptionsMenu;
+	private static final EnumValue<InputMappings.Type> keyTypeSprintHold;
+	private static final EnumValue<InputMappings.Type> keyTypeSprintToggle;
+	private static final EnumValue<InputMappings.Type> keyTypeSneakToggle;
+	private static final EnumValue<InputMappings.Type> keyTypeOptionsMenu;
+	
+	public static final KeyBindingInfo keyInfoSprintHold;
+	public static final KeyBindingInfo keyInfoSprintToggle;
+	public static final KeyBindingInfo keyInfoSneakToggle;
+	public static final KeyBindingInfo keyInfoOptionsMenu;
 	
 	public static final EnumValue<SprintKeyMode> sprintKeyMode;
 	
@@ -85,13 +90,10 @@ public class ClientSettings{
 		builder.pop();
 		
 		configSpec = builder.build();
-	}
-	
-	public static void updateKeyBindings(){
-		ClientModManager.keyBindSprintHold.setKeyModifierAndCode(keyModSprintHold.get(), keyTypeSprintHold.get().getOrMakeInput(keyCodeSprintHold.get()));
-		ClientModManager.keyBindSprintToggle.setKeyModifierAndCode(keyModSprintToggle.get(), keyTypeSprintToggle.get().getOrMakeInput(keyCodeSprintToggle.get()));
-		ClientModManager.keyBindSneakToggle.setKeyModifierAndCode(keyModSneakToggle.get(), keyTypeSneakToggle.get().getOrMakeInput(keyCodeSneakToggle.get()));
-		ClientModManager.keyBindOptionsMenu.setKeyModifierAndCode(keyModOptionsMenu.get(), keyTypeOptionsMenu.get().getOrMakeInput(keyCodeOptionsMenu.get()));
-		KeyBinding.resetKeyBindingArrayAndHash();
+		
+		keyInfoSprintHold = new KeyBindingInfo(keyCodeSprintHold, keyModSprintHold, keyTypeSprintHold);
+		keyInfoSprintToggle = new KeyBindingInfo(keyCodeSprintToggle, keyModSprintToggle, keyTypeSprintToggle);
+		keyInfoSneakToggle = new KeyBindingInfo(keyCodeSneakToggle, keyModSneakToggle, keyTypeSneakToggle);
+		keyInfoOptionsMenu = new KeyBindingInfo(keyCodeOptionsMenu, keyModOptionsMenu, keyTypeOptionsMenu);
 	}
 }
