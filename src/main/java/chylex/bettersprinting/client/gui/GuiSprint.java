@@ -55,7 +55,7 @@ public class GuiSprint extends Screen{
 			}
 		}
 		
-		btnSprintMode = addButton(new Button(left - 52, top, 50, 20, "", this::onClickedSprintMode)); // TODO make proper UI
+		btnSprintMode = addButton(new GuiButton(left - 50, top, 48, "", this::onClickedSprintMode));
 		btnDoubleTap = addButton(new GuiButtonInputOption(idDoubleTap, left, top + 60, "bs.doubleTapping", this::onButtonClicked));
 		btnAllDirs = addButton(new GuiButtonInputOption(idAllDirs, left + 160, top + 60, "bs.runAllDirs", this::onButtonClicked));
 		btnFlyBoost = addButton(new GuiButtonInputOption(idFlyBoost, left, top + 84, "bs.flyBoost", this::onButtonClicked));
@@ -80,7 +80,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	private void updateButtons(){
-		btnSprintMode.setMessage(I18n.format(ClientModManager.isModDisabled() ? "gui.unavailable" : ClientSettings.sprintKeyMode.get().translationKey));
+		btnSprintMode.setMessage(I18n.format((ClientModManager.isModDisabled() ? SprintKeyMode.TAP : ClientSettings.sprintKeyMode.get()).translationKey));
 		btnDoubleTap.setTitleKey(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.setTitleKey(Feature.FLY_BOOST.isAvailable() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
 		btnFlyOnGround.setTitleKey(Feature.FLY_ON_GROUND.isAvailable() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
@@ -99,6 +99,12 @@ public class GuiSprint extends Screen{
 		BetterSprintingMod.config.save();
 	}
 	
+	private void onClickedSprintMode(){
+		BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
+		BetterSprintingMod.config.save();
+		updateButtons();
+	}
+	
 	private void onBindingClicked(GuiButtonInputBinding binding){
 		if (selectedBinding != null){
 			selectedBinding.setSelected(false);
@@ -106,12 +112,6 @@ public class GuiSprint extends Screen{
 		
 		selectedBinding = binding;
 		selectedBinding.setSelected(true);
-	}
-	
-	private void onClickedSprintMode(@SuppressWarnings("unused") Button button){
-		BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
-		BetterSprintingMod.config.save();
-		updateButtons();
 	}
 	
 	private void onButtonClicked(int id){
