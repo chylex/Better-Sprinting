@@ -7,6 +7,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,7 +71,7 @@ final class ServerNetwork implements INetworkHandler{
 	 * guarantee support of the protocol features in any unofficial mods or plugins.
 	 */
 	
-	private static final Set<UUID> players = new HashSet<>();
+	private static final Set<UUID> players = Collections.synchronizedSet(new HashSet<>());
 	
 	public static boolean hasBetterSprinting(PlayerEntity player){
 		return players.contains(player.getUniqueID());
