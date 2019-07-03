@@ -1,7 +1,9 @@
 package chylex.bettersprinting.server;
 import chylex.bettersprinting.BetterSprintingMod;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +31,7 @@ public class ServerCommandConfig extends CommandBase{
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args){
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
 		if (args.length == 0){
 			sendMessage(sender, TextFormatting.GREEN + "[Better Sprinting]");
 			sendMessage(sender, "/bettersprinting info");
@@ -47,11 +49,13 @@ public class ServerCommandConfig extends CommandBase{
 				sendMessageTranslated(sender, ServerSettings.disableClientMod ? "bs.command.disableMod" : "bs.command.enableMod");
 				ServerNetwork.sendToAll(server.getPlayerList().getPlayers(), ServerNetwork.writeDisableMod(ServerSettings.disableClientMod));
 			}
-			else sendMessageTranslated(sender, "bs.command.invalidSyntax");
+			else{
+				throw new WrongUsageException("commands.generic.syntax");
+			}
 		}
 		else if (args[0].equalsIgnoreCase("setting")){
 			if (args.length <= 1 || !isValidBool(args, 2)){
-				sendMessageTranslated(sender, "bs.command.invalidSyntax");
+				throw new WrongUsageException("commands.generic.syntax");
 			}
 			else{
 				if (args[1].equalsIgnoreCase("survivalFlyBoost")){
@@ -70,7 +74,9 @@ public class ServerCommandConfig extends CommandBase{
 				}
 			}
 		}
-		else sendMessageTranslated(sender, "bs.command.invalidSyntax");
+		else{
+			throw new WrongUsageException("commands.generic.syntax");
+		}
 	}
 	
 	@Override

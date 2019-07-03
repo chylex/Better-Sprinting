@@ -13,10 +13,12 @@ import java.util.List;
 
 public class BetterSprintingConfig{
 	private final Configuration config;
+	private final boolean isNew;
 	private String currentCategory = "unknown";
 	
 	BetterSprintingConfig(File file){
 		MinecraftForge.EVENT_BUS.register(this);
+		isNew = !file.exists();
 		config = new Configuration(file);
 		reload();
 	}
@@ -38,6 +40,10 @@ public class BetterSprintingConfig{
 		}
 	}
 	
+	public boolean isNew(){
+		return isNew;
+	}
+	
 	public String getFileName(){
 		return config.toString();
 	}
@@ -56,23 +62,17 @@ public class BetterSprintingConfig{
 	}
 	
 	public Property get(String name, boolean defValue, String comment){
-		return config.get(currentCategory, name, defValue, comment);
+		Property property = config.get(currentCategory, name, defValue, ""); // the comment parameter is just fucked for some reason
+		property.setComment(comment);
+		return property;
 	}
 	
 	public Property get(String name, int defValue){
 		return config.get(currentCategory, name, defValue, "");
 	}
 	
-	public Property get(String name, int defValue, String comment){
-		return config.get(currentCategory, name, defValue, comment);
-	}
-	
 	public Property get(String name, String defValue){
 		return config.get(currentCategory, name, defValue, "");
-	}
-	
-	public Property get(String name, String defValue, String comment){
-		return config.get(currentCategory, name, defValue, comment);
 	}
 	
 	public void set(String name, boolean value){

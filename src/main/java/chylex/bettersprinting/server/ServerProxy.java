@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-public class ServerProxy extends BetterSprintingProxy{	
+public class ServerProxy extends BetterSprintingProxy{
 	@Override
 	public void loadSidedConfig(BetterSprintingConfig config){
 		ServerSettings.reload(config);
@@ -14,7 +14,6 @@ public class ServerProxy extends BetterSprintingProxy{
 	
 	@Override
 	public void onPreInit(FMLPreInitializationEvent e){
-		ServerEventHandler.register();
 		PacketPipeline.initialize(new ServerNetwork());
 	}
 

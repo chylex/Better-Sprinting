@@ -22,7 +22,7 @@ public final class UpdateNotificationManager{
 		if (ClientSettings.enableUpdateNotifications || ClientSettings.enableBuildCheck){
 			long time = Calendar.getInstance().getTimeInMillis();
 			
-			if (time-globalData.getLong(prefKey, 0L) > 86400000L){ // 24 hours
+			if (time - globalData.getLong(prefKey, 0L) > 86400000L){ // 24 hours
 				globalData.putLong(prefKey, time);
 				
 				try{

@@ -1,4 +1,5 @@
-# Generic GUI titles
+
+# Generic titles
 
 gui.enabled=Habilitado
 gui.disabled=Disabilitado
@@ -6,27 +7,32 @@ gui.unavailable=Não disponível
 
 # Titles for controls
 
-bs.sprint.hold=Correr (Segure)
+bs.sprint.mode.tap=Tap
+bs.sprint.mode.hold=Hold
+
+bs.sprint.hold=Correr
 bs.sprint.toggle=Correr (Ligar)
 bs.sneak.toggle=Agachar (Ligar)
-bs.menu=Menu
+bs.menu=Mod configuration
 
 bs.doubleTapping=Toque duplo
 bs.runAllDirs=Corra em todas direções
 bs.flyBoost=Voo rápido
+bs.flyOnGround=Fly on ground
 bs.disableMod=Desabilitar mod
 bs.autoJump=Pulo automático
 
-# Tooltips for controls (use the '#' character for splitting lines)
+# Tooltips for controls (use '#' character for splitting lines)
 
-bs.sprint.hold.info=Segure para correr.
-bs.sprint.toggle.info=Pressione uma vez para iniciar ou parar de correr.
+bs.sprint.hold.info=[Tap] will start or stop sprinting when pressed.#[Hold] will sprint only while the key is held.
+bs.sprint.toggle.info=Pressione uma vez para iniciar ou parar de correr.#Slowing down will not interrupt the sprint.
 bs.sneak.toggle.info=Pressione uma vez para iniciar ou parar de agachar.#Quando você abre um menu você para de agachar até fechá-lo.
 bs.menu.info=Tecla para abrir o em jogo.
 
 bs.doubleTapping.info=Habilite ou desabilite a corrida clicando duas vezes na tecla W.
 bs.runAllDirs.info=Correr em todas direções.#Você não pode usar isso no multiplayer, só se o servidor permitir.
-bs.flyBoost.info=Aperte no modo criativo para voar mais rápido.#Tecla padrão: control
+bs.flyBoost.info=Hold sprint key to fly faster in creative or spectator mode.
+bs.flyOnGround.info=Continue flying when touching ground in creative mode.
 bs.disableMod.info=Desabilitar todas funcionalidades.#Essa opção pode ser usada se um servidor não permite o mod.
 bs.autoJump.info=Opção que faz você pular automáticamente perto de obstáculos.
 
@@ -36,16 +42,13 @@ bs.autoJump.info=Opção que faz você pular automáticamente perto de obstácul
 
 # In-game messages
 
-bs.game.integrity=Erro na verificação, outro mod está conflitando com Better Sprinting.
-bs.game.disabled=O servidor pediu para desabilitar o mod, as mecânicas de corrida serão desabilitadas até você desconectar.
-bs.game.reenabled=O servidor reativou o mod, mecânicas ativadas.
+bs.game.integrity=Better Sprinting is not working correctly, there may be a conflict with another mod.
+bs.game.disabled=The server requested to disable the mod, all features will be deactivated.
+bs.game.reenabled=The server has enabled the mod again, all features were reactivated.
 
-# Server messages (translated on client)
+# Server messages
 
-bs.server.kick=O servidor não permite Better Sprinting. Novas versões do mod podem se desabilitar automaticamente sem te expulsar.
-
-bs.command.invalidSyntax=Sintaxe inválida, use /bettersprinting para uma lista de comandos.
-bs.command.info=Você pode usar o comando para desativar/ativar o mod, ou mudar configurações específicas. Estes irão persistir após reiniciar o servidor, e também vai afetar imediatamente os jogadores que já estão no servidor.
+bs.command.info=Use the commands to either disable/enable the mod for players, or change specific settings. These will persist after restarting the server, and will also immediately affect players that are already on the server.
 bs.command.disableMod=Better sprinting será automaticamente desabilitado quando alguém entrar.
 bs.command.enableMod=Better Sprinting agora é permitido no servidor.
 bs.command.disableFlyBoost=Voo rápido agora está desabilitado quando o jogador estiver no modo sobrevivência.
@@ -55,5 +58,5 @@ bs.command.enableAllDirs=Correr em todas as direções agora está ativado.
 
 # Configuration
 
-bs.config.notifications=Notifica sobre novas atualizações. A checagem acontece apenas uma vez por dia, e não impacta na performance do jogo.
-bs.config.buildCheck=É altamente recomendável de manter essa opção ativada. Isso irá detectar versões quebradas com erros críticos que podem crashar seu jogo. Essas geralmente são corrigidas muito rápidas, mas é importante notificar pessoas que baixaram versões quebradas.
+bs.config.notifications=Notifies about new updates, at most once per day.
+bs.config.buildCheck=Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled.

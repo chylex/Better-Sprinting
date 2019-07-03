@@ -60,7 +60,7 @@ public class PacketPipeline{
 		instance.channel.sendToServer(new FMLProxyPacket(buffer, channelName));
 	}
 	
-	public static interface INetworkHandler{
+	public interface INetworkHandler{
 		void onPacket(Side side, ByteBuf data, EntityPlayer player);
 	}
 }

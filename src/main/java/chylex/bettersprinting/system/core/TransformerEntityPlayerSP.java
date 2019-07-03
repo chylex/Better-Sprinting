@@ -1,7 +1,6 @@
 package chylex.bettersprinting.system.core;
 import chylex.bettersprinting.system.Log;
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassReader;
@@ -9,24 +8,18 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
 import java.util.Iterator;
 import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ASTORE;
 import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.GETSTATIC;
-import static org.objectweb.asm.Opcodes.IFEQ;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.ISTORE;
 
 public final class TransformerEntityPlayerSP implements IClassTransformer{
 	private static final String[] NAMES_ONLIVINGUPDATE = new String[]{ "n", "onLivingUpdate" };
@@ -60,8 +53,9 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			});
 		
 		try{
-			transformOnLivingUpdate(onLivingUpdate);
-			transformOnLivingUpdateEnd(onLivingUpdate);
+			transformMovementInputUpdate(onLivingUpdate);
+			transformSprinting(onLivingUpdate);
+			transformAfterSuperCall(onLivingUpdate);
 		}catch(Throwable t){
 			logInstructions(onLivingUpdate);
 			throw new IllegalStateException("Better Sprinting failed modifying EntityPlayerSP. The mod has generated logs to help pinpointing the issue, please include them in your report.", t);
@@ -70,144 +64,118 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 	
 	// EntityPlayerSP.onLivingUpdate()
 	
-	private void transformOnLivingUpdate(MethodNode method){
+	private void transformMovementInputUpdate(MethodNode method){
+		Log.debug("Transforming onLivingUpdate (movement update)...");
+		
 		InsnList instructions = method.instructions;
-		int instrcount = instructions.size();
+		int entry = -1;
 		
-		int insertionPoint = -1;
-		int skipPoint = -1;
-		
-		String[] clsMovementInput = getClassNames("net/minecraft/util/MovementInput");
-		String[] fldChest = new String[]{ "CHEST", "e" };
-		
-		for(int index = 0; index < instrcount; index++){
-			AbstractInsnNode instruction = instructions.get(index);
-			
-			if (instruction.getOpcode() == GETFIELD &&
-				ArrayUtils.contains(clsMovementInput, ((FieldInsnNode)instruction).desc) &&
-				checkOpcodeChain(instructions, index - 1, new int[]{ ALOAD, GETFIELD, GETFIELD, ISTORE }) &&
-				checkOpcodeChain(instructions, index + 5, new int[]{ ALOAD, GETFIELD, GETFIELD, ISTORE })
-			){
-				insertionPoint = index + 9;
+		for(int index = 0, instrcount = instructions.size(); index < instrcount; index++){
+			if (checkMethodInstruction(instructions.get(index), INVOKEVIRTUAL, "updatePlayerMoveState", "a") &&
+				checkOpcodeChain(instructions, index - 2, new int[]{ ALOAD, GETFIELD })
+            ){
+				entry = index;
 				break;
 			}
 		}
 		
-		if (insertionPoint == -1){
-			throw new IllegalStateException("Could not find insertion point.");
+		if (entry == -1){
+			throw new IllegalStateException("Could not find entry point.");
 		}
 		
-		Log.debug("Found insertion point at index: $0", insertionPoint);
+		Log.debug("Found entry point at " + entry + ".");
 		
-		for(int index = insertionPoint; index < instrcount; index++){
-			AbstractInsnNode instruction = instructions.get(index);
-			
-			if (instruction.getOpcode() == GETSTATIC &&
-				ArrayUtils.contains(fldChest, ((FieldInsnNode)instruction).name) &&
-				checkOpcodeChain(instructions, index - 1, new int[]{ ALOAD, GETSTATIC, INVOKEVIRTUAL, ASTORE }) &&
-				checkOpcodeChain(instructions, index - 24, new int[]{ ALOAD, GETFIELD, GETFIELD, IFEQ }
-			)){
-				skipPoint = index - 27;
-				break;
-			}
-		}
+		AbstractInsnNode toRemove = instructions.get(entry - 1);
+		AbstractInsnNode toReplace = instructions.get(entry);
 		
-		if (skipPoint == -1){
-			throw new IllegalStateException("Could not find skip point.");
-		}
-		
-		Log.debug("Found skip point at index: $0", insertionPoint);
-		
-		AbstractInsnNode insertNode = instructions.get(insertionPoint);
-		AbstractInsnNode skipNode = instructions.get(skipPoint);
-		
-		if (!(insertNode instanceof LabelNode)){
-			throw new IllegalStateException("invalid insertion point node, expected label, got " + insertNode.getClass().getSimpleName());
-		}
-		
-		if (!(skipNode instanceof LabelNode)){
-			throw new IllegalStateException("invalid insertion point node, expected label, got " + skipNode.getClass().getSimpleName());
-		}
-		
-		InsnList inserted = new InsnList();
-		inserted.add(new VarInsnNode(ALOAD, 0));
-		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
-		inserted.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode)skipNode));
-		
-		instructions.insert(insertNode, inserted);
+		instructions.remove(toRemove);
+		instructions.set(toReplace, new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
 	}
 	
-	private void transformOnLivingUpdateEnd(MethodNode method){
+	private void transformSprinting(MethodNode method){
+		Log.debug("Transforming onLivingUpdate (sprinting)...");
+		
 		InsnList instructions = method.instructions;
-		int instrcount = instructions.size();
+		int[] bounds = null;
 		
-		int insertionPoint = -1;
-		int skipPoint = -1;
-		
-		String[] mtdSendPlayerAbilities = new String[]{ "sendPlayerAbilities", "w" };
-		
-		for(int index = instrcount - 1; index >= 0; index--){
-			AbstractInsnNode instruction = instructions.get(index);
-			
-			if (instruction.getOpcode() == INVOKESPECIAL && ((MethodInsnNode)instruction).name.equals(method.name)){
-				insertionPoint = index + 1;
+		for(int index = 0, instrcount = instructions.size(); index < instrcount; index++){
+			if (checkMethodInstruction(instructions.get(index), INVOKEVIRTUAL, "pushOutOfBlocks", "i") &&
+				checkMethodInstruction(instructions.get(index - 25), INVOKEVIRTUAL, "pushOutOfBlocks", "i") &&
+				checkMethodInstruction(instructions.get(index - 50), INVOKEVIRTUAL, "pushOutOfBlocks", "i") &&
+				checkMethodInstruction(instructions.get(index - 75), INVOKEVIRTUAL, "pushOutOfBlocks", "i") &&
+				checkMethodInstruction(instructions.get(index + 130), INVOKEVIRTUAL, "setSprinting", "f")
+			){
+				bounds = new int[]{ index + 2, index + 131 };
 				break;
 			}
 		}
 		
-		if (insertionPoint == -1){
-			throw new IllegalStateException("Could not find insertion point.");
+		if (bounds == null){
+			throw new IllegalStateException("Could not find entry point.");
 		}
 		
-		Log.debug("Found insertion point at index: $0", insertionPoint);
+		Log.debug("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
 		
-		for(int index = insertionPoint; index < instrcount; index++){
-			AbstractInsnNode instruction = instructions.get(index);
-			
-			if (instruction.getOpcode() == INVOKEVIRTUAL){
-				MethodInsnNode methodInsn = (MethodInsnNode)instruction;
-				
-				if (ArrayUtils.contains(mtdSendPlayerAbilities, methodInsn.name) && methodInsn.desc.equals("()V")){
-					skipPoint = index + 1;
-					break;
-				}
+		AbstractInsnNode[] labels = new AbstractInsnNode[]{ instructions.get(bounds[0]), instructions.get(bounds[1]) };
+		validateLabels(labels[0], labels[1]);
+		
+		InsnList inserted = new InsnList();
+		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "()Z", false));
+		inserted.add(new JumpInsnNode(Opcodes.IFNE, (LabelNode)labels[1]));
+		
+		instructions.insert(labels[0], inserted);
+	}
+	
+	private void transformAfterSuperCall(MethodNode method){
+		Log.debug("Transforming onLivingUpdate (super call)...");
+		
+		InsnList instructions = method.instructions;
+		int[] bounds = null;
+		
+		for(int index = instructions.size() - 1; index >= 0; index--){
+			if (checkMethodInstruction(instructions.get(index), INVOKESPECIAL, method.name, null) &&
+				checkMethodInstruction(instructions.get(index + 24), INVOKEVIRTUAL, "sendPlayerAbilities", "w")
+			){
+				bounds = new int[]{ index + 1, index + 25 };
+				break;
 			}
 		}
 		
-		if (skipPoint == -1){
-			throw new IllegalStateException("Could not find skip point.");
+		if (bounds == null){
+			throw new IllegalStateException("Could not find entry point.");
 		}
 		
-		Log.debug("Found skip point at index: $0", insertionPoint);
+		Log.debug("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
 		
-		AbstractInsnNode insertNode = instructions.get(insertionPoint);
-		AbstractInsnNode skipNode = instructions.get(skipPoint);
-		
-		if (!(insertNode instanceof LabelNode)){
-			throw new IllegalStateException("invalid insertion point node, expected label, got " + insertNode.getClass().getSimpleName());
-		}
-		
-		if (!(skipNode instanceof LabelNode)){
-			throw new IllegalStateException("invalid insertion point node, expected label, got " + skipNode.getClass().getSimpleName());
-		}
+		AbstractInsnNode[] labels = new AbstractInsnNode[]{ instructions.get(bounds[0]), instructions.get(bounds[1]) };
+		validateLabels(labels[0], labels[1]);
 		
 		InsnList inserted = new InsnList();
-		inserted.add(new VarInsnNode(ALOAD, 0));
-		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false));
-		inserted.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode)skipNode));
+		inserted.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "()Z", false));
+		inserted.add(new JumpInsnNode(Opcodes.IFNE, (LabelNode)labels[1]));
 		
-		instructions.insert(insertNode, inserted);
+		instructions.insert(labels[0], inserted);
 	}
 	
 	// Helpers
 	
-	private static String[] getClassNames(String name){
-		String obf = FMLDeobfuscatingRemapper.INSTANCE.unmap(name);
+	private static void validateLabels(AbstractInsnNode insertNode, AbstractInsnNode skipNode){
+		if (!(insertNode instanceof LabelNode)){
+			throw new IllegalStateException("Invalid insertion point node, expected label, got: " + insertNode.getClass().getSimpleName());
+		}
 		
-		return new String[]{
-			"L" + name + ";",
-			"L" + obf + ";"
-		};
+		if (!(skipNode instanceof LabelNode)){
+			throw new IllegalStateException("Invalid insertion point node, expected label, got: " + skipNode.getClass().getSimpleName());
+		}
+	}
+	
+	private static boolean checkMethodInstruction(AbstractInsnNode instruction, int opcode, String name1, String name2){
+		if (instruction.getOpcode() != opcode){
+			return false;
+		}
+		
+		String name = ((MethodInsnNode)instruction).name;
+		return name.equals(name1) || name.equals(name2);
 	}
 	
 	private static boolean checkOpcodeChain(InsnList instructions, int start, int[] chain){
@@ -215,7 +183,7 @@ public final class TransformerEntityPlayerSP implements IClassTransformer{
 			AbstractInsnNode instruction = instructions.get(start + offset);
 			
 			if (instruction.getOpcode() != chain[offset]){
-				Log.warn("Mismatched opcode chain, $0 != $1", instruction.getOpcode(), chain[offset]);
+				Log.debug("Mismatched opcode chain, $0 != $1", instruction.getOpcode(), chain[offset]);
 				return false;
 			}
 		}

@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
+import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.system.PacketPipeline;
 import chylex.bettersprinting.system.core.BetterSprintingCore;
@@ -23,7 +24,6 @@ public class ClientProxy extends BetterSprintingProxy{
 			throw new RuntimeException("This version of Better Sprinting only supports Minecraft " + BetterSprintingCore.supportedMinecraftVersion);
 		}
 		
-		ClientEventHandler.register();
 		PacketPipeline.initialize(new ClientNetwork());
 	}
 	
@@ -31,12 +31,20 @@ public class ClientProxy extends BetterSprintingProxy{
 	public void onInit(FMLInitializationEvent e){
 		GameSettings settings = Minecraft.getMinecraft().gameSettings;
 		
-		settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
+		settings.keyBindings = ArrayUtils.addAll(settings.keyBindings,
 			ClientModManager.keyBindSprintToggle,
 			ClientModManager.keyBindSneakToggle,
-			ClientModManager.keyBindOptionsMenu,
-		});
+			ClientModManager.keyBindOptionsMenu
+		);
 		
+		if (BetterSprintingMod.config.isNew()){
+			ClientSettings.firstTimeSetup();
+		}
+		
+		ClientSettings.keyInfoSprintHold.writeInto(ClientModManager.keyBindSprintHold);
+		ClientSettings.keyInfoSprintToggle.writeInto(ClientModManager.keyBindSprintToggle);
+		ClientSettings.keyInfoSneakToggle.writeInto(ClientModManager.keyBindSneakToggle);
+		ClientSettings.keyInfoOptionsMenu.writeInto(ClientModManager.keyBindOptionsMenu);
 		KeyBinding.resetKeyBindingArrayAndHash();
 	}
 	

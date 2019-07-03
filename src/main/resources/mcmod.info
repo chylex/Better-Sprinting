@@ -2,9 +2,9 @@
 {
   "modid": "bettersprinting",
   "name": "Better Sprinting",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "mcversion": "",
-  "description": "New sprinting and sneaking functionality. Mod settings are configurable in Controls and in-game menu (default: 'O'), for internal settings (notifications) click Config button below.\n\nFind me on Twitter: https://twitter.com/chylexmc",
+  "description": "New ways to control sprinting, sneaking, and flying.\n\nTo configure the mod, click the Better Sprinting button in Controls, or press the configuration key in-game (default: 'O').\n\nFind me on Twitter: https://twitter.com/chylexmc",
   "url": "https://bsprint.chylex.com",
   "updateUrl": "",
   "authorList": [ "chylex" ],

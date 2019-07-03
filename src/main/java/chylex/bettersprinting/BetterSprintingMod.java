@@ -1,5 +1,4 @@
 package chylex.bettersprinting;
-import chylex.bettersprinting.system.Log;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -21,12 +20,11 @@ public class BetterSprintingMod{
 	public static BetterSprintingConfig config;
 	
 	public static final String modId = "bettersprinting";
-	public static final String buildId = "2019-1";
+	public static final String buildId = "2019-2";
 	public static String modVersion;
 	
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent e){
-		Log.load();
 		modVersion = e.getModMetadata().version;
 		config = new BetterSprintingConfig(e.getSuggestedConfigurationFile());
 		proxy.onPreInit(e);

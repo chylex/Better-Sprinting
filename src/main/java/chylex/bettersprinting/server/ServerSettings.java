@@ -1,6 +1,9 @@
 package chylex.bettersprinting.server;
 import chylex.bettersprinting.BetterSprintingConfig;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.SERVER)
 public class ServerSettings{
 	public static boolean enableSurvivalFlyBoost = false;
 	public static boolean enableAllDirs = false;

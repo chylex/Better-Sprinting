@@ -31,16 +31,16 @@ public class ClientNetwork implements INetworkHandler{
 		byte type = data.readByte();
 		
 		if (type == 0){
-			ClientModManager.svSurvivalFlyingBoost = data.readBoolean();
+			ClientModManager.svSurvivalFlyBoost = data.readBoolean();
 			ClientModManager.svRunInAllDirs = data.readBoolean();
 		}
 		else if (type == 1 && !ClientSettings.disableMod){
 			ClientModManager.svDisableMod = true;
-			ClientModManager.showDisableWarningWhenPossible = true;
+			ClientEventHandler.showDisableWarningWhenPossible = true;
 		}
 		else if (type == 2 && !ClientSettings.disableMod){
 			ClientModManager.svDisableMod = false;
-			ClientModManager.showDisableWarningWhenPossible = true;
+			ClientEventHandler.showDisableWarningWhenPossible = true;
 		}
 	}
 }

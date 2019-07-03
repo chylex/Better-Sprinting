@@ -6,9 +6,9 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.client.Minecraft;
+import net.minecraft.realms.RealmsSharedConstants;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.IOUtils;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -23,9 +23,9 @@ public class UpdateThread extends Thread{
 	private final String modVersion;
 	private final String mcVersion;
 	
-	public UpdateThread(String modVersion){
+	UpdateThread(String modVersion){
 		this.modVersion = modVersion;
-		this.mcVersion = MinecraftForge.MC_VERSION;
+		this.mcVersion = RealmsSharedConstants.VERSION_STRING;
 		setPriority(MIN_PRIORITY);
 		setDaemon(true);
 	}
@@ -39,6 +39,7 @@ public class UpdateThread extends Thread{
 			
 			List<VersionEntry> versionList = Lists.newArrayList();
 			VersionEntry newestVersionForCurrentMC = null;
+			
 			int counter = -1;
 			String buildId = "";
 			boolean isInDev = true;
@@ -53,7 +54,9 @@ public class UpdateThread extends Thread{
 						downloadURL = entry.getValue().getAsString();
 					}
 				}
-				else versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
+				else{
+					versionList.add(new VersionEntry(entry.getKey(), entry.getValue().getAsJsonObject()));
+				}
 			}
 			
 			Collections.sort(versionList);
@@ -62,7 +65,10 @@ public class UpdateThread extends Thread{
 				Log.debug("Reading update data: $0", version.versionIdentifier);
 				
 				if (version.isSupportedByMC(mcVersion)){
-					if (newestVersionForCurrentMC == null)newestVersionForCurrentMC = version;
+					if (newestVersionForCurrentMC == null){
+						newestVersionForCurrentMC = version;
+					}
+					
 					++counter;
 				}
 				
@@ -77,7 +83,9 @@ public class UpdateThread extends Thread{
 				Log.debug("In-dev version used, notifications disabled.");
 				return;
 			}
-			else Log.debug("Done.");
+			else{
+				Log.debug("Done.");
+			}
 			
 			StringBuilder message = null;
 			
@@ -102,7 +110,7 @@ public class UpdateThread extends Thread{
 				}
 			}
 		}
-		catch(UnknownHostException e){}
+		catch(UnknownHostException ignored){}
 		catch(Exception e){
 			Log.throwable(e, "Error detecting updates!");
 		}

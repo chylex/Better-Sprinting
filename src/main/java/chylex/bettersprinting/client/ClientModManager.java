@@ -9,15 +9,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class ClientModManager{
 	private static final Minecraft mc = Minecraft.getMinecraft();
+	
 	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + " ";
 	public static final String categoryName = "key.categories.bettersprinting.hidden";
 	
-	public static boolean showDisableWarningWhenPossible;
-	
 	public static final KeyBinding keyBindSprintHold = mc.gameSettings.keyBindSprint;
-	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", 34, categoryName);
-	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", 21, categoryName);
-	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", 24, categoryName);
+	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", -1, categoryName);
+	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", -1, categoryName);
+	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", -1, categoryName);
 	
 	public static final KeyBinding[] keyBindings = new KeyBinding[]{
 		keyBindSprintHold, keyBindSprintToggle, keyBindSneakToggle, keyBindOptionsMenu
@@ -31,33 +30,55 @@ public final class ClientModManager{
 		}
 	}
 	
-	static boolean svSurvivalFlyingBoost = false, svRunInAllDirs = false, svDisableMod = false;
+	static boolean svSurvivalFlyBoost = false, svRunInAllDirs = false, svDisableMod = false;
 	
 	static void onDisconnectedFromServer(){
-		svSurvivalFlyingBoost = svRunInAllDirs = svDisableMod = false;
+		svSurvivalFlyBoost = svRunInAllDirs = svDisableMod = false;
 	}
 	
-	public static boolean inMenu(){
+	private static boolean notInGame(){
 		return mc.player == null || mc.world == null;
 	}
 	
-	public static boolean canRunInAllDirs(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || svRunInAllDirs);
-	}
-	
-	public static boolean canBoostFlying(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyingBoost);
-	}
-	
-	public static boolean canFlyOnGround(){
-		return !isModDisabled() && (inMenu() || mc.isSingleplayer() || mc.player.isCreative());
+	public static boolean canManuallyEnableMod(){
+		return notInGame() || mc.isSingleplayer();
 	}
 	
 	public static boolean isModDisabled(){
 		return ClientSettings.disableMod || svDisableMod;
 	}
 	
-	public static boolean isModDisabledByServer(){
-		return svDisableMod;
+	public enum Feature{
+		FLY_BOOST{
+			@Override protected boolean checkTriggerCondition(){
+				return mc.player.capabilities.isFlying && keyBindSprintHold.isKeyDown() && (mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyBoost);
+			}
+		},
+		
+		FLY_ON_GROUND{
+			@Override protected boolean checkTriggerCondition(){
+				return mc.player.capabilities.isFlying && ClientSettings.flyOnGround && mc.player.isCreative();
+			}
+		},
+		
+		RUN_IN_ALL_DIRS{
+			@Override protected boolean checkTriggerCondition(){
+				return ClientSettings.enableAllDirs;
+			}
+			
+			@Override public boolean isAvailable(){
+				return super.isAvailable() && (notInGame() || mc.isSingleplayer() || svRunInAllDirs);
+			}
+		};
+		
+		protected abstract boolean checkTriggerCondition();
+		
+		public final boolean isTriggered(){
+			return isAvailable() && checkTriggerCondition();
+		}
+		
+		public boolean isAvailable(){
+			return !isModDisabled();
+		}
 	}
 }
