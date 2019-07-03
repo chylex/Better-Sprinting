@@ -287,7 +287,7 @@ function initializeCoreMod(){
     // Transformers
 
     var transformMovementInputUpdate = function(method){
-        print("Transforming livingTick (movement update)");
+        print("Transforming livingTick (movement update)...");
 
         var instructions = method.instructions;
         var entry = null;
