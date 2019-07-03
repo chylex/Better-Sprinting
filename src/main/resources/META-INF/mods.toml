@@ -1,17 +1,19 @@
 modLoader = "javafml"
-loaderVersion = "[24,)"
+loaderVersion = "[25,)"
 
 authors = "chylex"
-displayURL = "https://bsprint.chylex.com"
 issueTrackerURL = "https://github.com/chylex/Better-Sprinting/issues"
 
 [[mods]]
 modId = "bettersprinting"
-version = "2.2.1"
+version = "3.0.0"
 displayName = "Better Sprinting"
+displayURL = "https://bsprint.chylex.com"
 updateJSONURL = "https://raw.githubusercontent.com/chylex/Better-Sprinting/master/UpdateInfo.json"
 description = '''
-New sprinting and sneaking functionality. Mod settings are configurable in Controls and in-game menu (default: 'O'), for internal settings (notifications) click Config button below.
+New ways to control sprinting, sneaking, and flying.
+
+To configure the mod, click the Better Sprinting button in Controls, or press the configuration key in-game (default: 'O').
 
 Find me on Twitter: https://twitter.com/chylexmc
 '''
@@ -26,6 +28,6 @@ Find me on Twitter: https://twitter.com/chylexmc
 [[dependencies.bettersprinting]]
     modId = "forge"
     mandatory = true
-    versionRange = "[25.0.53,)"
+    versionRange = "[25.0.149,)"
     ordering = "NONE"
     side = "BOTH"

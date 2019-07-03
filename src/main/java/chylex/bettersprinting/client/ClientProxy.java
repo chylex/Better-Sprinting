@@ -5,7 +5,6 @@ import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.realms.RealmsSharedConstants;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -16,14 +15,8 @@ import java.util.List;
 
 public class ClientProxy extends BetterSprintingProxy{
 	@Override
-	public String getMinecraftVersion(){
-		return RealmsSharedConstants.VERSION_STRING;
-	}
-	
-	@Override
 	public void onConstructed(ModLoadingContext ctx){
 		ClientSettings.register(ctx);
-		ClientEventHandler.register();
 		PacketPipeline.initialize(new ClientNetwork());
 	}
 	
@@ -34,13 +27,22 @@ public class ClientProxy extends BetterSprintingProxy{
 		mc.addScheduledTask(() -> {
 			GameSettings settings = mc.gameSettings;
 			
-			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings, new KeyBinding[]{
+			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings,
 				ClientModManager.keyBindSprintToggle,
 				ClientModManager.keyBindSneakToggle,
-				ClientModManager.keyBindOptionsMenu,
-			});
+				ClientModManager.keyBindOptionsMenu
+			);
 			
-			ClientSettings.updateKeyBindings();
+			if (BetterSprintingMod.config.isNew()){
+				ClientSettings.firstTimeSetup();
+			}
+			
+			// this should work whether it's called before or after Forge's post-load GameSettings.loadOptions call
+			ClientSettings.keyInfoSprintHold.writeInto(ClientModManager.keyBindSprintHold);
+			ClientSettings.keyInfoSprintToggle.writeInto(ClientModManager.keyBindSprintToggle);
+			ClientSettings.keyInfoSneakToggle.writeInto(ClientModManager.keyBindSneakToggle);
+			ClientSettings.keyInfoOptionsMenu.writeInto(ClientModManager.keyBindOptionsMenu);
+			KeyBinding.resetKeyBindingArrayAndHash();
 		});
 	}
 	
@@ -54,6 +56,7 @@ public class ClientProxy extends BetterSprintingProxy{
 					case "disableMod":                value = ClientSettings.disableMod; break;
 					case "enableDoubleTap":           value = ClientSettings.enableDoubleTap; break;
 					case "enableAllDirs":             value = ClientSettings.enableAllDirs; break;
+					case "flyOnGround":               value = ClientSettings.flyOnGround; break;
 					case "enableUpdateNotifications": value = ClientSettings.enableUpdateNotifications; break;
 					case "enableBuildCheck":          value = ClientSettings.enableBuildCheck; break;
 					default: continue;

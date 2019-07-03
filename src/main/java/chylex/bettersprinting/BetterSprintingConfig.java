@@ -21,6 +21,10 @@ public class BetterSprintingConfig{
 		this.config = config;
 	}
 	
+	public boolean isNew(){
+		return isNew;
+	}
+	
 	public void save(){
 		config.save();
 	}
@@ -36,6 +40,7 @@ public class BetterSprintingConfig{
 	// Migration
 	
 	private static Path migrationFile = null;
+	private static boolean isNew = false;
 	
 	// TODO remove migration eventually
 	
@@ -52,6 +57,7 @@ public class BetterSprintingConfig{
 		
 		if (Files.notExists(Paths.get("config", fileName))){
 			migrationFile = Paths.get("config", "bettersprinting.cfg").toAbsolutePath();
+			isNew = true; // since keybinds are not migrated and first time setup only modifies keybinds, this is fine
 		}
 	}
 	

@@ -1,11 +1,11 @@
 package chylex.bettersprinting.client;
+import chylex.bettersprinting.system.PacketPipeline;
+import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
 import net.minecraftforge.fml.LogicalSide;
 
 @OnlyIn(Dist.CLIENT)
@@ -32,16 +32,16 @@ public class ClientNetwork implements INetworkHandler{
 		byte type = data.readByte();
 		
 		if (type == 0){
-			ClientModManager.svSurvivalFlyingBoost = data.readBoolean();
+			ClientModManager.svSurvivalFlyBoost = data.readBoolean();
 			ClientModManager.svRunInAllDirs = data.readBoolean();
 		}
 		else if (type == 1 && !ClientSettings.disableMod.get()){
 			ClientModManager.svDisableMod = true;
-			ClientModManager.showDisableWarningWhenPossible = true;
+			ClientEventHandler.showDisableWarningWhenPossible = true;
 		}
 		else if (type == 2 && !ClientSettings.disableMod.get()){
 			ClientModManager.svDisableMod = false;
-			ClientModManager.showDisableWarningWhenPossible = true;
+			ClientEventHandler.showDisableWarningWhenPossible = true;
 		}
 	}
 }

@@ -1,5 +1,10 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
+import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.input.KeyBindingInfo;
+import chylex.bettersprinting.client.input.SprintKeyMode;
+import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
@@ -7,30 +12,35 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import org.lwjgl.glfw.GLFW;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientSettings{
-	public static final IntValue keyCodeSprintHold;
-	public static final IntValue keyCodeSprintToggle;
-	public static final IntValue keyCodeSneakToggle;
-	public static final IntValue keyCodeOptionsMenu;
+	private static final IntValue keyCodeSprintHold;
+	private static final IntValue keyCodeSprintToggle;
+	private static final IntValue keyCodeSneakToggle;
+	private static final IntValue keyCodeOptionsMenu;
 	
-	public static final ConfigValue<String> keyModSprintHold;
-	public static final ConfigValue<String> keyModSprintToggle;
-	public static final ConfigValue<String> keyModSneakToggle;
-	public static final ConfigValue<String> keyModOptionsMenu;
+	private static final EnumValue<KeyModifier> keyModSprintHold;
+	private static final EnumValue<KeyModifier> keyModSprintToggle;
+	private static final EnumValue<KeyModifier> keyModSneakToggle;
+	private static final EnumValue<KeyModifier> keyModOptionsMenu;
 	
-	public static final ConfigValue<String> keyTypeSprintHold;
-	public static final ConfigValue<String> keyTypeSprintToggle;
-	public static final ConfigValue<String> keyTypeSneakToggle;
-	public static final ConfigValue<String> keyTypeOptionsMenu;
+	private static final EnumValue<InputMappings.Type> keyTypeSprintHold;
+	private static final EnumValue<InputMappings.Type> keyTypeSprintToggle;
+	private static final EnumValue<InputMappings.Type> keyTypeSneakToggle;
+	private static final EnumValue<InputMappings.Type> keyTypeOptionsMenu;
+	
+	public static final KeyBindingInfo keyInfoSprintHold;
+	public static final KeyBindingInfo keyInfoSprintToggle;
+	public static final KeyBindingInfo keyInfoSneakToggle;
+	public static final KeyBindingInfo keyInfoOptionsMenu;
+	
+	public static final EnumValue<SprintKeyMode> sprintKeyMode;
 	
 	public static final IntValue flySpeedBoost;
 	public static final BooleanValue flyOnGround;
@@ -57,15 +67,17 @@ public class ClientSettings{
 		keyCodeSneakToggle  = builder.defineInRange("keyCodeSneakToggle", GLFW.GLFW_KEY_Z, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		keyCodeOptionsMenu  = builder.defineInRange("keyCodeOptionsMenu", GLFW.GLFW_KEY_O, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		
-		keyModSprintHold   = defineEnum(builder, "keyModSprintHold", KeyModifier.NONE);
-		keyModSprintToggle = defineEnum(builder, "keyModSprintToggle", KeyModifier.NONE);
-		keyModSneakToggle  = defineEnum(builder, "keyModSneakToggle", KeyModifier.NONE);
-		keyModOptionsMenu  = defineEnum(builder, "keyModOptionsMenu", KeyModifier.NONE);
+		keyModSprintHold   = builder.defineEnum("keyModSprintHold", () -> KeyModifier.NONE, obj -> true, KeyModifier.class);
+		keyModSprintToggle = builder.defineEnum("keyModSprintToggle", () -> KeyModifier.NONE, obj -> true, KeyModifier.class);
+		keyModSneakToggle  = builder.defineEnum("keyModSneakToggle", () -> KeyModifier.NONE, obj -> true, KeyModifier.class);
+		keyModOptionsMenu  = builder.defineEnum("keyModOptionsMenu", () -> KeyModifier.NONE, obj -> true, KeyModifier.class);
 		
-		keyTypeSprintHold   = defineEnum(builder, "keyTypeSprintHold", InputMappings.Type.KEYSYM);
-		keyTypeSprintToggle = defineEnum(builder, "keyTypeSprintToggle", InputMappings.Type.KEYSYM);
-		keyTypeSneakToggle  = defineEnum(builder, "keyTypeSneakToggle", InputMappings.Type.KEYSYM);
-		keyTypeOptionsMenu  = defineEnum(builder, "keyTypeOptionsMenu", InputMappings.Type.KEYSYM);
+		keyTypeSprintHold   = builder.defineEnum("keyTypeSprintHold", InputMappings.Type.KEYSYM);
+		keyTypeSprintToggle = builder.defineEnum("keyTypeSprintToggle", InputMappings.Type.KEYSYM);
+		keyTypeSneakToggle  = builder.defineEnum("keyTypeSneakToggle", InputMappings.Type.KEYSYM);
+		keyTypeOptionsMenu  = builder.defineEnum("keyTypeOptionsMenu", InputMappings.Type.KEYSYM);
+		
+		sprintKeyMode = builder.defineEnum("sprintKeyMode", SprintKeyMode.TAP);
 		
 		flySpeedBoost   = builder.defineInRange("flySpeedBoost", 3, 0, 7);
 		flyOnGround     = builder.define("flyOnGround", false);
@@ -82,30 +94,42 @@ public class ClientSettings{
 		builder.pop();
 		
 		configSpec = builder.build();
+		
+		keyInfoSprintHold = new KeyBindingInfo(keyCodeSprintHold, keyModSprintHold, keyTypeSprintHold);
+		keyInfoSprintToggle = new KeyBindingInfo(keyCodeSprintToggle, keyModSprintToggle, keyTypeSprintToggle);
+		keyInfoSneakToggle = new KeyBindingInfo(keyCodeSneakToggle, keyModSneakToggle, keyTypeSneakToggle);
+		keyInfoOptionsMenu = new KeyBindingInfo(keyCodeOptionsMenu, keyModOptionsMenu, keyTypeOptionsMenu);
 	}
 	
-	// TODO wait for toml lib to fix stuff
-	private static ConfigValue<String> defineEnum(ForgeConfigSpec.Builder builder, String path, Enum<?> defaultValue){
-		return builder.defineInList(path, defaultValue.name(), Arrays.stream(defaultValue.getDeclaringClass().getEnumConstants()).map(Enum::name).collect(Collectors.toList()));
-	}
-	
-	private static KeyModifier getModifier(ConfigValue<String> value){
-		return KeyModifier.valueFromString(value.get());
-	}
-	
-	private static InputMappings.Type getType(ConfigValue<String> value){
-		try{
-			return InputMappings.Type.valueOf(value.get());
-		}catch(Exception e){
-			return InputMappings.Type.KEYSYM;
+	public static void firstTimeSetup(){
+		GameSettings settings = Minecraft.getInstance().gameSettings;
+		
+		keyInfoSprintHold.readFrom(settings.keyBindSprint);
+		
+		KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
+		KeyModifier sneakModifier = getVanillaKeyModifier(settings.keyBindSneak);
+		
+		if (sprintModifier != KeyModifier.NONE){
+			keyInfoSprintToggle.set(sprintModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));
 		}
+		
+		if (sneakModifier != KeyModifier.NONE){
+			keyInfoSneakToggle.set(sneakModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));
+		}
+		
+		BetterSprintingMod.config.save();
 	}
 	
-	public static void updateKeyBindings(){
-		ClientModManager.keyBindSprintHold.setKeyModifierAndCode(getModifier(keyModSprintHold), getType(keyTypeSprintHold).getOrMakeInput(keyCodeSprintHold.get()));
-		ClientModManager.keyBindSprintToggle.setKeyModifierAndCode(getModifier(keyModSprintToggle), getType(keyTypeSprintToggle).getOrMakeInput(keyCodeSprintToggle.get()));
-		ClientModManager.keyBindSneakToggle.setKeyModifierAndCode(getModifier(keyModSneakToggle), getType(keyTypeSneakToggle).getOrMakeInput(keyCodeSneakToggle.get()));
-		ClientModManager.keyBindOptionsMenu.setKeyModifierAndCode(getModifier(keyModOptionsMenu), getType(keyTypeOptionsMenu).getOrMakeInput(keyCodeOptionsMenu.get()));
-		KeyBinding.resetKeyBindingArrayAndHash();
+	private static KeyModifier getVanillaKeyModifier(KeyBinding binding){
+		if (binding.getKeyModifier() != KeyModifier.NONE || binding.getKey().getType() != InputMappings.Type.KEYSYM){
+			return KeyModifier.NONE;
+		}
+		
+		switch(binding.getKey().getKeyCode()){
+			case GLFW.GLFW_KEY_LEFT_CONTROL: return KeyModifier.CONTROL;
+			case GLFW.GLFW_KEY_LEFT_SHIFT: return KeyModifier.SHIFT;
+			case GLFW.GLFW_KEY_LEFT_ALT: return KeyModifier.ALT;
+			default: return KeyModifier.NONE;
+		}
 	}
 }

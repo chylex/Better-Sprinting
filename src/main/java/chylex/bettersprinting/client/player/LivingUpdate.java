@@ -1,20 +1,14 @@
 package chylex.bettersprinting.client.player;
 import chylex.bettersprinting.client.ClientModManager;
-import chylex.bettersprinting.client.ClientSettings;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.PlayerSPPushOutOfBlocksEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 @OnlyIn(Dist.CLIENT)
 public final class LivingUpdate{
-	private static final Minecraft mc = Minecraft.getInstance();
-	
 	private static PlayerLogicHandler currentHandler;
 	private static boolean hasTriggered;
+	private static boolean isModDisabled;
 	
 	public static boolean checkIntegrity(){
 		return hasTriggered;
@@ -26,110 +20,67 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
-	public static void injectOnLivingUpdate(EntityPlayerSP $this){
-		/*
-		if (this.timeUntilPortal > 0){
-			--this.timeUntilPortal;
+	public static void injectMovementInputUpdate(EntityPlayerSP $this){
+		hasTriggered = true;
+		isModDisabled = ClientModManager.isModDisabled();
+		
+		// this.movementInput.updatePlayerMoveState(); <<< REPLACE
+		
+		if (isModDisabled){
+			$this.movementInput.updatePlayerMoveState();
+			currentHandler = null;
+			return;
 		}
 		
-		boolean flag = this.movementInput.jump;
-		boolean flag1 = this.movementInput.sneak;
-		<<< INSERTED HERE
-		float f = 0.8F;
-		boolean flag2 = this.movementInput.moveForward >= 0.8F;
-		*/
-		
-		// CUSTOM
 		if (currentHandler == null || currentHandler.getPlayer() != $this){
 			currentHandler = new PlayerLogicHandler($this);
-			hasTriggered = true;
 		}
 		
-		if (mc.playerController.isInCreativeMode() && $this.abilities.isFlying && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get()){
-			$this.onGround = false;
-		}
-		
-		boolean wasJumping = $this.movementInput.jump;
 		currentHandler.updateMovementInput();
-		
-		// VANILLA
-		if ($this.isHandActive() && !$this.isPassenger()){
-			$this.movementInput.moveStrafe *= 0.2F;
-			$this.movementInput.moveForward *= 0.2F;
-			$this.sprintToggleTimer = 0;
+	}
+	
+	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
+	public static boolean injectSprinting(){
+		if (isModDisabled){
+			return false;
 		}
 		
-		boolean hasAutoJumped = false;
-		
-		if ($this.autoJumpTime > 0){
-			--$this.autoJumpTime;
-			hasAutoJumped = true;
-			$this.movementInput.jump = true;
+		/*
 		}
+		<<< INSERTED HERE
+		boolean flag4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.abilities.allowFlying;
+		*/
 		
-		AxisAlignedBB playerBoundingBox = $this.getBoundingBox();
-		PlayerSPPushOutOfBlocksEvent event = new PlayerSPPushOutOfBlocksEvent($this, playerBoundingBox);
-		
-		if (!MinecraftForge.EVENT_BUS.post(event)){
-			playerBoundingBox = event.getEntityBoundingBox();
-			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
-			$this.pushOutOfBlocks($this.posX - $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
-			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ - $this.width * 0.35D);
-			$this.pushOutOfBlocks($this.posX + $this.width * 0.35D, playerBoundingBox.minY + 0.5D, $this.posZ + $this.width * 0.35D);
-		}
-		
-		// CUSTOM
-		currentHandler.updateLiving();
-		
-		// VANILLA
-		if ($this.abilities.allowFlying){
-			if (mc.playerController.isSpectatorMode()){
-				if (!$this.abilities.isFlying){
-					$this.abilities.isFlying = true;
-					$this.sendPlayerAbilities();
-				}
-			}
-			else if (!wasJumping && $this.movementInput.jump && !hasAutoJumped){
-				if ($this.flyToggleTimer == 0){
-					$this.flyToggleTimer = 7;
-				}
-				else{
-					$this.abilities.isFlying = !$this.abilities.isFlying;
-					$this.sendPlayerAbilities();
-					$this.flyToggleTimer = 0;
-				}
-			}
-		}
+		currentHandler.updateSprinting();
+		return true;
 		
 		/*
 		}
 		<<< SKIPPED TO HERE
-		if (this.movementInput.jump && !flag && !this.onGround && this.motionY < 0.0D && !this.isElytraFlying() && !this.abilities.isFlying){
-			ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if (this.abilities.allowFlying) {
 		*/
 	}
 	
 	// UPDATE | EntityPlayerSP.livingTick | 1.13.2
-	public static void injectOnLivingUpdateEnd(EntityPlayerSP $this){
-		/*
-		else{
-			this.horseJumpPower = 0.0F;
+	public static boolean injectAfterSuperCall(){
+		if (isModDisabled){
+			return false;
 		}
 		
+		/*
 		super.livingTick();
 		<<< INSERTED HERE
-			
-		if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode()){
+		if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode()) {
 		*/
 		
-		if ($this.onGround && $this.abilities.isFlying && !mc.playerController.isSpectatorMode()){
-			boolean shouldFlyOnGround = mc.playerController.isInCreativeMode() && ClientModManager.canFlyOnGround() && ClientSettings.flyOnGround.get();
-			
-			if (!shouldFlyOnGround){
-				$this.abilities.isFlying = false;
-				$this.sendPlayerAbilities();
-			}
+		currentHandler.updateFlight();
+		return true;
+		
+		/*
+			this.sendPlayerAbilities();
 		}
+		<<< SKIPPED TO HERE
+		*/
 	}
 	
 	private LivingUpdate(){}

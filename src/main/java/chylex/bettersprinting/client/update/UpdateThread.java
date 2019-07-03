@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.client.Minecraft;
+import net.minecraft.realms.RealmsSharedConstants;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeHooks;
 import org.apache.commons.io.IOUtils;
@@ -24,7 +25,7 @@ public class UpdateThread extends Thread{
 	
 	UpdateThread(String modVersion){
 		this.modVersion = modVersion;
-		this.mcVersion = BetterSprintingMod.proxy.getMinecraftVersion();
+		this.mcVersion = RealmsSharedConstants.VERSION_STRING;
 		setPriority(MIN_PRIORITY);
 		setDaemon(true);
 	}

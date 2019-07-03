@@ -1,7 +1,7 @@
 function initializeCoreMod(){
     var api = Java.type("net.minecraftforge.coremod.api.ASMAPI");
     var opcodes = Java.type("org.objectweb.asm.Opcodes");
-    
+
     var getInstructionTypeName = function(instruction){
         var type = instruction.getType();
         
@@ -193,7 +193,7 @@ function initializeCoreMod(){
     };
     
     var printInstructions = function(instructions){
-        for(var index = 0; index < instructions.size(); index++){
+        for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
             var instruction = instructions.get(index);
             
             var indexStr = index + ": ";
@@ -215,7 +215,7 @@ function initializeCoreMod(){
                     var name = instruction.name;
                     
                     if (name){
-                        opcodeName += ", " + instruction.name;
+                        opcodeName += ", " + name;
                     }
                 }catch(e){}
                 
@@ -223,7 +223,20 @@ function initializeCoreMod(){
                     var desc = instruction.desc;
                     
                     if (desc){
-                        opcodeName += ", " + instruction.desc;
+                        opcodeName += ", " + desc;
+                    }
+                }catch(e){}
+
+                try{
+                    var label = instruction.label;
+
+                    if (label){
+                        for(var search = 0; search < instrcount; search++){
+                            if (instructions.get(search) == label){
+                                opcodeName += ", " + search;
+                                break;
+                            }
+                        }
                     }
                 }catch(e){}
             }
@@ -231,16 +244,18 @@ function initializeCoreMod(){
             print(indexStr + typeName + opcodeName);
         }
     };
+
+    // Helpers
     
-    var checkInstructionName = function(instruction, name1, name2){
-        return instruction.name.equals(name1) || instruction.name.equals(name2);
+    var checkInstruction = function(instruction, opcode, name1, name2){
+        return instruction.getOpcode() === opcode && (instruction.name.equals(name1) || (name2 && instruction.name.equals(name2)));
     };
     
     var checkOpcodeChain = function(instructions, start, chain){
         for(var offset = 0; offset < chain.length; offset++){
             var instruction = instructions.get(start + offset);
             
-            if (instruction.getOpcode() != chain[offset]){
+            if (instruction.getOpcode() !== chain[offset]){
                 print("Mismatched opcode chain, " + instruction.getOpcode() + " != " + chain[offset]);
                 return false;
             }
@@ -248,158 +263,156 @@ function initializeCoreMod(){
         
         return true;
     };
-    
-    var transformLivingTick = function(method){
-        print("Transforming livingTick (start)...")
-        
-        var instructions = method.instructions;
-        var instrcount = instructions.size();
-        
-        var insertionPoint = -1;
-        var skipPoint = -1;
-        
-        for(var index = 0; index < instrcount; index++){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.GETFIELD &&
-                checkInstructionName(instruction, "movementInput", "field_71158_b") &&
-                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ]) &&
-                checkOpcodeChain(instructions, index + 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.ISTORE ])
-            ){
-                insertionPoint = index + 9;
-                break;
-            }
-        }
-        
-        if (insertionPoint == -1){
-            return false;
-        }
-        
-        print("Found insertion point at index " + insertionPoint + ".");
-        
-        for(var index = insertionPoint; index < instrcount; index++){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.GETSTATIC &&
-                instruction.name.equals("CHEST") &&
-                checkOpcodeChain(instructions, index - 1, [ opcodes.ALOAD, opcodes.GETSTATIC, opcodes.INVOKEVIRTUAL, opcodes.ASTORE ]) &&
-                checkOpcodeChain(instructions, index - 24, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.GETFIELD, opcodes.IFEQ ])
-            ){
-                skipPoint = index - 27;
-                break;
-            }
-        }
-        
-        if (skipPoint == -1){
-            return false;
-        }
-        
-        print("Found skip point at index " + skipPoint + ".");
-        
-        var insertionPointLabel = instructions.get(insertionPoint);
-        var skipPointLabel = instructions.get(skipPoint);
-        
-        if (insertionPointLabel.getType() != 8){
+
+    var validateLabels = function(labels){
+        if (labels[0].getType() != 8){
             print("Insertion point is not a label!");
             return false;
         }
-        
-        if (skipPointLabel.getType() != 8){
+
+        if (labels[1].getType() != 8){
             print("Skip point is not a label!");
             return false;
         }
-        
-        var skipPointLabelInst = skipPointLabel.getLabel();
-        skipPointLabelInst.info = skipPointLabel;
-        
-        var helper = api.getMethodNode();
-        helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false);
-        helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
-        
-        instructions.insert(insertionPointLabel, helper.instructions);
+
         return true;
     };
+
+    var getSkipInst = function(label){
+        var labelInst = label.getLabel();
+        labelInst.info = label;
+        return labelInst;
+    };
+
+    // Transformers
+
+    var transformMovementInputUpdate = function(method){
+        print("Transforming livingTick (movement update)");
+
+        var instructions = method.instructions;
+        var entry = null;
+
+        for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
+            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "updatePlayerMoveState", "func_78898_a") &&
+                checkOpcodeChain(instructions, index - 2, [ opcodes.ALOAD, opcodes.GETFIELD ])
+            ){
+                entry = index;
+                break;
+            }
+        }
+
+        if (entry === null){
+            return false;
+        }
+
+        print("Found entry point at " + entry + ".");
+
+        var toRemove = instructions.get(entry - 1);
+        var toReplace = instructions.get(entry);
+
+        return function(){
+            var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", api.MethodType.STATIC);
+
+            instructions.remove(toRemove);
+            instructions.set(toReplace, call);
+        };
+    };
     
-    var transformLivingTickEnd = function(method){
-        print("Transforming livingTick (end)...")
+    var transformSprinting = function(method){
+        print("Transforming livingTick (sprinting)...");
         
         var instructions = method.instructions;
-        var instrcount = instructions.size();
-        
-        var insertionPoint = -1;
-        var skipPoint = -1;
-        
-        for(var index = instrcount - 1; index > skipPoint; index--){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.INVOKESPECIAL &&
-                checkInstructionName(instruction, "livingTick", "func_70636_d")
+        var bounds = null;
+
+        for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
+            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_145771_j") &&
+                checkInstruction(instructions.get(index - 25), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_145771_j") &&
+                checkInstruction(instructions.get(index - 50), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_145771_j") &&
+                checkInstruction(instructions.get(index - 75), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_145771_j") &&
+                checkInstruction(instructions.get(index + 207), opcodes.INVOKEVIRTUAL, "setSprinting", "func_70031_b")
             ){
-                insertionPoint = index + 1;
+                bounds = [ index + 2, index + 208 ];
                 break;
             }
         }
         
-        if (insertionPoint == -1){
+        if (bounds === null){
             return false;
         }
+
+        print("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
+
+        var labels = [ instructions.get(bounds[0]), instructions.get(bounds[1]) ];
+
+        if (!validateLabels(labels)){
+            return false;
+        }
+
+        return function(){
+            var helper = api.getMethodNode();
+            helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectSprinting", "()Z", false);
+            helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
+
+            instructions.insert(labels[0], helper.instructions);
+        };
+    };
+    
+    var transformAfterSuperCall = function(method){
+        print("Transforming livingTick (super call)...");
         
-        print("Found insertion point at index " + insertionPoint + ".");
+        var instructions = method.instructions;
+        var bounds = null;
         
-        for(var index = insertionPoint; index < instrcount; index++){
-            var instruction = instructions.get(index);
-            
-            if (instruction.getOpcode() == opcodes.INVOKEVIRTUAL &&
-                checkInstructionName(instruction, "sendPlayerAbilities", "func_71016_p")
+        for(var index = instructions.size() - 1; index >= 0; index--){
+            if (checkInstruction(instructions.get(index), opcodes.INVOKESPECIAL, "livingTick", "func_70636_d") &&
+                checkInstruction(instructions.get(index + 24), opcodes.INVOKEVIRTUAL, "sendPlayerAbilities", "func_71016_p")
             ){
-                skipPoint = index + 1;
+                bounds = [ index + 1, index + 25 ];
                 break;
             }
         }
         
-        if (skipPoint == -1){
+        if (bounds === null){
             return false;
         }
-        
-        print("Found skip point at index " + skipPoint + ".");
-        
-        var insertionPointLabel = instructions.get(insertionPoint);
-        var skipPointLabel = instructions.get(skipPoint);
-        
-        if (insertionPointLabel.getType() != 8){
-            print("Insertion point is not a label!");
+
+        print("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
+
+        var labels = [ instructions.get(bounds[0]), instructions.get(bounds[1]) ];
+
+        if (!validateLabels(labels)){
             return false;
         }
-        
-        if (skipPointLabel.getType() != 8){
-            print("Skip point is not a label!");
-            return false;
-        }
-        
-        var skipPointLabelInst = skipPointLabel.getLabel();
-        skipPointLabelInst.info = skipPointLabel;
-        
-        var helper = api.getMethodNode();
-        helper.visitVarInsn(opcodes.ALOAD, 0);
-        helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectOnLivingUpdateEnd", "(Lnet/minecraft/client/entity/EntityPlayerSP;)V", false);
-        helper.visitJumpInsn(opcodes.GOTO, skipPointLabelInst);
-        
-        instructions.insert(insertionPointLabel, helper.instructions);
+
+        return function(){
+            var helper = api.getMethodNode();
+            helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectAfterSuperCall", "()Z", false);
+            helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
+
+            instructions.insert(labels[0], helper.instructions);
+        };
+    };
+
+    var transformAll = function(method){
+        var f1 = transformMovementInputUpdate(method);
+        if (f1 === false) return false;
+
+        var f2 = transformSprinting(method);
+        if (f2 === false) return false;
+
+        var f3 = transformAfterSuperCall(method);
+        if (f3 === false) return false;
+
+        f1(); f2(); f3();
         return true;
     };
-    
-    var transformPushOutOfBlocks = function(method){
-        method.access &= ~opcodes.ACC_PROTECTED;
-        method.access |= opcodes.ACC_PUBLIC;
-    };
-    
+
     var matchMethod = function(name1, name2, desc){
         return function(method){
             return (method.name.equals(name1) || method.name.equals(name2)) && method.desc.equals(desc);
         };
     };
-    
+
     return {
         "BetterSprintingCore": {
             "target": {
@@ -408,39 +421,30 @@ function initializeCoreMod(){
             },
             "transformer": function(classNode){
                 print("Setting up BetterSprintingCore...");
-                
+
                 var livingTick = classNode.methods
                                           .stream()
                                           .filter(matchMethod("livingTick", "func_70636_d", "()V"))
                                           .toArray();
-                
-                var pushOutOfBlocks = classNode.methods
-                                               .stream()
-                                               .filter(matchMethod("pushOutOfBlocks", "func_145771_j", "(DDD)Z"))
-                                               .toArray();
-                
-                if (livingTick.length == 1 && pushOutOfBlocks.length == 1){
+
+                if (livingTick.length == 1){
                     var mLivingTick = livingTick[0];
-                    
-                    if (transformLivingTick(mLivingTick) && transformLivingTickEnd(mLivingTick)){
-                        print("Transformed EntityPlayerSP.livingTick().");
-                    }
-                    else{
+
+                    if (!transformAll(mLivingTick)){
                         print("Could not inject into EntityPlayerSP.livingTick(), printing all instructions...");
                         printInstructions(mLivingTick.instructions);
                     }
-                    
-                    transformPushOutOfBlocks(pushOutOfBlocks[0]);
-                    print("Transformed EntityPlayerSP.pushOutOfBlocks().");
+
+                    // printInstructions(mLivingTick.instructions);
                 }
                 else{
-                    print("Could not find EntityPlayerSP.livingTick() and/or EntityPlayerSP.pushOutOfBlocks(), printing all methods...");
-                    
+                    print("Could not find EntityPlayerSP.livingTick(), printing all methods...");
+
                     classNode.methods.forEach(function(method){
                         print(method.name + method.desc);
                     });
                 }
-                
+
                 print("Finished BetterSprintingCore.");
                 return classNode;
             }

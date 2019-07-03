@@ -3,12 +3,14 @@ import chylex.bettersprinting.BetterSprintingMod;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,23 +21,35 @@ import static net.minecraft.command.Commands.literal;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
 final class ServerCommandConfig{
+	private static String SETTING_SURVIVAL_FLY_BOOST = "survivalFlyBoost";
+	private static String SETTING_RUN_IN_ALL_DIRS = "runInAllDirs";
+	
+	private static String[] SETTINGS_ALL = new String[]{ SETTING_SURVIVAL_FLY_BOOST, SETTING_RUN_IN_ALL_DIRS };
+	
+	private static String ARG_BOOLEAN = "true|false";
+	private static String ARG_SETTINGS = String.join("|", SETTINGS_ALL);
+	
+	private static SuggestionProvider<CommandSource> SUGGEST_SETTING = (context, builder) -> ISuggestionProvider.suggest(SETTINGS_ALL, builder);
+	
 	public static void register(CommandDispatcher<CommandSource> dispatcher){
 		LiteralArgumentBuilder<CommandSource> builder = literal("bettersprinting").requires(source -> source.hasPermissionLevel(3));
 		
 		builder.executes(ServerCommandConfig::execHelp);
 		builder.then(literal("info").executes(ServerCommandConfig::execInfo));
-		builder.then(literal("disablemod").then(argument("true|false", bool()).executes(ServerCommandConfig::execDisableMod)));
-		builder.then(literal("setting").then(argument("survivalFlyBoost|runInAllDirs", word()).then(argument("true|false", bool()).executes(ServerCommandConfig::execSetting))));
+		builder.then(literal("disablemod").then(argument(ARG_BOOLEAN, bool()).executes(ServerCommandConfig::execDisableMod)));
+		builder.then(literal("setting").then(argument(ARG_SETTINGS, word()).suggests(SUGGEST_SETTING).then(argument(ARG_BOOLEAN, bool()).executes(ServerCommandConfig::execSetting))));
 		
 		dispatcher.register(builder);
 	}
+	
+	// Executors
 	
 	private static int execHelp(CommandContext<CommandSource> ctx){
 		CommandSource source = ctx.getSource();
 		sendMessage(source, TextFormatting.GREEN + "[Better Sprinting]");
 		sendMessage(source, "/bettersprinting info");
-		sendMessage(source, "/bettersprinting disablemod <true|false>");
-		sendMessage(source, "/bettersprinting setting <survivalFlyBoost|runInAllDirs> <true|false>");
+		sendMessage(source, "/bettersprinting disablemod <" + ARG_BOOLEAN + ">");
+		sendMessage(source, "/bettersprinting setting <" + ARG_SETTINGS + "> <" + ARG_BOOLEAN + ">");
 		return 0;
 	}
 	
@@ -46,7 +60,7 @@ final class ServerCommandConfig{
 	}
 	
 	private static int execDisableMod(CommandContext<CommandSource> ctx){
-		BetterSprintingMod.config.set(ServerSettings.disableClientMod, ctx.getArgument("true|false", Boolean.class));
+		BetterSprintingMod.config.set(ServerSettings.disableClientMod, ctx.getArgument(ARG_BOOLEAN, Boolean.class));
 		BetterSprintingMod.config.save();
 		
 		CommandSource source = ctx.getSource();
@@ -56,19 +70,19 @@ final class ServerCommandConfig{
 	}
 	
 	private static int execSetting(CommandContext<CommandSource> ctx){
-		String setting = ctx.getArgument("survivalFlyBoost|runInAllDirs", String.class);
-		boolean value = ctx.getArgument("true|false", Boolean.class);
+		String setting = ctx.getArgument(ARG_SETTINGS, String.class);
+		boolean value = ctx.getArgument(ARG_BOOLEAN, Boolean.class);
 		
 		CommandSource source = ctx.getSource();
 		
-		if (setting.equalsIgnoreCase("survivalFlyBoost")){
+		if (setting.equalsIgnoreCase(SETTING_SURVIVAL_FLY_BOOST)){
 			BetterSprintingMod.config.set(ServerSettings.enableSurvivalFlyBoost, value);
 			BetterSprintingMod.config.save();
 			
 			sendMessageTranslated(source, ServerSettings.enableSurvivalFlyBoost.get() ? "bs.command.enableFlyBoost" : "bs.command.disableFlyBoost", true);
 			ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost.get(), ServerSettings.enableAllDirs.get()));
 		}
-		else if (setting.equalsIgnoreCase("runInAllDirs")){
+		else if (setting.equalsIgnoreCase(SETTING_RUN_IN_ALL_DIRS)){
 			BetterSprintingMod.config.set(ServerSettings.enableAllDirs, value);
 			BetterSprintingMod.config.save();
 			
@@ -81,6 +95,8 @@ final class ServerCommandConfig{
 		
 		return 0;
 	}
+	
+	// Helpers
 	
 	private static void sendMessage(CommandSource source, String text){
 		sendMessage(source, text, false);

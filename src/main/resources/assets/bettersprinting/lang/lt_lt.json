@@ -1,5 +1,5 @@
 {
-    "_comment": "Generic GUI titles",
+    "_comment": "Generic titles",
 
     "gui.enabled": "Įjungtas",
     "gui.disabled": "Išjungtas",
@@ -7,27 +7,32 @@
 
     "_comment": "Titles for controls",
 
-    "bs.sprint.hold": "Bėgimas (laikyti)",
-    "bs.sprint.toggle": "Bėgimas  (įjungti/išjungti)",
-    "bs.sneak.toggle": "Sėlinimas  (įjungti/išjungti)",
-    "bs.menu": "Better Sprinting modo meniu",
+    "bs.sprint.mode.tap": "Tap",
+    "bs.sprint.mode.hold": "Hold",
+
+    "bs.sprint.hold": "Bėgimas",
+    "bs.sprint.toggle": "Bėgimas (įjungti/išjungti)",
+    "bs.sneak.toggle": "Sėlinimas (įjungti/išjungti)",
+    "bs.menu": "Mod configuration",
 
     "bs.doubleTapping": "Dvigubas paspaudimas į prieki",
     "bs.runAllDirs": "Bėgimas visomis kryptimis",
     "bs.flyBoost": "Skraidymo pagreitinimas",
+    "bs.flyOnGround": "Fly on ground",
     "bs.disableMod": "Išjungti modo veikimą",
     "bs.autoJump": "Auto pašokimas",
 
-    "_comment": "Tooltips for controls (use the '#' character for splitting lines)",
+    "_comment": "Tooltips for controls (use '#' character for splitting lines)",
 
-    "bs.sprint.hold.info": "Laikyti mygtuką, kad bėgti",
-    "bs.sprint.toggle.info": "Paspausti kartą, kad pradėti arba baigti bėgimą.",
-    "bs.sneak.toggle.info": "Paspausti kartą, kad pradėti arba baigti sėlinima..#Kai jūs atidarysite kokį nors GUI, jūs nustosite sėlinti kol uždarysite jį.",
+    "bs.sprint.hold.info": "[Tap] will start or stop sprinting when pressed.#[Hold] will sprint only while the key is held.",
+    "bs.sprint.toggle.info": "Paspausti kartą, kad pradėti arba baigti bėgimą.#Slowing down will not interrupt the sprint.",
+    "bs.sneak.toggle.info": "Paspausti kartą, kad pradėti arba baigti sėlinima.#Kai jūs atidarysite kokį nors GUI, jūs nustosite sėlinti kol uždarysite jį.",
     "bs.menu.info": "Migtukas su kuriuo galite atidaryti šį meniu žaidime.",
 
     "bs.doubleTapping.info": "Įjungti arba išjungti galimybę pradėti bėgti du kartus paspaudžiant klaviša į priekį.",
     "bs.runAllDirs.info": "Bėgimas į visas puses.#Jūs negalite naudoti šito serveriuose, nebent serveris turi šį moda ir tai leidžia.",
-    "bs.flyBoost.info": "Laikant bėgimo mygtuką skrisite tiek kartu daugiau kiek nustatysite.",
+    "bs.flyBoost.info": "Hold sprint key to fly faster in creative or spectator mode.",
+    "bs.flyOnGround.info": "Continue flying when touching ground in creative mode.",
     "bs.disableMod.info": "Išjungia visas modo galimybes#Šis nustatymas gali būti panaudotas jei pavyzdžiui serveris neleidžia šio modo.",
     "bs.autoJump.info": "Standartinio Minecraft galimybė automatiškai pašokti priėjus kliūtį.",
 
@@ -43,16 +48,13 @@
 
     "_comment": "In-game messages",
 
-    "bs.game.integrity": "Modo integralumo patikrinimas nepavyko, kitas modas nedera kartu su Better Sprinting.",
-    "bs.game.disabled": "Serveris reikalavo išjungti modą, iki kol atsijungsite bėgimo ir sėlinimo mechanika perjungta i standartinę.",
-    "bs.game.reenabled": "Serveris įjungė modą vėl, bėgimo mechanikos perjungtos į Better Sprinting modo.",
+    "bs.game.integrity": "Better Sprinting is not working correctly, there may be a conflict with another mod.",
+    "bs.game.disabled": "The server requested to disable the mod, all features will be deactivated.",
+    "bs.game.reenabled": "The server has enabled the mod again, all features were reactivated.",
 
-    "_comment": "Server messages (translated on client)",
+    "_comment": "Server messages",
 
-    "bs.server.kick": "Serveris neleidžia naudoti Better Sprinting. Naujesnės modo versijos gali būti išjungiamos automatiškai neišmetant iš serverio.",
-
-    "bs.command.invalidSyntax": "Neteisinga komandos sintaksė, rašyk /bettersprinting ir gausi šio modo komandų sąrašą.",
-    "bs.command.info": "Tu gali panaudoti šią komandą, kad išjungti/įjungti modą, arba pakeisti konkrečius modo nustatymus. Šie pakeitimai išliks po serverio perkrovimo ir taippat iš karto bus pritaikyti žaidėjams kuri šiuo metu yra prisijungę.",
+    "bs.command.info": "Use the commands to either disable/enable the mod for players, or change specific settings. These will persist after restarting the server, and will also immediately affect players that are already on the server.",
     "bs.command.disableMod": "Better Sprinting modas bus automatiškai išjungtas prisijungiantiems žaidėjams.",
     "bs.command.enableMod": "Better Sprinting modas nuo šiol yra leidžiamas serveryje.",
     "bs.command.disableFlyBoost": "Skraidymo pagreitinimas dabar išjungtas žaidėjams kurie yra išlikimo rėžime.",
@@ -62,6 +64,6 @@
 
     "_comment": "Configuration",
 
-    "bs.config.notifications": "Ispėja žaidėjus apie naujus atnaujinimus. Atnaujinimų tikrinimas yra atliekamas tik kartą per dieną ir neįtakoja žaidimo veikimo.",
-    "bs.config.buildCheck": "Labai rekomenduojame palikti įjungtą. Tai aptiks brokuotas versijas turinčias kritinių klaidų dėl kurių modas gali tinkamai neveikti ir užlaužti žaidimą. Šios problemos paprastai ištaisomos labai greitai, tačiau svarbu ispėti žaidėjus atsisiuntusius brukuotas versijas."
+    "bs.config.notifications": "Notifies about new updates, at most once per day.",
+    "bs.config.buildCheck": "Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled."
 }

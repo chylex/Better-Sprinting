@@ -1,6 +1,7 @@
 package chylex.bettersprinting.system;
 import chylex.bettersprinting.BetterSprintingMod;
 import net.minecraft.client.Minecraft;
+import net.minecraft.realms.RealmsSharedConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -21,7 +22,7 @@ public final class Log{
 	
 	@OnlyIn(Dist.CLIENT)
 	private static void loadDeobfClient(){
-		String title = "Minecraft " + BetterSprintingMod.proxy.getMinecraftVersion() + " - BetterSprinting " + BetterSprintingMod.modVersion;
+		String title = "Minecraft " + RealmsSharedConstants.VERSION_STRING + " - BetterSprinting " + BetterSprintingMod.modVersion;
 		
 		Minecraft mc = Minecraft.getInstance();
 		mc.addScheduledTask(() -> GLFW.glfwSetWindowTitle(mc.mainWindow.getHandle(), title));
@@ -32,16 +33,6 @@ public final class Log{
 		if (isDeobfEnvironment){
 			logger.info(getMessage(message, data));
 		}
-	}
-
-	/** Use $x where x is between 0 and data.length-1 to input variables. */
-	public static void info(String message, Object...data){
-		logger.info(getMessage(message, data));
-	}
-
-	/** Use $x where x is between 0 and data.length-1 to input variables. */
-	public static void warn(String message, Object...data){
-		logger.warn(getMessage(message, data));
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */
