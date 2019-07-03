@@ -287,7 +287,7 @@ function initializeCoreMod(){
     // Transformers
 
     var transformMovementInputUpdate = function(method){
-        print("Transforming livingTick (movement update)");
+        print("Transforming livingTick (movement update)...");
 
         var instructions = method.instructions;
         var entry = null;
@@ -305,10 +305,10 @@ function initializeCoreMod(){
             return false;
         }
 
-        print("Found entry point at " + index + ".");
+        print("Found entry point at " + entry + ".");
 
-        var toRemove = instructions.get(index - 4);
-        var toReplace = instructions.get(index);
+        var toRemove = instructions.get(entry - 4);
+        var toReplace = instructions.get(entry);
 
         return function(){
             var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", api.MethodType.STATIC);
