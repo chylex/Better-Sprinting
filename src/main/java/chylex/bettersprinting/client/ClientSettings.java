@@ -104,6 +104,8 @@ public class ClientSettings{
 	public static void firstTimeSetup(){
 		GameSettings settings = Minecraft.getInstance().gameSettings;
 		
+		keyInfoSprintHold.readFrom(settings.keyBindSprint);
+		
 		KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
 		KeyModifier sneakModifier = getVanillaKeyModifier(settings.keyBindSneak);
 		

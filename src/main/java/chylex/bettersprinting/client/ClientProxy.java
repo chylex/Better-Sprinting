@@ -37,7 +37,7 @@ public class ClientProxy extends BetterSprintingProxy{
 				ClientSettings.firstTimeSetup();
 			}
 			
-			// UPDATE | Ensure this doesn't override vanilla sprint key on start (settings are reloaded after mods load) | 1.14.3
+			// this should work whether it's called before or after Forge's post-load GameSettings.loadOptions call
 			ClientSettings.keyInfoSprintHold.writeInto(ClientModManager.keyBindSprintHold);
 			ClientSettings.keyInfoSprintToggle.writeInto(ClientModManager.keyBindSprintToggle);
 			ClientSettings.keyInfoSneakToggle.writeInto(ClientModManager.keyBindSneakToggle);
