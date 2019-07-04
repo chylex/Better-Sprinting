@@ -7,8 +7,8 @@
 
     "_comment": "Titles for controls",
 
-    "bs.sprint.mode.tap": "Umschalten",
-    "bs.sprint.mode.hold": "Gedrückthalten",
+    "bs.sprint.mode.tap": "Drücken",
+    "bs.sprint.mode.hold": "Halten",
 
     "bs.sprint.hold": "Sprint",
     "bs.sprint.toggle": "Sprint (Umschalten)",
@@ -24,7 +24,7 @@
 
     "_comment": "Tooltips for controls (use '#' character for splitting lines)",
 
-    "bs.sprint.hold.info": "[Umschalten] started und stoppt sprinten beim Betätigen der Taste.#[Gedrückthalten] ermöglicht sprinten während die Taste gedrückt wird.",
+    "bs.sprint.hold.info": "[Drücken] started und stoppt sprinten beim Betätigen der Taste.#[Halten] ermöglicht sprinten während die Taste gedrückt wird.",
     "bs.sprint.toggle.info": "Drücken, um kontinuierliches Sprinten zu (de-)aktivieren.#Sprinten wird durch Verlangsamungen nicht unterbrochen.",
     "bs.sneak.toggle.info": "Drücken, um kontinuierliches Schleichen zu (de-)aktivieren.#Schleichen wird durch das Öffnen eines Interfaces nicht unterbrochen.",
     "bs.menu.info": "Taste zum Öffnen dieses Menüs.",
