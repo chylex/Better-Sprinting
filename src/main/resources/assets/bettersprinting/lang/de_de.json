@@ -31,7 +31,7 @@
 
     "bs.doubleTapping.info": "Sprinten durch doppeltes Betätigen der Vorwärtstaste.",
     "bs.runAllDirs.info": "Sprinten in alle Richtungen ermöglichen.#Sofern der Server es nicht explizit erlaubt,#kannst du dies nicht im Mehrspielermodus verwenden.",
-    "bs.flyBoost.info": "Halte die Sprint-Taste gedrückt um im Kreativ- und Zuschauermodus schneller zu fliegen.",
+    "bs.flyBoost.info": "Halte die Sprint-Taste gedrückt um im Kreativ-#und Zuschauermodus schneller zu fliegen.",
     "bs.flyOnGround.info": "Das Fliegen im Kreativmodus wird durch berühren des Bodens nicht unterbrochen.",
     "bs.disableMod.info": "Deaktiviert alle nicht standardmäßigen Funktionen von Better Sprinting.#Diese Option kann genutzt werden, sollte ein Server diese Mod nicht erlauben.",
     "bs.autoJump.info": "Lässt dich vor Hindernissen automatisch springen.",
