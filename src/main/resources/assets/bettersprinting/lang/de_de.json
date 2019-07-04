@@ -7,8 +7,8 @@
 
     "_comment": "Titles for controls",
 
-    "bs.sprint.mode.tap": "Tap",
-    "bs.sprint.mode.hold": "Hold",
+    "bs.sprint.mode.tap": "Umschalten",
+    "bs.sprint.mode.hold": "Gedrückthalten",
 
     "bs.sprint.hold": "Sprint",
     "bs.sprint.toggle": "Sprint (Umschalten)",
