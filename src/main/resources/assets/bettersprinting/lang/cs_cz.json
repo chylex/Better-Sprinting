@@ -51,8 +51,8 @@
     "bs.command.info": "Příkazy lze použít pro zablokování/povolení módu pro hráče, nebo pro upravení některých nastavení. Tato nastavení zůstanou uložena po restartu serveru, a jejich změna automaticky ovlivní všechny hráče na serveru kteří mají mód nainstalován.",
     "bs.command.disableMod": "Better Sprinting bude automaticky vypnut pro všechny hráče.",
     "bs.command.enableMod": "Better Sprinting je na serveru opět povolen.",
-    "bs.command.disableFlyBoost": "Zrychlení letu v módu o přežití je nyní zablokováno.",
-    "bs.command.enableFlyBoost": "Zrychlení letu v módu o přežití je nyní povoleno.",
+    "bs.command.disableFlyBoost": "Zrychlení letu ve hře o přežití je nyní zablokováno.",
+    "bs.command.enableFlyBoost": "Zrychlení letu ve hře o přežití je nyní povoleno.",
     "bs.command.disableAllDirs": "Běh ve všech směrech je nyní zablokován.",
     "bs.command.enableAllDirs": "Běh ve všech směrech je nyní povolen.",
 
