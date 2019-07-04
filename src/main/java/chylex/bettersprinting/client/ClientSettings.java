@@ -88,8 +88,9 @@ public class ClientSettings{
 		builder.pop();
 		builder.push("updates");
 		
-		enableUpdateNotifications = builder.translation("bs.config.notifications").define("enableUpdateNotifications", true);
-		enableBuildCheck          = builder.translation("bs.config.buildCheck").define("enableBuildCheck", true);
+		// TODO update when builder.translation starts working...
+		enableUpdateNotifications = builder.comment(" Notifies about new updates, at most once per day.").translation("bs.config.notifications").define("enableUpdateNotifications", true);
+		enableBuildCheck          = builder.comment(" Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled.").translation("bs.config.buildCheck").define("enableBuildCheck", true);
 		
 		builder.pop();
 		
