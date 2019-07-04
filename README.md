@@ -1,6 +1,8 @@
 Better Sprinting
 ================
 
+![Logo](https://raw.githubusercontent.com/chylex/Better-Sprinting/master/logo.png "Depiction of Zero Regrets")
+
 ## Network specification
 
 If you are a server owner and want to disable the mod, or enable some of the singleplayer-only functions, see the Better Sprinting network specification which has all the information:
