@@ -18,7 +18,7 @@ public class ClientNetwork implements INetworkHandler{
 	
 	public static PacketBuffer writeLanSettings(){
 		PacketBuffer buffer = PacketPipeline.buf();
-		buffer.writeByte(0).writeBoolean(true).writeBoolean(true);
+		buffer.writeByte(0).writeBoolean(false).writeBoolean(true);
 		return buffer;
 	}
 	
