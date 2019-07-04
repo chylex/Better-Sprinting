@@ -1,12 +1,12 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.BetterSprintingProxy;
+import chylex.bettersprinting.client.input.SprintKeyMode;
 import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.apache.commons.lang3.ArrayUtils;
@@ -64,15 +64,11 @@ public class ClientProxy extends BetterSprintingProxy{
 				
 				BetterSprintingMod.config.set(value, entry.getRight().equalsIgnoreCase("true"));
 			}
-			else if (entry.getLeft() == 'I'){
-				IntValue value;
-				
-				switch(entry.getMiddle()){
-					case "flySpeedBoost": value = ClientSettings.flySpeedBoost; break;
-					default: continue;
-				}
-				
-				BetterSprintingMod.config.set(value, Integer.parseInt(entry.getRight()));
+			else if (entry.getLeft() == 'I' && entry.getMiddle().equals("flySpeedBoost")){
+				BetterSprintingMod.config.set(ClientSettings.flySpeedBoost, Integer.parseInt(entry.getRight()));
+			}
+			else if (entry.getLeft() == 'S' && entry.getMiddle().equals("sprintKeyMode") && entry.getRight().equals("HOLD")){
+				BetterSprintingMod.config.set(ClientSettings.sprintKeyMode, SprintKeyMode.HOLD);
 			}
 		}
 	}
