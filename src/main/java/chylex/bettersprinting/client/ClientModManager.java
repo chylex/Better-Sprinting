@@ -51,7 +51,7 @@ public final class ClientModManager{
 	public enum Feature{
 		FLY_BOOST{
 			@Override protected boolean checkEnableCondition(){
-				return mc.player.capabilities.isFlying && keyBindSprintHold.isKeyDown() && (mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyBoost);
+				return mc.player.capabilities.isFlying && (mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyBoost);
 			}
 		},
 		
