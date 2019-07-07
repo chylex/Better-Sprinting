@@ -118,7 +118,7 @@ final class PlayerLogicHandler{
 		
 		// Update state
 		
-		boolean shouldSprint = sprinting.active() && isNotSneaking && !isSprintBlocked; // TODO fixes https://bugs.mojang.com/browse/MC-99848 (adding blindness while sprinting does not stop the sprint)
+		boolean shouldSprint = sprinting.active() && isNotSneaking && !isSprintBlocked && !abilities.isFlying; // TODO fixes https://bugs.mojang.com/browse/MC-99848 (adding blindness while sprinting does not stop the sprint)
 		
 		if (player.isSprinting() != shouldSprint){
 			player.setSprinting(shouldSprint);
@@ -134,7 +134,7 @@ final class PlayerLogicHandler{
 		int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
 		
 		if (flySpeedBoostMultiplier > 0){
-			if (Feature.FLY_BOOST.isEnabled()){
+			if (Feature.FLY_BOOST.isEnabled() && (isSprintHeld || movementController.isSprintToggled())){
 				abilities.setFlySpeed(flySpeedBase + 0.075F * flySpeedBoostMultiplier);
 			}
 			else{
