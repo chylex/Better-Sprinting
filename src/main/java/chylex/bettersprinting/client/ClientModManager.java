@@ -50,19 +50,19 @@ public final class ClientModManager{
 	
 	public enum Feature{
 		FLY_BOOST{
-			@Override protected boolean checkTriggerCondition(){
+			@Override protected boolean checkEnableCondition(){
 				return mc.player.capabilities.isFlying && keyBindSprintHold.isKeyDown() && (mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyBoost);
 			}
 		},
 		
 		FLY_ON_GROUND{
-			@Override protected boolean checkTriggerCondition(){
+			@Override protected boolean checkEnableCondition(){
 				return mc.player.capabilities.isFlying && ClientSettings.flyOnGround && mc.player.isCreative();
 			}
 		},
 		
 		RUN_IN_ALL_DIRS{
-			@Override protected boolean checkTriggerCondition(){
+			@Override protected boolean checkEnableCondition(){
 				return ClientSettings.enableAllDirs;
 			}
 			
@@ -71,10 +71,10 @@ public final class ClientModManager{
 			}
 		};
 		
-		protected abstract boolean checkTriggerCondition();
+		protected abstract boolean checkEnableCondition();
 		
-		public final boolean isTriggered(){
-			return isAvailable() && checkTriggerCondition();
+		public final boolean isEnabled(){
+			return isAvailable() && checkEnableCondition();
 		}
 		
 		public boolean isAvailable(){

@@ -43,7 +43,7 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public void updateMovementInput(){
-		if (Feature.FLY_ON_GROUND.isTriggered()){
+		if (Feature.FLY_ON_GROUND.isEnabled()){
 			player.onGround = false;
 		}
 		
@@ -101,7 +101,7 @@ final class PlayerLogicHandler{
 		// Stop conditions
 		
 		if (sprinting.active()){
-			boolean isSlow = Feature.RUN_IN_ALL_DIRS.isTriggered() ? !movementController.isMovingAnywhere() : !movementController.isMovingFastForward();
+			boolean isSlow = Feature.RUN_IN_ALL_DIRS.isEnabled() ? !movementController.isMovingAnywhere() : !movementController.isMovingFastForward();
 			
 			boolean isSlowOrHungry = isSlow || !enoughHunger;
 			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally;
@@ -129,7 +129,7 @@ final class PlayerLogicHandler{
 		int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost;
 		
 		if (flySpeedBoostMultiplier > 0){
-			if (Feature.FLY_BOOST.isTriggered()){
+			if (Feature.FLY_BOOST.isEnabled()){
 				abilities.setFlySpeed(flySpeedBase + 0.075F * flySpeedBoostMultiplier);
 			}
 			else{
@@ -143,7 +143,7 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | EntityPlayerSP.onLivingUpdate | 1.12.2
 	public void updateFlight(){
-		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isTriggered()){
+		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isEnabled()){
 			abilities.isFlying = false;
 			player.sendPlayerAbilities();
 		}
