@@ -11,8 +11,8 @@
     "bs.sprint.mode.hold": "Segure",
 
     "bs.sprint.hold": "Correr",
-    "bs.sprint.toggle": "Alternância para correr",
-    "bs.sneak.toggle": "Alternância para agachar",
+    "bs.sprint.toggle": Correr (Ligar/Desligar)",
+    "bs.sneak.toggle": "Agachar (Ligar/Desligar)",
     "bs.menu": "Configuração do mod",
 
     "bs.doubleTapping": "Dois toques",
