@@ -59,9 +59,5 @@
     "_comment": "Configuration",
 
     "bs.config.notifications": "Notifica sobre novas atualizações, no máximo uma ver por dia.",
-    "bs.config.buildCheck": "Notifica quando a versão atual do mod está criticamente quebrada. É aconselhável deixar essa opção ativada.",
-
-    "_comment": "This should never be visible, but just in case it is",
-
-    "key.categories.bettersprinting.hidden": "Better Sprinting"
+    "bs.config.buildCheck": "Notifica quando a versão atual do mod está criticamente quebrada. É aconselhável deixar essa opção ativada."
 }
