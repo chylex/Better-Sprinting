@@ -7,32 +7,32 @@ gui.unavailable=Недоступно
 
 # Titles for controls
 
-bs.sprint.mode.tap=Tap
-bs.sprint.mode.hold=Hold
+bs.sprint.mode.tap=Притиснути
+bs.sprint.mode.hold=Држати
 
 bs.sprint.hold=Трчање
 bs.sprint.toggle=Трчање (променљиво)
 bs.sneak.toggle=Шуњати се (променљиво)
-bs.menu=Mod configuration
+bs.menu=Конфигурација мода
 
 bs.doubleTapping=Двоструки клик
 bs.runAllDirs=Трчати у свим правцима
 bs.flyBoost=Убрзање за лет
-bs.flyOnGround=Fly on ground
+bs.flyOnGround=Летети над тлом
 bs.disableMod=Онемогући мод
 bs.autoJump=Aуто-скок
 
 # Tooltips for controls (use '#' character for splitting lines)
 
-bs.sprint.hold.info=[Tap] will start or stop sprinting when pressed.#[Hold] will sprint only while the key is held.
-bs.sprint.toggle.info=Притиснути једном да започнете или зауставите трчање.#Slowing down will not interrupt the sprint.
+bs.sprint.hold.info=[Притиснути] ће покренути или зауставити спринт када је притиснуто.#[Држати] спринт ће само радити када се држи дугме.
+bs.sprint.toggle.info=Притиснути једном да започнете или зауставите трчање.#Успоравање неће прекинути спринт.
 bs.sneak.toggle.info=Притиснути једном да започнете или зауставите шуњање.#Када отворите било који GUI, зауставићете шуњање док га не затворите.
 bs.menu.info=Дугме да отворите овај мени у игри.
 
 bs.doubleTapping.info=Омогући или онемогући трчање притискањем два пута дугме за напред.
 bs.runAllDirs.info=Трчање у свим правцима.#Ово не можете да користите у multiplayer-у осим ако сервер то не дозвољава.
-bs.flyBoost.info=Hold sprint key to fly faster in creative or spectator mode.
-bs.flyOnGround.info=Continue flying when touching ground in creative mode.
+bs.flyBoost.info=Држати спринт дугме да летите брже у преживљавању или спектатор моду.
+bs.flyOnGround.info=Наставити летење када додирујете тло у креативном.
 bs.disableMod.info=Онемогућити све функције мода Better Sprinting које нису део стандардног Minecraft-а.#Ова опција може да се користи ако сервер не дозвољава да се користи овај мод.
 bs.autoJump.info=Ванила додатак који вам омогућава да аутоматски скочите близу препрека.
 
@@ -42,21 +42,21 @@ bs.autoJump.info=Ванила додатак који вам омогућава 
 
 # In-game messages
 
-bs.game.integrity=Better Sprinting is not working correctly, there may be a conflict with another mod.
-bs.game.disabled=The server requested to disable the mod, all features will be deactivated.
-bs.game.reenabled=The server has enabled the mod again, all features were reactivated.
+bs.game.integrity=Better Sprinting не ради како треба, можда постоји конфликт са неким другим модом.
+bs.game.disabled=Сервер је захтевао да се мод онемогући, све карактеристике биће онемогућене.
+bs.game.reenabled=Сервер је омогућио мод, све карактеристике су активиране.
 
 # Server messages
 
-bs.command.info=Use the commands to either disable/enable the mod for players, or change specific settings. These will persist after restarting the server, and will also immediately affect players that are already on the server.
+bs.command.info=Користите команде да омогућите/онемогућите мод играчима, или да промените специфично подешавање. Подешавања ће остати сачувана и након рестарта, и одмах ће утицати на играче који су тренутно на серверу.
 bs.command.disableMod=Better Sprinting ћи бити аутоматски онемогућен када се играч придружи.
 bs.command.enableMod=Better Sprinting није дозвољен на серверу.
-bs.command.disableFlyBoost=Убрзање за лет је сада онемогућено када је играч у survival mode.
-bs.command.enableFlyBoost=Убрзање за лет је сада омогућено када је играч у survival mode.
+bs.command.disableFlyBoost=Убрзање за лет је сада онемогућено када је играч у survival моду.
+bs.command.enableFlyBoost=Убрзање за лет је сада омогућено када је играч у survival моду.
 bs.command.disableAllDirs=Трчање у свим правцима је сада онемогућено.
 bs.command.enableAllDirs=Трчање у свим правцима је сада омогућено.
 
 # Configuration
 
-bs.config.notifications=Notifies about new updates, at most once per day.
-bs.config.buildCheck=Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled.
+bs.config.notifications=Обавештава о новим верзијама, највише једном по дану.
+bs.config.buildCheck=Обавештава када је тренутна верзија мода критично неисправна. Препоручује се да ова опција буде омогућена.
