@@ -17,6 +17,8 @@ import static chylex.bettersprinting.client.input.SprintState.TOGGLED;
 
 final class PlayerLogicHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
+	
+	private static final float flySpeedBase = 0.05F;
 
 	private final ClientPlayerEntity player;
 	private final PlayerAbilities abilities;
@@ -39,6 +41,10 @@ final class PlayerLogicHandler{
 	
 	public ClientPlayerEntity getPlayer(){
 		return player;
+	}
+	
+	public void resetState(){
+		abilities.setFlySpeed(flySpeedBase);
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
@@ -130,7 +136,6 @@ final class PlayerLogicHandler{
 		
 		// Fly boost
 		
-		float flySpeedBase = 0.05F;
 		int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
 		
 		if (flySpeedBoostMultiplier > 0){

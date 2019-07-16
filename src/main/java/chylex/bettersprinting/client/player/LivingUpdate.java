@@ -27,8 +27,12 @@ public final class LivingUpdate{
 		// this.movementInput.func_217607_a(flag3, this.isSpectator()); <<< REPLACE
 		
 		if (isModDisabled){
+			if (currentHandler != null){
+				currentHandler.resetState();
+				currentHandler = null;
+			}
+			
 			$this.movementInput.func_217607_a(slowMovement, isSpectator);
-			currentHandler = null;
 			return;
 		}
 		
