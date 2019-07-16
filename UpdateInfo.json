@@ -2,14 +2,14 @@
   "homepage": "https://bsprint.chylex.com",
   
   "promos": {
-    "1.14.3-latest": "3.0.0",
-    "1.14.3-recommended": "3.0.0",
+    "1.14.3-latest": "3.0.1",
+    "1.14.3-recommended": "3.0.1",
     "1.14.2-latest": "2.3.0",
     "1.14.2-recommended": "2.3.0",
     "1.13.2-latest": "3.0.0",
     "1.13.2-recommended": "3.0.0",
-    "1.12.2-latest": "3.0.0",
-    "1.12.2-recommended": "3.0.0",
+    "1.12.2-latest": "3.0.1",
+    "1.12.2-recommended": "3.0.1",
     "1.12.1-latest": "2.0.3",
     "1.12.1-recommended": "2.0.3",
     "1.12-latest": "2.0.2",
@@ -33,6 +33,7 @@
   },
 
   "1.14.3": {
+    "3.0.1": "Improved flight boost, updated Serbian & Portuguese",
     "3.0.0": "Major rewrite with many new features and improvements"
   },
 
@@ -47,6 +48,7 @@
   },
   
   "1.12.2": {
+    "3.0.1": "Improved flight boost, updated Serbian & Portuguese",
     "3.0.0": "Major rewrite with many new features and improvements",
     "2.3.0": "Backported everything applicable from the current MC 1.14.2 release",
     "2.1.2": "Backported spectator fly boost, LAN fixes, and a few other changes from version 2.2.1",
