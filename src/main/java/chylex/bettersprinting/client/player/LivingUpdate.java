@@ -27,8 +27,12 @@ public final class LivingUpdate{
 		// this.movementInput.updatePlayerMoveState(); <<< REPLACE
 		
 		if (isModDisabled){
+			if (currentHandler != null){
+				currentHandler.resetState();
+				currentHandler = null;
+			}
+			
 			$this.movementInput.updatePlayerMoveState();
-			currentHandler = null;
 			return;
 		}
 		
