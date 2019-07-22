@@ -32,7 +32,7 @@ public final class LivingUpdate{
 				currentHandler = null;
 			}
 			
-			$this.movementInput.func_217607_a(slowMovement, isSpectator);
+			$this.movementInput.tick(slowMovement, isSpectator);
 			return;
 		}
 		

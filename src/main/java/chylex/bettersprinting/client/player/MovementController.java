@@ -36,7 +36,7 @@ final class MovementController{
 			restoreSneakToggle = false;
 		}
 		
-		movementInput.func_217607_a(slowMovement || sneakToggle.isToggled, isSpectator);
+		movementInput.tick(slowMovement || sneakToggle.isToggled, isSpectator);
 		movementInput.sneak |= sneakToggle.isToggled;
 	}
 	
