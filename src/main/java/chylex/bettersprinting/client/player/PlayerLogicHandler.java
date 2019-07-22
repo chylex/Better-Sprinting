@@ -47,7 +47,7 @@ final class PlayerLogicHandler{
 		abilities.setFlySpeed(flySpeedBase);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
 	public void updateMovementInput(boolean slowMovement, boolean isSpectator){
 		if (Feature.FLY_ON_GROUND.isEnabled()){
 			player.onGround = false;
@@ -58,7 +58,7 @@ final class PlayerLogicHandler{
 		movementController.update(slowMovement, isSpectator);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
 	public void updateSprinting(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
@@ -151,7 +151,7 @@ final class PlayerLogicHandler{
 		}
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
 	public void updateFlight(){
 		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isEnabled()){
 			abilities.isFlying = false;

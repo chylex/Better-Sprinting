@@ -19,12 +19,12 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
 	public static void injectMovementInputUpdate(ClientPlayerEntity $this, boolean slowMovement, boolean isSpectator){
 		hasTriggered = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
-		// this.movementInput.func_217607_a(flag3, this.isSpectator()); <<< REPLACE
+		// this.movementInput.tick(flag3, this.isSpectator()); <<< REPLACE
 		
 		if (isModDisabled){
 			if (currentHandler != null){
@@ -43,7 +43,7 @@ public final class LivingUpdate{
 		currentHandler.updateMovementInput(slowMovement, isSpectator);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
 	public static boolean injectSprinting(){
 		if (isModDisabled){
 			return false;
@@ -65,7 +65,7 @@ public final class LivingUpdate{
 		*/
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.3
+	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
 	public static boolean injectAfterSuperCall(){
 		if (isModDisabled){
 			return false;
