@@ -293,7 +293,7 @@ function initializeCoreMod(){
         var entry = null;
 
         for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
-            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "func_217607_a") &&
+            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "tick", "func_217607_a") &&
                 checkOpcodeChain(instructions, index - 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.ILOAD, opcodes.ALOAD ])
             ){
                 entry = index;
