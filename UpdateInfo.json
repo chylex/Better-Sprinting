@@ -2,7 +2,7 @@
   "homepage": "https://bsprint.chylex.com",
   
   "promos": {
-    "1.14.4-latest": "3.0.1",
+    "1.14.4-latest": "3.0.1a",
     "1.14.4-recommended": "3.0.1",
     "1.14.3-latest": "3.0.1",
     "1.14.3-recommended": "3.0.1",
@@ -35,6 +35,7 @@
   },
 
   "1.14.4": {
+    "3.0.1a": "Updated to work with Forge 28.0.45 and newer",
     "3.0.1": "Updated to Minecraft 1.14.4"
   },
 
