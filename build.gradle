@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
 def mcversion = "1.14.4"
-def forgeversion = "28.0.11"
+def forgeversion = "28.0.45"
 
 def prefixName = 'displayName = '
 def prefixVersion = 'version = '
@@ -30,7 +30,7 @@ archivesBaseName = metaName.replaceAll('\\s', '')
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft{
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: '20190810-1.14.3'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     

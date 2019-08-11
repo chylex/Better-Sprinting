@@ -28,6 +28,6 @@ Find me on Twitter: https://twitter.com/chylexmc
 [[dependencies.bettersprinting]]
     modId = "forge"
     mandatory = true
-    versionRange = "[27.0.16,)"
+    versionRange = "[28.0.45,)"
     ordering = "NONE"
     side = "BOTH"

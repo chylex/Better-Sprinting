@@ -2,9 +2,9 @@ package chylex.bettersprinting.server;
 import chylex.bettersprinting.BetterSprintingMod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
