@@ -1,0 +1,63 @@
+{
+    "_comment": "Generic titles",
+
+    "gui.enabled": "Включено",
+    "gui.disabled": "Отключено",
+    "gui.unavailable": "Недоступно",
+
+    "_comment": "Titles for controls",
+
+    "bs.sprint.mode.tap": "Tap",
+    "bs.sprint.mode.hold": "Hold",
+
+    "bs.sprint.hold": "Бег",
+    "bs.sprint.toggle": "Бег (переключить)",
+    "bs.sneak.toggle": "Присесть (переключить)",
+    "bs.menu": "Mod configuration",
+
+    "bs.doubleTapping": "Двойное нажатие",
+    "bs.runAllDirs": "Бег во всех направлениях",
+    "bs.flyBoost": "Ускорение полёта",
+    "bs.flyOnGround": "Fly on ground",
+    "bs.disableMod": "Отключить модификацию",
+    "bs.autoJump": "Автопрыжок",
+
+    "_comment": "Tooltips for controls (use '#' character for splitting lines)",
+
+    "bs.sprint.hold.info": "[Tap] will start or stop sprinting when pressed.#[Hold] will sprint only while the key is held.",
+    "bs.sprint.toggle.info": "Press once to start or stop sprinting.#Slowing down will not interrupt the sprint.",
+    "bs.sneak.toggle.info": "Нажмите, чтобы присесть или встать.#Вы автоматически встанете, если откроете любой интерфейс.",
+    "bs.menu.info": "Клавиша для вызова этого меню в игре.",
+
+    "bs.doubleTapping.info": "Включение или отключение бега по двойному нажатию клавиши \"Вперёд\".",
+    "bs.runAllDirs.info": "Бег во всех направлениях.#Вы не можете использовать это в мультиплеере, если сервер не разрешил это.",
+    "bs.flyBoost.info": "Hold sprint key to fly faster in creative or spectator mode.",
+    "bs.flyOnGround.info": "Continue flying when touching ground in creative mode.",
+    "bs.disableMod.info": "Отключает все функции модификации Better Sprinting.#Это опция может быть полезна, если сервер не разрешает использовать этот мод.",
+    "bs.autoJump.info": "Vanilla feature that makes you automatically jump near obstacles.",
+
+    "_comment": "If you need to translate fly speed boost, use the following pattern (from 2x to 8x)",
+
+    "2x": "2x",
+
+    "_comment": "In-game messages",
+
+    "bs.game.integrity": "Проверка целостности провалилась, другая модификация конфликтует с Better Sprinting.",
+    "bs.game.disabled": "Сервер отключил эту модификацию, механизм бега изменён на оригинальный.",
+    "bs.game.reenabled": "Сервер включил эту модификацию, используется механизм бега модификации Better Sprinting.",
+
+    "_comment": "Server messages",
+
+    "bs.command.info": "Use the commands to either disable/enable the mod for players, or change specific settings. These will persist after restarting the server, and will also immediately affect players that are already on the server.",
+    "bs.command.disableMod": "Модификация Better Sprinting будет автоматически отключена при подключении игрока.",
+    "bs.command.enableMod": "Модификация Better Sprinting теперь разрешена на сервере.",
+    "bs.command.disableFlyBoost": "Ускорение полёта отключено, если игрок играет в режиме выживания.",
+    "bs.command.enableFlyBoost": "Ускорение полёта включено, если игрок играет в режиме выживания.",
+    "bs.command.disableAllDirs": "Бег во всех направлениях отключен.",
+    "bs.command.enableAllDirs": "Бег во всех направлениях включен.",
+
+    "_comment": "Configuration",
+
+    "bs.config.notifications": "Notifies about new updates, at most once per day.",
+    "bs.config.buildCheck": "Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled."
+}
