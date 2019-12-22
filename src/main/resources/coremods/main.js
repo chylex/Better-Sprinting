@@ -293,8 +293,8 @@ function initializeCoreMod(){
         var entry = null;
 
         for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
-            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "tick", "func_217607_a") &&
-                checkOpcodeChain(instructions, index - 5, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.ILOAD, opcodes.ALOAD ])
+            if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "func_225607_a_") &&
+                checkOpcodeChain(instructions, index - 4, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.ALOAD, opcodes.INVOKEVIRTUAL ])
             ){
                 entry = index;
                 break;
@@ -307,11 +307,11 @@ function initializeCoreMod(){
 
         print("Found entry point at " + entry + ".");
 
-        var toRemove = instructions.get(entry - 4);
+        var toRemove = instructions.get(entry - 3);
         var toReplace = instructions.get(entry);
 
         return function(){
-            var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;ZZ)V", api.MethodType.STATIC);
+            var call = api.buildMethodCall("chylex/bettersprinting/client/player/LivingUpdate", "injectMovementInputUpdate", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;Z)V", api.MethodType.STATIC);
 
             instructions.remove(toRemove);
             instructions.set(toReplace, call);
@@ -326,9 +326,9 @@ function initializeCoreMod(){
 
         for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
             if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
-                checkInstruction(instructions.get(index - 24), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
-                checkInstruction(instructions.get(index - 48), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
-                checkInstruction(instructions.get(index - 72), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index - 22), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index - 44), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+                checkInstruction(instructions.get(index - 66), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
                 checkInstruction(instructions.get(index + 198), opcodes.INVOKEVIRTUAL, "setSprinting", "func_70031_b")
             ){
                 bounds = [ index + 1, index + 199 ];

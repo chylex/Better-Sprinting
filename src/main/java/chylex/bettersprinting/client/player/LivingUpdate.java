@@ -19,12 +19,12 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
+	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
 	public static void injectMovementInputUpdate(ClientPlayerEntity $this, boolean slowMovement){
 		hasTriggered = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
-		// this.movementInput.tick(flag3, this.isSpectator()); <<< REPLACE
+		// this.movementInput.func_225607_a_(this.func_228354_I_()); <<< REPLACE
 		
 		if (isModDisabled){
 			if (currentHandler != null){
@@ -43,7 +43,7 @@ public final class LivingUpdate{
 		currentHandler.updateMovementInput(slowMovement);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
+	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
 	public static boolean injectSprinting(){
 		if (isModDisabled){
 			return false;
@@ -52,7 +52,7 @@ public final class LivingUpdate{
 		/*
 		}
 		<<< INSERTED HERE
-		boolean flag7 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.abilities.allowFlying;
+		boolean flag4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.abilities.allowFlying;
 		*/
 		
 		currentHandler.updateSprinting();
@@ -65,7 +65,7 @@ public final class LivingUpdate{
 		*/
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
+	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
 	public static boolean injectAfterSuperCall(){
 		if (isModDisabled){
 			return false;
