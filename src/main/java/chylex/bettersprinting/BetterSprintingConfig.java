@@ -11,9 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
-public class BetterSprintingConfig{
+public final class BetterSprintingConfig{
 	private final ModConfig config;
 	
 	BetterSprintingConfig(ModConfig config){
@@ -32,7 +32,7 @@ public class BetterSprintingConfig{
 		config.getConfigData().set(property.getPath(), value);
 	}
 	
-	public <T> void update(ConfigValue<T> property, Function<T, T> func){
+	public <T> void update(ConfigValue<T> property, UnaryOperator<T> func){
 		set(property, func.apply(property.get()));
 	}
 	
@@ -51,7 +51,7 @@ public class BetterSprintingConfig{
 	}
 	
 	public static void register(ModLoadingContext context, ModConfig.Type type, ForgeConfigSpec spec, String suffix){
-		String fileName = BetterSprintingMod.modId + "-" + suffix + ".toml";
+		String fileName = BetterSprintingMod.id + "-" + suffix + ".toml";
 		context.registerConfig(type, spec, fileName);
 		
 		if (Files.notExists(Paths.get("config", fileName))){

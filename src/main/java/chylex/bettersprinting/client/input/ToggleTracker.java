@@ -1,7 +1,7 @@
 package chylex.bettersprinting.client.input;
 import net.minecraft.client.settings.KeyBinding;
 
-public class ToggleTracker{
+public final class ToggleTracker{
 	private final KeyBinding bindingToggle;
 	private final KeyBinding bindingReset;
 	

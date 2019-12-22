@@ -19,7 +19,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
-public class ClientSettings{
+public final class ClientSettings{
 	private static final IntValue keyCodeSprintHold;
 	private static final IntValue keyCodeSprintToggle;
 	private static final IntValue keyCodeSneakToggle;

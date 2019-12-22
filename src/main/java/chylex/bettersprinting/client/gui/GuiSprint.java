@@ -21,16 +21,9 @@ import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiSprint extends Screen{
-	private static final int idDoubleTap = 199;
-	private static final int idAllDirs = 198;
-	private static final int idFlyBoost = 197;
-	private static final int idFlyOnGround = 196;
-	private static final int idDisableMod = 195;
-	private static final int idAutoJump = 194;
+	private static final Minecraft mc = Minecraft.getInstance();
 	
-	private final Minecraft mc = Minecraft.getInstance();
 	private final Screen parentScreen;
-	
 	private Button btnSprintMode;
 	private GuiButtonInputOption btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
 	private GuiButtonInputBinding selectedBinding;
@@ -51,13 +44,45 @@ public class GuiSprint extends Screen{
 			addButton(new GuiButtonInputBinding(left + 160 * (index % 2), top + 24 * (index / 2), ClientModManager.keyBindings[index], this::onBindingClicked));
 		}
 		
-		btnSprintMode = addButton(new GuiButton(left - 50, top, 48, "", this::onClickedSprintMode));
-		btnDoubleTap = addButton(new GuiButtonInputOption(idDoubleTap, left, top + 60, "bs.doubleTapping", this::onButtonClicked));
-		btnAllDirs = addButton(new GuiButtonInputOption(idAllDirs, left + 160, top + 60, "bs.runAllDirs", this::onButtonClicked));
-		btnFlyBoost = addButton(new GuiButtonInputOption(idFlyBoost, left, top + 84, "bs.flyBoost", this::onButtonClicked));
-		btnFlyOnGround = addButton(new GuiButtonInputOption(idFlyOnGround, left + 160, top + 84, "bs.flyOnGround", this::onButtonClicked));
-		btnDisableMod = addButton(new GuiButtonInputOption(idDisableMod, left + 160, top + 108, "bs.disableMod", this::onButtonClicked));
-		btnAutoJump = addButton(new GuiButtonInputOption(idAutoJump, left, top + 108, "bs.autoJump", this::onButtonClicked));
+		btnSprintMode = addButton(new GuiButton(left - 50, top, 48, "", onSettingClicked(() -> {
+			BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
+		})));
+		
+		btnDoubleTap = addButton(new GuiButtonInputOption(left, top + 60, "bs.doubleTapping", onSettingClicked(() -> {
+			if (!ClientSettings.disableMod.get()){
+				BetterSprintingMod.config.update(ClientSettings.enableDoubleTap, value -> !value);
+			}
+		})));
+		
+		btnAllDirs = addButton(new GuiButtonInputOption(left + 160, top + 60, "bs.runAllDirs", onSettingClicked(() -> {
+			if (Feature.RUN_IN_ALL_DIRS.isAvailable()){
+				BetterSprintingMod.config.update(ClientSettings.enableAllDirs, value -> !value);
+			}
+		})));
+		
+		btnFlyBoost = addButton(new GuiButtonInputOption(left, top + 84, "bs.flyBoost", onSettingClicked(() -> {
+			if (Feature.FLY_BOOST.isAvailable()){
+				BetterSprintingMod.config.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
+			}
+		})));
+		
+		btnFlyOnGround = addButton(new GuiButtonInputOption(left + 160, top + 84, "bs.flyOnGround", onSettingClicked(() -> {
+			if (Feature.FLY_ON_GROUND.isAvailable()){
+				BetterSprintingMod.config.update(ClientSettings.flyOnGround, value -> !value);
+			}
+		})));
+		
+		btnDisableMod = addButton(new GuiButtonInputOption(left + 160, top + 108, "bs.disableMod", onSettingClicked(() -> {
+			if (ClientModManager.canManuallyEnableMod()){
+				BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
+				updateButtonState();
+			}
+		})));
+		
+		btnAutoJump = addButton(new GuiButtonInputOption(left, top + 108, "bs.autoJump", onSettingClicked(() -> {
+			mc.gameSettings.autoJump = !mc.gameSettings.autoJump;
+			mc.gameSettings.saveOptions();
+		})));
 		
 		addButton(new GuiButton((width / 2) - 100, top + 168, parentScreen == null ? 98 : 200, I18n.format("gui.done"), this::onClickedDone));
 		
@@ -110,10 +135,12 @@ public class GuiSprint extends Screen{
 		BetterSprintingMod.config.save();
 	}
 	
-	private void onClickedSprintMode(){
-		BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
-		BetterSprintingMod.config.save();
-		updateButtonText();
+	private Runnable onSettingClicked(Runnable callback){
+		return () -> {
+			callback.run();
+			BetterSprintingMod.config.save();
+			updateButtonText();
+		};
 	}
 	
 	private void onBindingClicked(GuiButtonInputBinding binding){
@@ -123,48 +150,6 @@ public class GuiSprint extends Screen{
 		
 		selectedBinding = binding;
 		selectedBinding.setSelected(true);
-	}
-	
-	private void onButtonClicked(int id){
-		switch(id){
-			case idAutoJump:
-				mc.gameSettings.autoJump = !mc.gameSettings.autoJump;
-				mc.gameSettings.saveOptions();
-				break;
-				
-			case idDisableMod:
-				if (ClientModManager.canManuallyEnableMod()){
-					BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
-					updateButtonState();
-					updateButtonText();
-				} break;
-				
-			case idFlyBoost:
-				if (Feature.FLY_BOOST.isAvailable()){
-					BetterSprintingMod.config.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
-				} break;
-			
-			case idFlyOnGround:
-				if (Feature.FLY_ON_GROUND.isAvailable()){
-					BetterSprintingMod.config.update(ClientSettings.flyOnGround, value -> !value);
-				} break;
-				
-			case idAllDirs:
-				if (Feature.RUN_IN_ALL_DIRS.isAvailable()){
-					BetterSprintingMod.config.update(ClientSettings.enableAllDirs, value -> !value);
-				} break;
-				
-			case idDoubleTap:
-				if (!ClientSettings.disableMod.get()){
-					BetterSprintingMod.config.update(ClientSettings.enableDoubleTap, value -> !value);
-				} break;
-				
-			default:
-				return;
-		}
-		
-		BetterSprintingMod.config.save();
-		updateButtonText();
 	}
 	
 	@Override

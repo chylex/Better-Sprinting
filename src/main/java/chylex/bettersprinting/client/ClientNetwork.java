@@ -9,14 +9,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 
 @OnlyIn(Dist.CLIENT)
-public class ClientNetwork implements INetworkHandler{
+public final class ClientNetwork implements INetworkHandler{
 	public static PacketBuffer writeModNotification(int protocol){
 		PacketBuffer buffer = PacketPipeline.buf();
 		buffer.writeByte(0).writeByte(protocol);
 		return buffer;
 	}
 	
-	public static PacketBuffer writeLanSettings(){
+	private static PacketBuffer writeLanSettings(){
 		PacketBuffer buffer = PacketPipeline.buf();
 		buffer.writeByte(0).writeBoolean(false).writeBoolean(true);
 		return buffer;

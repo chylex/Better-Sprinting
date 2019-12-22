@@ -93,7 +93,7 @@ final class ServerNetwork implements INetworkHandler{
 		return buffer;
 	}
 	
-	public static void sendToPlayer(PlayerEntity player, PacketBuffer packet){
+	private static void sendToPlayer(PlayerEntity player, PacketBuffer packet){
 		if (hasBetterSprinting(player)){
 			PacketPipeline.sendToPlayer(packet, player);
 		}

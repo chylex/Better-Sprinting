@@ -14,7 +14,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import java.util.List;
 
-public class ClientProxy extends BetterSprintingProxy{
+public final class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void onConstructed(ModLoadingContext ctx){
 		Debug.updateDebugWindowTitle();

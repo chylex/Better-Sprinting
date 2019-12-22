@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
-@EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = BetterSprintingMod.modId)
+@EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = BetterSprintingMod.id)
 public final class ServerEventHandler{
 	@SubscribeEvent
 	public static void onServerStarting(FMLServerStartingEvent e){
@@ -19,6 +19,4 @@ public final class ServerEventHandler{
 	public static void onPlayerLogout(PlayerLoggedOutEvent e){
 		ServerNetwork.onDisconnected(e.getPlayer());
 	}
-	
-	private ServerEventHandler(){}
 }

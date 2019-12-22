@@ -23,8 +23,6 @@ public final class IntegrityCheck{
 	private static final IntegrityCheck instance = new IntegrityCheck();
 	private static final Minecraft mc = Minecraft.getInstance();
 	
-	private IntegrityCheck(){}
-	
 	@SubscribeEvent
 	public void onPlayerTick(ClientTickEvent e){
 		if (e.phase == Phase.END && mc.player != null && mc.player.ticksExisted > 1){

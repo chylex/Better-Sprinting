@@ -19,19 +19,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
 import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
 
-public class PacketPipeline{
+public final class PacketPipeline{
 	private static final ResourceLocation channelName = new ResourceLocation("bsm", "settings");
 	private static final String protocolId = "1";
 	
-	private static boolean registered = false;
-	
 	public static void initialize(INetworkHandler handler){
-		if (registered){
-			throw new RuntimeException("Packet pipeline has already been registered!");
-		}
-		
 		NetworkRegistry.newEventChannel(channelName, () -> protocolId, protocolServer -> true, protocolClient -> true).registerObject(new PacketPipeline(handler));
-		registered = true;
 	}
 	
 	private final INetworkHandler handler;

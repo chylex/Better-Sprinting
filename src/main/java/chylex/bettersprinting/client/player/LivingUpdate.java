@@ -4,6 +4,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+@SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
 public final class LivingUpdate{
 	private static PlayerLogicHandler currentHandler;
@@ -20,7 +21,7 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
-	public static void injectMovementInputUpdate(ClientPlayerEntity $this, boolean slowMovement){
+	public static void injectMovementInputUpdate(ClientPlayerEntity player, boolean slowMovement){
 		hasTriggered = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
@@ -32,12 +33,12 @@ public final class LivingUpdate{
 				currentHandler = null;
 			}
 			
-			$this.movementInput.func_225607_a_(slowMovement);
+			player.movementInput.func_225607_a_(slowMovement);
 			return;
 		}
 		
-		if (currentHandler == null || currentHandler.getPlayer() != $this){
-			currentHandler = new PlayerLogicHandler($this);
+		if (currentHandler == null || currentHandler.getPlayer() != player){
+			currentHandler = new PlayerLogicHandler(player);
 		}
 		
 		currentHandler.updateMovementInput(slowMovement);
@@ -86,6 +87,4 @@ public final class LivingUpdate{
 		<<< SKIPPED TO HERE
 		*/
 	}
-	
-	private LivingUpdate(){}
 }

@@ -6,17 +6,15 @@ import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.util.MovementInput;
 
 final class MovementController{
-	private final Minecraft mc;
-	private final MovementInput movementInput;
+	private static final Minecraft mc = Minecraft.getInstance();
 	
+	private final MovementInput movementInput;
 	private final ToggleTracker sprintToggle;
 	private final ToggleTracker sneakToggle;
 	private boolean restoreSneakToggle;
 	
 	public MovementController(MovementInput movementInput){
-		this.mc = Minecraft.getInstance();
 		this.movementInput = movementInput;
-		
 		this.sprintToggle = new ToggleTracker(ClientModManager.keyBindSprintToggle, ClientModManager.keyBindSprintHold);
 		this.sneakToggle = new ToggleTracker(ClientModManager.keyBindSneakToggle, mc.gameSettings.field_228046_af_);
 	}

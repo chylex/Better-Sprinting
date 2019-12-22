@@ -21,15 +21,15 @@ import static net.minecraft.command.Commands.literal;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
 final class ServerCommandConfig{
-	private static String SETTING_SURVIVAL_FLY_BOOST = "survivalFlyBoost";
-	private static String SETTING_RUN_IN_ALL_DIRS = "runInAllDirs";
+	private static final String SETTING_SURVIVAL_FLY_BOOST = "survivalFlyBoost";
+	private static final String SETTING_RUN_IN_ALL_DIRS = "runInAllDirs";
 	
-	private static String[] SETTINGS_ALL = new String[]{ SETTING_SURVIVAL_FLY_BOOST, SETTING_RUN_IN_ALL_DIRS };
+	private static final String[] SETTINGS_ALL = new String[]{ SETTING_SURVIVAL_FLY_BOOST, SETTING_RUN_IN_ALL_DIRS };
 	
-	private static String ARG_BOOLEAN = "true|false";
-	private static String ARG_SETTINGS = String.join("|", SETTINGS_ALL);
+	private static final String ARG_BOOLEAN = "true|false";
+	private static final String ARG_SETTINGS = String.join("|", SETTINGS_ALL);
 	
-	private static SuggestionProvider<CommandSource> SUGGEST_SETTING = (context, builder) -> ISuggestionProvider.suggest(SETTINGS_ALL, builder);
+	private static final SuggestionProvider<CommandSource> SUGGEST_SETTING = (context, builder) -> ISuggestionProvider.suggest(SETTINGS_ALL, builder);
 	
 	public static void register(CommandDispatcher<CommandSource> dispatcher){
 		LiteralArgumentBuilder<CommandSource> builder = literal("bettersprinting").requires(source -> source.hasPermissionLevel(3));
@@ -55,7 +55,7 @@ final class ServerCommandConfig{
 	
 	private static int execInfo(CommandContext<CommandSource> ctx){
 		CommandSource source = ctx.getSource();
-		sendMessageTranslated(source, "bs.command.info");
+		sendMessageTranslated(source, "bs.command.info", false);
 		return 0;
 	}
 	
@@ -99,15 +99,7 @@ final class ServerCommandConfig{
 	// Helpers
 	
 	private static void sendMessage(CommandSource source, String text){
-		sendMessage(source, text, false);
-	}
-	
-	private static void sendMessage(CommandSource source, String text, boolean log){
-		source.sendFeedback(new StringTextComponent(text), log);
-	}
-	
-	private static void sendMessageTranslated(CommandSource source, String translationKey){
-		sendMessageTranslated(source, translationKey, false);
+		source.sendFeedback(new StringTextComponent(text), false);
 	}
 	
 	private static void sendMessageTranslated(CommandSource source, String translationName, boolean log){

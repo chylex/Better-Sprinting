@@ -10,21 +10,23 @@ import net.minecraftforge.client.settings.KeyModifier;
 import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
-public final class GuiButtonInputBinding extends GuiButtonCustomInput<GuiButtonInputBinding>{
+public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 	private static final GameSettings settings = Minecraft.getInstance().gameSettings;
 	
 	public final KeyBinding binding;
+	private final Consumer<GuiButtonInputBinding> onClick;
 	private boolean isSelected;
 	
 	public GuiButtonInputBinding(int x, int y, KeyBinding binding, Consumer<GuiButtonInputBinding> onClick){
-		super(x, y, "", binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription(), onClick);
+		super(x, y, "", binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
 		this.binding = binding;
+		this.onClick = onClick;
 		updateKeyBindingText();
 	}
 	
 	@Override
-	protected GuiButtonInputBinding getContext(){
-		return this;
+	public void onPress(){
+		onClick.accept(this);
 	}
 	
 	public void setSelected(boolean isSelected){

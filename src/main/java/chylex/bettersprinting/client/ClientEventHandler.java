@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import org.apache.commons.lang3.ArrayUtils;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(value = Dist.CLIENT, modid = BetterSprintingMod.modId)
+@EventBusSubscriber(value = Dist.CLIENT, modid = BetterSprintingMod.id)
 public final class ClientEventHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
 	private static boolean stopCheckingNewServer;
@@ -110,6 +110,4 @@ public final class ClientEventHandler{
 			}
 		}
 	}
-	
-	private ClientEventHandler(){}
 }
