@@ -55,12 +55,10 @@ public final class ClientProxy extends BetterSprintingProxy{
 				BooleanValue value;
 				
 				switch(entry.getMiddle()){
-					case "disableMod":                value = ClientSettings.disableMod; break;
-					case "enableDoubleTap":           value = ClientSettings.enableDoubleTap; break;
-					case "enableAllDirs":             value = ClientSettings.enableAllDirs; break;
-					case "flyOnGround":               value = ClientSettings.flyOnGround; break;
-					case "enableUpdateNotifications": value = ClientSettings.enableUpdateNotifications; break;
-					case "enableBuildCheck":          value = ClientSettings.enableBuildCheck; break;
+					case "disableMod":      value = ClientSettings.disableMod; break;
+					case "enableDoubleTap": value = ClientSettings.enableDoubleTap; break;
+					case "enableAllDirs":   value = ClientSettings.enableAllDirs; break;
+					case "flyOnGround":     value = ClientSettings.flyOnGround; break;
 					default: continue;
 				}
 				

@@ -54,10 +54,5 @@
     "bs.command.disableFlyBoost": "Убрзање за лет је сада онемогућено када је играч у survival моду.",
     "bs.command.enableFlyBoost": "Убрзање за лет је сада омогућено када је играч у survival моду.",
     "bs.command.disableAllDirs": "Трчање у свим правцима је сада онемогућено.",
-    "bs.command.enableAllDirs": "Трчање у свим правцима је сада омогућено.",
-
-    "_comment": "Configuration",
-
-    "bs.config.notifications": "Обавештава о новим верзијама, највише једном по дану.",
-    "bs.config.buildCheck": "Обавештава када је тренутна верзија мода критично неисправна. Препоручује се да ова опција буде омогућена."
+    "bs.command.enableAllDirs": "Трчање у свим правцима је сада омогућено."
 }

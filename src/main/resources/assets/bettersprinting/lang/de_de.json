@@ -54,10 +54,5 @@
     "bs.command.disableFlyBoost": "Flug-Boost ist nun deaktiviert, wenn ein Spieler im Überlebensmodus erscheint.",
     "bs.command.enableFlyBoost": "Flug-Boost ist nun aktiviert, wenn ein Spieler im Überlebensmodus erscheint.",
     "bs.command.disableAllDirs": "Sprinten in alle Richtungen ist nun deaktiviert.",
-    "bs.command.enableAllDirs": "Sprinten in alle Richtungen ist nun aktiviert.",
-
-    "_comment": "Configuration",
-
-    "bs.config.notifications": "Benachrichtigungen über neue Updates, maximal einmal pro Tag.",
-    "bs.config.buildCheck": "Benachrichtigungen wenn sich die aktuelle Version des Mods als nicht funktionsfähig herausstellt. Es wird empfohlen diese Option aktiviert zu lassen."
+    "bs.command.enableAllDirs": "Sprinten in alle Richtungen ist nun aktiviert."
 }

@@ -54,10 +54,5 @@
     "bs.command.disableFlyBoost": "玩家處於生存模式時停用飛行加速。",
     "bs.command.enableFlyBoost": "玩家處於生存模式時啟用飛行加速。",
     "bs.command.disableAllDirs": "全方向疾跑已禁用。",
-    "bs.command.enableAllDirs": "全方向疾跑已啟用。",
-
-    "_comment": "Configuration",
-
-    "bs.config.notifications": "Notifies about new updates, at most once per day.",
-    "bs.config.buildCheck": "Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled."
+    "bs.command.enableAllDirs": "全方向疾跑已啟用。"
 }

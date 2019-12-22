@@ -60,10 +60,5 @@
     "bs.command.disableFlyBoost": "Skraidymo pagreitinimas dabar išjungtas žaidėjams kurie yra išlikimo rėžime.",
     "bs.command.enableFlyBoost": "Skraidymo pagreitinimas dabar įjungtas žaidėjams kurie yra išlikimo rėžime.",
     "bs.command.disableAllDirs": "Bėgimas visomis kryptimis dabar išjungtas.",
-    "bs.command.enableAllDirs": "Bėgimas visomis kryptimis dabar įjungtas.",
-
-    "_comment": "Configuration",
-
-    "bs.config.notifications": "Notifies about new updates, at most once per day.",
-    "bs.config.buildCheck": "Notifies when the current version of the mod is found to be critically broken. Highly recommended to keep this option enabled."
+    "bs.command.enableAllDirs": "Bėgimas visomis kryptimis dabar įjungtas."
 }

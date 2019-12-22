@@ -54,10 +54,5 @@
     "bs.command.disableFlyBoost": "Impulso de voo foi desativado para jogadores no modo sobrevivência.",
     "bs.command.enableFlyBoost": "Impulso de voo foi ativado para jogadores no modo sobrevivência.",
     "bs.command.disableAllDirs": "Correr em todas as direções foi desativado.",
-    "bs.command.enableAllDirs": "Correr em todas as direções foi ativado.",
-
-    "_comment": "Configuration",
-
-    "bs.config.notifications": "Notifica sobre novas atualizações, no máximo uma ver por dia.",
-    "bs.config.buildCheck": "Notifica quando a versão atual do mod está criticamente quebrada. É aconselhável deixar essa opção ativada."
+    "bs.command.enableAllDirs": "Correr em todas as direções foi ativado."
 }

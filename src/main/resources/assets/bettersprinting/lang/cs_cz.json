@@ -54,10 +54,5 @@
     "bs.command.disableFlyBoost": "Zrychlení letu ve hře o přežití je nyní zablokováno.",
     "bs.command.enableFlyBoost": "Zrychlení letu ve hře o přežití je nyní povoleno.",
     "bs.command.disableAllDirs": "Běh ve všech směrech je nyní zablokován.",
-    "bs.command.enableAllDirs": "Běh ve všech směrech je nyní povolen.",
-
-    "_comment": "Configuration",
-
-    "bs.config.notifications": "Upozorní na nové verze módu, nejvýše jednou denně.",
-    "bs.config.buildCheck": "Upozorní pokud byly v této verzi módu nalezeny kritické chyby. Vysoce doporučeno ponechat tuto možnost zapnutou."
+    "bs.command.enableAllDirs": "Běh ve všech směrech je nyní povolen."
 }
