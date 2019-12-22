@@ -68,6 +68,7 @@ jar{
 
     from('./'){
         include 'LICENSE'
+        include 'logo.png'
     }
 
     manifest{
