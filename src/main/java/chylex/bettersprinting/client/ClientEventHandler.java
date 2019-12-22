@@ -4,7 +4,6 @@ import chylex.bettersprinting.client.gui.GuiButton;
 import chylex.bettersprinting.client.gui.GuiSprint;
 import chylex.bettersprinting.client.player.IntegrityCheck;
 import chylex.bettersprinting.client.player.LivingUpdate;
-import chylex.bettersprinting.client.update.UpdateNotificationManager;
 import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ControlsScreen;
@@ -41,7 +40,6 @@ public final class ClientEventHandler{
 	@SubscribeEvent
 	public static void onPlayerLoginClient(PlayerLoggedInEvent e){
 		IntegrityCheck.register();
-		UpdateNotificationManager.run();
 	}
 	
 	@SubscribeEvent
