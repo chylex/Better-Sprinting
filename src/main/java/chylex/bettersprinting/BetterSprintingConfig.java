@@ -1,5 +1,4 @@
 package chylex.bettersprinting;
-import chylex.bettersprinting.system.Log;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -77,7 +76,8 @@ public class BetterSprintingConfig{
 			     .map(BetterSprintingConfig::readOldConfigEntry)
 			     .forEach(oldConfig::add);
 		}catch(IOException e){
-			Log.throwable(e, "Failed migrating old configuration.");
+			BetterSprintingMod.log.catching(e);
+			BetterSprintingMod.log.error("Failed migrating old configuration.");
 		}
 		
 		return oldConfig;

@@ -1,7 +1,6 @@
 package chylex.bettersprinting;
 import chylex.bettersprinting.client.ClientProxy;
 import chylex.bettersprinting.server.ServerProxy;
-import chylex.bettersprinting.system.Log;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -14,11 +13,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(BetterSprintingMod.modId)
 public class BetterSprintingMod{
 	public static final BetterSprintingProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+	public static final Logger log = LogManager.getLogger("BetterSprinting");
 	
 	public static BetterSprintingConfig config;
 	
 	public static final String modId = "bettersprinting";
-	public static String modVersion;
 	
 	public BetterSprintingMod(){
 		ModLoadingContext ctx = ModLoadingContext.get();
@@ -28,7 +27,6 @@ public class BetterSprintingMod{
 		proxy.onConstructed(ctx);
 		
 		bus.register(this);
-		Log.load();
 	}
 	
 	@SubscribeEvent
