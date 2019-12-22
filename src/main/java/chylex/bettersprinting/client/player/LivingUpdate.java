@@ -20,7 +20,7 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
-	public static void injectMovementInputUpdate(ClientPlayerEntity $this, boolean slowMovement, boolean isSpectator){
+	public static void injectMovementInputUpdate(ClientPlayerEntity $this, boolean slowMovement){
 		hasTriggered = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
@@ -32,7 +32,7 @@ public final class LivingUpdate{
 				currentHandler = null;
 			}
 			
-			$this.movementInput.tick(slowMovement, isSpectator);
+			$this.movementInput.func_225607_a_(slowMovement);
 			return;
 		}
 		
@@ -40,7 +40,7 @@ public final class LivingUpdate{
 			currentHandler = new PlayerLogicHandler($this);
 		}
 		
-		currentHandler.updateMovementInput(slowMovement, isSpectator);
+		currentHandler.updateMovementInput(slowMovement);
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4

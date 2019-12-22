@@ -25,7 +25,7 @@ public final class Log{
 		String title = "Minecraft " + SharedConstants.getVersion().getName() + " - BetterSprinting " + BetterSprintingMod.modVersion;
 		
 		Minecraft mc = Minecraft.getInstance();
-		mc.execute(() -> GLFW.glfwSetWindowTitle(mc.mainWindow.getHandle(), title));
+		mc.execute(() -> GLFW.glfwSetWindowTitle(mc.func_228018_at_().getHandle(), title));
 	}
 
 	/** Use $x where x is between 0 and data.length-1 to input variables. */

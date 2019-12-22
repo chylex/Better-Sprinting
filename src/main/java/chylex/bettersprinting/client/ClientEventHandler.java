@@ -35,6 +35,7 @@ public final class ClientEventHandler{
 	private static final Minecraft mc = Minecraft.getInstance();
 	private static boolean stopCheckingNewServer;
 	
+	public static boolean openedControlsFromSprintMenu;
 	public static boolean showDisableWarningWhenPossible;
 	
 	@SubscribeEvent
@@ -106,7 +107,7 @@ public final class ClientEventHandler{
 			        	(entry instanceof CategoryEntry && ((CategoryEntry)entry).labelText.equals(I18n.format(ClientModManager.categoryName)))
 			        ));
 			
-			if (!(controls.parentScreen instanceof GuiSprint)){
+			if (!openedControlsFromSprintMenu){
 				e.addWidget(new GuiButton((controls.width / 2) + 5, 18, 150, "Better Sprinting", () -> mc.displayGuiScreen(new GuiSprint(mc.currentScreen))));
 			}
 		}

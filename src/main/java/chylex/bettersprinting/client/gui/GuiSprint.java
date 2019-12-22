@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.gui;
 import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.client.ClientEventHandler;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientModManager.Feature;
 import chylex.bettersprinting.client.ClientSettings;
@@ -98,7 +99,9 @@ public class GuiSprint extends Screen{
 	}
 	
 	private void onClickedControls(){
+		ClientEventHandler.openedControlsFromSprintMenu = true;
 		mc.displayGuiScreen(new ControlsScreen(this, mc.gameSettings));
+		ClientEventHandler.openedControlsFromSprintMenu = false;
 		BetterSprintingMod.config.save();
 	}
 	

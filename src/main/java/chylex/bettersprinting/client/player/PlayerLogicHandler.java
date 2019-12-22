@@ -48,14 +48,14 @@ final class PlayerLogicHandler{
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
-	public void updateMovementInput(boolean slowMovement, boolean isSpectator){
+	public void updateMovementInput(boolean slowMovement){
 		if (Feature.FLY_ON_GROUND.isEnabled()){
 			player.onGround = false;
 		}
 		
-		wasSneaking = movementInput.sneak;
+		wasSneaking = movementInput.field_228350_h_;
 		wasMovingForward = player.func_223110_ee();
-		movementController.update(slowMovement, isSpectator);
+		movementController.update(slowMovement);
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.14.4
@@ -64,7 +64,7 @@ final class PlayerLogicHandler{
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
 		
 		boolean isSprintHeld = ClientModManager.keyBindSprintHold.isKeyDown();
-		boolean isNotSneaking = !(movementInput.sneak && !abilities.isFlying && !player.isSwimming());
+		boolean isNotSneaking = !(movementInput.field_228350_h_ && !abilities.isFlying && !player.isSwimming());
 		
 		// Double tapping
 		
@@ -113,7 +113,7 @@ final class PlayerLogicHandler{
 			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
 			
 			if (player.isSwimming()){
-				if (!player.onGround && !movementInput.sneak && isSlowOrHungry || !player.isInWater()){
+				if (!player.onGround && !movementInput.field_228350_h_ && isSlowOrHungry || !player.isInWater()){
 					sprinting = INACTIVE;
 				}
 			}
