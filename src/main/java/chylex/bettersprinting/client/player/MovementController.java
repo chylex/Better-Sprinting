@@ -16,7 +16,7 @@ final class MovementController{
 	public MovementController(MovementInput movementInput){
 		this.movementInput = movementInput;
 		this.sprintToggle = new ToggleTracker(ClientModManager.keyBindSprintToggle, ClientModManager.keyBindSprintHold);
-		this.sneakToggle = new ToggleTracker(ClientModManager.keyBindSneakToggle, mc.gameSettings.field_228046_af_);
+		this.sneakToggle = new ToggleTracker(ClientModManager.keyBindSneakToggle, mc.gameSettings.keyBindSneak);
 	}
 	
 	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.15.1

@@ -98,7 +98,7 @@ public final class ClientSettings{
 		keyInfoSprintHold.readFrom(settings.keyBindSprint);
 		
 		KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
-		KeyModifier sneakModifier = getVanillaKeyModifier(settings.field_228046_af_);
+		KeyModifier sneakModifier = getVanillaKeyModifier(settings.keyBindSneak);
 		
 		if (sprintModifier != KeyModifier.NONE){
 			keyInfoSprintToggle.set(sprintModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));

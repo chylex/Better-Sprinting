@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[30,)"
+loaderVersion = "[31,)"
 
 authors = "chylex"
 issueTrackerURL = "https://github.com/chylex/Better-Sprinting/issues"
@@ -22,13 +22,13 @@ Find me on Twitter: https://twitter.com/chylexmc
 [[dependencies.bettersprinting]]
     modId = "minecraft"
     mandatory = true
-    versionRange = "[1.15.1]"
+    versionRange = "[1.15.2]"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.bettersprinting]]
     modId = "forge"
     mandatory = true
-    versionRange = "[30,)"
+    versionRange = "[31,)"
     ordering = "NONE"
     side = "BOTH"
