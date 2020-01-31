@@ -19,7 +19,7 @@ final class MovementController{
 		this.sneakToggle = new ToggleTracker(ClientModManager.keyBindSneakToggle, mc.gameSettings.keyBindSneak);
 	}
 	
-	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.15.1
+	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.15.2
 	public void update(boolean slowMovement){
 		sprintToggle.update();
 		sneakToggle.update();

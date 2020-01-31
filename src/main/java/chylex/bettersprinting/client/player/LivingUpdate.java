@@ -20,7 +20,7 @@ public final class LivingUpdate{
 		hasTriggered = false;
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
+	// UPDATE | ClientPlayerEntity.livingTick | 1.15.2
 	public static void injectMovementInputUpdate(ClientPlayerEntity player, boolean slowMovement){
 		hasTriggered = true;
 		isModDisabled = ClientModManager.isModDisabled();
@@ -44,7 +44,7 @@ public final class LivingUpdate{
 		currentHandler.updateMovementInput(slowMovement);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
+	// UPDATE | ClientPlayerEntity.livingTick | 1.15.2
 	public static boolean injectSprinting(){
 		if (isModDisabled){
 			return false;
@@ -66,7 +66,7 @@ public final class LivingUpdate{
 		*/
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.15.1
+	// UPDATE | ClientPlayerEntity.livingTick | 1.15.2
 	public static boolean injectAfterSuperCall(){
 		if (isModDisabled){
 			return false;
