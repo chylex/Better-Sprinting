@@ -36,7 +36,6 @@ minecraft{
     
     runs{
         client{
-            properties 'bettersprinting.debug': ''
             workingDirectory file('run')
             
             mods{
@@ -47,7 +46,6 @@ minecraft{
         }
         
         server{
-            properties 'bettersprinting.debug': ''
             workingDirectory file('run')
             
             mods{

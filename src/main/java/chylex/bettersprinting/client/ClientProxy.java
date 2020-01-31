@@ -2,7 +2,6 @@ package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.client.input.SprintKeyMode;
-import chylex.bettersprinting.system.Debug;
 import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
@@ -17,7 +16,6 @@ import java.util.List;
 public final class ClientProxy extends BetterSprintingProxy{
 	@Override
 	public void onConstructed(ModLoadingContext ctx){
-		Debug.updateDebugWindowTitle();
 		ClientSettings.register(ctx);
 		PacketPipeline.initialize(new ClientNetwork());
 	}

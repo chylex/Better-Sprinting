@@ -1,7 +1,6 @@
 bin/
 build/
 eclipse/
-run/
 out/
 .gradle/
 .settings/
@@ -13,5 +12,12 @@ out/
 *.launch
 *.iml
 Thumbs.db
-Mod Update Process.txt
+
+run/*
 !run/eula.txt
+!run/mods
+!run/config
+run/config/*
+!run/config/customwindowtitle-client.toml
+
+Mod Update Process.txt
