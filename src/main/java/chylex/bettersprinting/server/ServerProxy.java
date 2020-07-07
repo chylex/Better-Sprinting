@@ -4,7 +4,6 @@ import chylex.bettersprinting.BetterSprintingProxy;
 import chylex.bettersprinting.system.PacketPipeline;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.apache.commons.lang3.tuple.Triple;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public final class ServerProxy extends BetterSprintingProxy{
 	}
 
 	@Override
-	public void onLoaded(FMLLoadCompleteEvent e){}
+	public void onLoaded(){}
 	
 	@Override
 	public void migrateConfig(List<Triple<Character, String, String>> oldConfig){

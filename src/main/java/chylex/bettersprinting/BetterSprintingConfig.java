@@ -51,7 +51,7 @@ public final class BetterSprintingConfig{
 	}
 	
 	public static void register(ModLoadingContext context, ModConfig.Type type, ForgeConfigSpec spec, String suffix){
-		String fileName = BetterSprintingMod.id + "-" + suffix + ".toml";
+		String fileName = BetterSprintingMod.id + '-' + suffix + ".toml";
 		context.registerConfig(type, spec, fileName);
 		
 		if (Files.notExists(Paths.get("config", fileName))){

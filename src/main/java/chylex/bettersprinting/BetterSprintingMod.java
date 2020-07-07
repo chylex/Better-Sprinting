@@ -33,6 +33,6 @@ public final class BetterSprintingMod{
 	
 	@SubscribeEvent
 	public static void onLoadComplete(final FMLLoadCompleteEvent e){
-		proxy.onLoaded(e);
+		proxy.onLoaded();
 	}
 }

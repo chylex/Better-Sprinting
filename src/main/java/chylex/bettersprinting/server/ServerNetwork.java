@@ -71,14 +71,14 @@ final class ServerNetwork implements INetworkHandler{
 	 * guarantee support of the protocol features in any unofficial mods or plugins.
 	 */
 	
-	private static final Set<UUID> players = Collections.synchronizedSet(new HashSet<>());
+	private static final Set<UUID> playersWithMod = Collections.synchronizedSet(new HashSet<>());
 	
 	public static boolean hasBetterSprinting(PlayerEntity player){
-		return players.contains(player.getUniqueID());
+		return playersWithMod.contains(player.getUniqueID());
 	}
 	
 	public static void onDisconnected(PlayerEntity player){
-		players.remove(player.getUniqueID());
+		playersWithMod.remove(player.getUniqueID());
 	}
 	
 	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
@@ -107,7 +107,7 @@ final class ServerNetwork implements INetworkHandler{
 	
 	@Override
 	public void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player){
-		players.add(player.getUniqueID());
+		playersWithMod.add(player.getUniqueID());
 		
 		if (ServerSettings.disableClientMod.get()){
 			sendToPlayer(player, writeDisableMod(true));

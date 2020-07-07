@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import java.util.List;
@@ -21,7 +20,7 @@ public final class ClientProxy extends BetterSprintingProxy{
 	}
 	
 	@Override
-	public void onLoaded(FMLLoadCompleteEvent e){
+	public void onLoaded(){
 		Minecraft mc = Minecraft.getInstance();
 		
 		mc.execute(() -> {

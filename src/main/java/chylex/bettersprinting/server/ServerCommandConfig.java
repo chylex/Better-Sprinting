@@ -24,7 +24,7 @@ final class ServerCommandConfig{
 	private static final String SETTING_SURVIVAL_FLY_BOOST = "survivalFlyBoost";
 	private static final String SETTING_RUN_IN_ALL_DIRS = "runInAllDirs";
 	
-	private static final String[] SETTINGS_ALL = new String[]{ SETTING_SURVIVAL_FLY_BOOST, SETTING_RUN_IN_ALL_DIRS };
+	private static final String[] SETTINGS_ALL = { SETTING_SURVIVAL_FLY_BOOST, SETTING_RUN_IN_ALL_DIRS };
 	
 	private static final String ARG_BOOLEAN = "true|false";
 	private static final String ARG_SETTINGS = String.join("|", SETTINGS_ALL);
@@ -48,8 +48,8 @@ final class ServerCommandConfig{
 		CommandSource source = ctx.getSource();
 		sendMessage(source, TextFormatting.GREEN + "[Better Sprinting]");
 		sendMessage(source, "/bettersprinting info");
-		sendMessage(source, "/bettersprinting disablemod <" + ARG_BOOLEAN + ">");
-		sendMessage(source, "/bettersprinting setting <" + ARG_SETTINGS + "> <" + ARG_BOOLEAN + ">");
+		sendMessage(source, "/bettersprinting disablemod <" + ARG_BOOLEAN + '>');
+		sendMessage(source, "/bettersprinting setting <" + ARG_SETTINGS + "> <" + ARG_BOOLEAN + '>');
 		return 0;
 	}
 	

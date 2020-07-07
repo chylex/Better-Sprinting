@@ -11,7 +11,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 public final class ClientModManager{
 	private static final Minecraft mc = Minecraft.getInstance();
 	
-	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + " ";
+	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + ' ';
 	
 	private static final String keyCategoryName = "key.categories.bettersprinting.hidden";
 	public static final TranslationTextComponent keyCategory = new TranslationTextComponent(keyCategoryName);
@@ -21,7 +21,7 @@ public final class ClientModManager{
 	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", -1, keyCategoryName);
 	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", -1, keyCategoryName);
 	
-	public static final KeyBinding[] keyBindings = new KeyBinding[]{
+	public static final KeyBinding[] keyBindings = {
 		keyBindSprintHold, keyBindSprintToggle, keyBindSneakToggle, keyBindOptionsMenu
 	};
 	
