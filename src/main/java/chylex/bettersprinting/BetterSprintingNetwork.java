@@ -1,4 +1,4 @@
-package chylex.bettersprinting.system;
+package chylex.bettersprinting;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
@@ -19,17 +19,17 @@ import org.apache.commons.lang3.tuple.Pair;
 import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
 import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
 
-public final class PacketPipeline{
+public final class BetterSprintingNetwork{
 	private static final ResourceLocation channelName = new ResourceLocation("bsm", "settings");
 	private static final String protocolId = "1";
 	
 	public static void initialize(INetworkHandler handler){
-		NetworkRegistry.newEventChannel(channelName, () -> protocolId, protocolServer -> true, protocolClient -> true).registerObject(new PacketPipeline(handler));
+		NetworkRegistry.newEventChannel(channelName, () -> protocolId, protocolServer -> true, protocolClient -> true).registerObject(new BetterSprintingNetwork(handler));
 	}
 	
 	private final INetworkHandler handler;
 	
-	private PacketPipeline(INetworkHandler handler){
+	private BetterSprintingNetwork(INetworkHandler handler){
 		this.handler = handler;
 	}
 	
@@ -53,10 +53,6 @@ public final class PacketPipeline{
 		return Minecraft.getInstance().player;
 	}
 	
-	public static PacketBuffer buf(){
-		return new PacketBuffer(Unpooled.buffer());
-	}
-	
 	public static void sendToPlayer(PacketBuffer buffer, PlayerEntity player){
 		PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player).send(PLAY_TO_CLIENT.buildPacket(Pair.of(buffer, 0), channelName).getThis());
 	}
@@ -67,5 +63,9 @@ public final class PacketPipeline{
 	
 	public interface INetworkHandler{
 		void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player);
+		
+		static PacketBuffer buf(){
+			return new PacketBuffer(Unpooled.buffer());
+		}
 	}
 }

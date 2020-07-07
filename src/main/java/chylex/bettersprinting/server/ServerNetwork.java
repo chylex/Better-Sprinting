@@ -1,11 +1,13 @@
 package chylex.bettersprinting.server;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
+import chylex.bettersprinting.BetterSprintingNetwork;
+import chylex.bettersprinting.BetterSprintingNetwork.INetworkHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,7 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @OnlyIn(Dist.DEDICATED_SERVER)
-final class ServerNetwork implements INetworkHandler{
+public final class ServerNetwork implements INetworkHandler{
 	/*
 	 * OVERVIEW
 	 * ========
@@ -77,25 +79,26 @@ final class ServerNetwork implements INetworkHandler{
 		return playersWithMod.contains(player.getUniqueID());
 	}
 	
-	public static void onDisconnected(PlayerEntity player){
-		playersWithMod.remove(player.getUniqueID());
+	@SubscribeEvent
+	public static void onPlayerLogout(PlayerLoggedOutEvent e){
+		playersWithMod.remove(e.getPlayer().getUniqueID());
 	}
 	
 	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
-		PacketBuffer buffer = PacketPipeline.buf();
+		PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(0).writeBoolean(enableSurvivalFlyBoost).writeBoolean(enableAllDirs);
 		return buffer;
 	}
 	
 	public static PacketBuffer writeDisableMod(boolean disable){
-		PacketBuffer buffer = PacketPipeline.buf();
+		PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(disable ? 1 : 2);
 		return buffer;
 	}
 	
 	private static void sendToPlayer(PlayerEntity player, PacketBuffer packet){
 		if (hasBetterSprinting(player)){
-			PacketPipeline.sendToPlayer(packet, player);
+			BetterSprintingNetwork.sendToPlayer(packet, player);
 		}
 	}
 	

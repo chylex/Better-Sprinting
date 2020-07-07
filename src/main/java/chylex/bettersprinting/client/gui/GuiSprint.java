@@ -1,6 +1,5 @@
 package chylex.bettersprinting.client.gui;
-import chylex.bettersprinting.BetterSprintingMod;
-import chylex.bettersprinting.client.ClientEventHandler;
+import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientModManager.Feature;
 import chylex.bettersprinting.client.ClientSettings;
@@ -25,6 +24,8 @@ import org.lwjgl.glfw.GLFW;
 public class GuiSprint extends GuiScreenMigration{
 	private static final Minecraft mc = Minecraft.getInstance();
 	
+	public static boolean openedControlsFromSprintMenu;
+	
 	private final Screen parentScreen;
 	private Button btnSprintMode;
 	private GuiButtonInputOption btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
@@ -47,36 +48,36 @@ public class GuiSprint extends GuiScreenMigration{
 		}
 		
 		btnSprintMode = addButton(new GuiButton(left - 50, top, 48, "", onSettingClicked(() -> {
-			BetterSprintingMod.config.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
+			BetterSprintingConfig.update(ClientSettings.sprintKeyMode, SprintKeyMode::next);
 		})));
 		
 		btnDoubleTap = addButton(new GuiButtonInputOption(left, top + 60, "bs.doubleTapping", onSettingClicked(() -> {
 			if (!ClientSettings.disableMod.get()){
-				BetterSprintingMod.config.update(ClientSettings.enableDoubleTap, value -> !value);
+				BetterSprintingConfig.update(ClientSettings.enableDoubleTap, value -> !value);
 			}
 		})));
 		
 		btnAllDirs = addButton(new GuiButtonInputOption(left + 160, top + 60, "bs.runAllDirs", onSettingClicked(() -> {
 			if (Feature.RUN_IN_ALL_DIRS.isAvailable()){
-				BetterSprintingMod.config.update(ClientSettings.enableAllDirs, value -> !value);
+				BetterSprintingConfig.update(ClientSettings.enableAllDirs, value -> !value);
 			}
 		})));
 		
 		btnFlyBoost = addButton(new GuiButtonInputOption(left, top + 84, "bs.flyBoost", onSettingClicked(() -> {
 			if (Feature.FLY_BOOST.isAvailable()){
-				BetterSprintingMod.config.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
+				BetterSprintingConfig.update(ClientSettings.flySpeedBoost, value -> (value + 1) % 8);
 			}
 		})));
 		
 		btnFlyOnGround = addButton(new GuiButtonInputOption(left + 160, top + 84, "bs.flyOnGround", onSettingClicked(() -> {
 			if (Feature.FLY_ON_GROUND.isAvailable()){
-				BetterSprintingMod.config.update(ClientSettings.flyOnGround, value -> !value);
+				BetterSprintingConfig.update(ClientSettings.flyOnGround, value -> !value);
 			}
 		})));
 		
 		btnDisableMod = addButton(new GuiButtonInputOption(left + 160, top + 108, "bs.disableMod", onSettingClicked(() -> {
 			if (ClientModManager.canManuallyEnableMod()){
-				BetterSprintingMod.config.update(ClientSettings.disableMod, value -> !value);
+				BetterSprintingConfig.update(ClientSettings.disableMod, value -> !value);
 				updateButtonState();
 			}
 		})));
@@ -126,21 +127,21 @@ public class GuiSprint extends GuiScreenMigration{
 	}
 	
 	private void onClickedControls(){
-		ClientEventHandler.openedControlsFromSprintMenu = true;
+		openedControlsFromSprintMenu = true;
 		mc.displayGuiScreen(new ControlsScreen(this, mc.gameSettings));
-		ClientEventHandler.openedControlsFromSprintMenu = false;
-		BetterSprintingMod.config.save();
+		openedControlsFromSprintMenu = false;
+		BetterSprintingConfig.save();
 	}
 	
 	private void onClickedDone(){
 		mc.displayGuiScreen(parentScreen);
-		BetterSprintingMod.config.save();
+		BetterSprintingConfig.save();
 	}
 	
 	private Runnable onSettingClicked(Runnable callback){
 		return () -> {
 			callback.run();
-			BetterSprintingMod.config.save();
+			BetterSprintingConfig.save();
 			updateButtonText();
 		};
 	}
@@ -216,7 +217,7 @@ public class GuiSprint extends GuiScreenMigration{
 		KeyBinding.resetKeyBindingArrayAndHash();
 		
 		mc.gameSettings.saveOptions();
-		BetterSprintingMod.config.save();
+		BetterSprintingConfig.save();
 	}
 	
 	@Override

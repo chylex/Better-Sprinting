@@ -1,6 +1,8 @@
 package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,8 +12,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 @OnlyIn(Dist.CLIENT)
 public final class ClientModManager{
 	private static final Minecraft mc = Minecraft.getInstance();
-	
-	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + ' ';
+	private static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + ' ';
 	
 	private static final String keyCategoryName = "key.categories.bettersprinting.hidden";
 	public static final TranslationTextComponent keyCategory = new TranslationTextComponent(keyCategoryName);
@@ -49,6 +50,10 @@ public final class ClientModManager{
 	
 	public static boolean isModDisabled(){
 		return ClientSettings.disableMod.get() || svDisableMod;
+	}
+	
+	public static void showChatMessage(String text){
+		mc.player.sendMessage(new StringTextComponent(chatPrefix + text), Util.field_240973_b_);
 	}
 	
 	public enum Feature{

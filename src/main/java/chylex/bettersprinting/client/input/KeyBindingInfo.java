@@ -1,5 +1,5 @@
 package chylex.bettersprinting.client.input;
-import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.BetterSprintingConfig;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -18,9 +18,9 @@ public final class KeyBindingInfo{
 	}
 	
 	public void set(KeyModifier modifier, InputMappings.Input input){
-		BetterSprintingMod.config.set(keyCode, input.getKeyCode());
-		BetterSprintingMod.config.set(keyModifier, modifier);
-		BetterSprintingMod.config.set(keyType, input.getType());
+		BetterSprintingConfig.set(keyCode, input.getKeyCode());
+		BetterSprintingConfig.set(keyModifier, modifier);
+		BetterSprintingConfig.set(keyType, input.getType());
 	}
 	
 	public void readFrom(KeyBinding binding){

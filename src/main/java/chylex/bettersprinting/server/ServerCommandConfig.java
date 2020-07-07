@@ -1,5 +1,5 @@
 package chylex.bettersprinting.server;
-import chylex.bettersprinting.BetterSprintingMod;
+import chylex.bettersprinting.BetterSprintingConfig;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -60,8 +60,8 @@ final class ServerCommandConfig{
 	}
 	
 	private static int execDisableMod(CommandContext<CommandSource> ctx){
-		BetterSprintingMod.config.set(ServerSettings.disableClientMod, ctx.getArgument(ARG_BOOLEAN, Boolean.class));
-		BetterSprintingMod.config.save();
+		BetterSprintingConfig.set(ServerSettings.disableClientMod, ctx.getArgument(ARG_BOOLEAN, Boolean.class));
+		BetterSprintingConfig.save();
 		
 		CommandSource source = ctx.getSource();
 		sendMessageTranslated(source, ServerSettings.disableClientMod.get() ? "bs.command.disableMod" : "bs.command.enableMod", true);
@@ -76,15 +76,15 @@ final class ServerCommandConfig{
 		CommandSource source = ctx.getSource();
 		
 		if (setting.equalsIgnoreCase(SETTING_SURVIVAL_FLY_BOOST)){
-			BetterSprintingMod.config.set(ServerSettings.enableSurvivalFlyBoost, value);
-			BetterSprintingMod.config.save();
+			BetterSprintingConfig.set(ServerSettings.enableSurvivalFlyBoost, value);
+			BetterSprintingConfig.save();
 			
 			sendMessageTranslated(source, ServerSettings.enableSurvivalFlyBoost.get() ? "bs.command.enableFlyBoost" : "bs.command.disableFlyBoost", true);
 			ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost.get(), ServerSettings.enableAllDirs.get()));
 		}
 		else if (setting.equalsIgnoreCase(SETTING_RUN_IN_ALL_DIRS)){
-			BetterSprintingMod.config.set(ServerSettings.enableAllDirs, value);
-			BetterSprintingMod.config.save();
+			BetterSprintingConfig.set(ServerSettings.enableAllDirs, value);
+			BetterSprintingConfig.save();
 			
 			sendMessageTranslated(source, ServerSettings.enableAllDirs.get() ? "bs.command.enableAllDirs" : "bs.command.disableAllDirs", true);
 			ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeSettings(ServerSettings.enableSurvivalFlyBoost.get(), ServerSettings.enableAllDirs.get()));

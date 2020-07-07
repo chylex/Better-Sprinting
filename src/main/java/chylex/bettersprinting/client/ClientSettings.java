@@ -1,10 +1,8 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
-import chylex.bettersprinting.BetterSprintingMod;
 import chylex.bettersprinting.client.input.KeyBindingInfo;
 import chylex.bettersprinting.client.input.SprintKeyMode;
 import net.minecraft.client.GameSettings;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,8 +12,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
 import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
@@ -50,8 +46,8 @@ public final class ClientSettings{
 	
 	private static final ForgeConfigSpec configSpec;
 	
-	static void register(ModLoadingContext ctx){
-		BetterSprintingConfig.register(ctx, ModConfig.Type.CLIENT, configSpec, "client");
+	public static ForgeConfigSpec getSpec(){
+		return configSpec;
 	}
 	
 	static{
@@ -92,9 +88,7 @@ public final class ClientSettings{
 		keyInfoOptionsMenu = new KeyBindingInfo(keyCodeOptionsMenu, keyModOptionsMenu, keyTypeOptionsMenu);
 	}
 	
-	public static void firstTimeSetup(){
-		GameSettings settings = Minecraft.getInstance().gameSettings;
-		
+	public static void firstTimeSetup(GameSettings settings){
 		keyInfoSprintHold.readFrom(settings.keyBindSprint);
 		
 		KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
@@ -108,7 +102,7 @@ public final class ClientSettings{
 			keyInfoSneakToggle.set(sneakModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));
 		}
 		
-		BetterSprintingMod.config.save();
+		BetterSprintingConfig.save();
 	}
 	
 	private static KeyModifier getVanillaKeyModifier(KeyBinding binding){

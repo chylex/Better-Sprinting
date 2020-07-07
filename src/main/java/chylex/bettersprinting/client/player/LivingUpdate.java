@@ -8,21 +8,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public final class LivingUpdate{
 	private static PlayerLogicHandler currentHandler;
-	private static boolean hasTriggered;
 	private static boolean isModDisabled;
-	
-	public static boolean checkIntegrity(){
-		return hasTriggered;
-	}
 	
 	public static void cleanup(){
 		currentHandler = null;
-		hasTriggered = false;
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
 	public static void injectMovementInputUpdate(ClientPlayerEntity player, boolean slowMovement){
-		hasTriggered = true;
+		IntegrityCheck.isValidated = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
 		// this.movementInput.func_225607_a_(this.func_228354_I_()); <<< REPLACE

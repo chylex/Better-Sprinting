@@ -1,6 +1,6 @@
 package chylex.bettersprinting.client;
-import chylex.bettersprinting.system.PacketPipeline;
-import chylex.bettersprinting.system.PacketPipeline.INetworkHandler;
+import chylex.bettersprinting.BetterSprintingNetwork;
+import chylex.bettersprinting.BetterSprintingNetwork.INetworkHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -11,13 +11,13 @@ import net.minecraftforge.fml.LogicalSide;
 @OnlyIn(Dist.CLIENT)
 public final class ClientNetwork implements INetworkHandler{
 	public static PacketBuffer writeModNotification(int protocol){
-		PacketBuffer buffer = PacketPipeline.buf();
+		PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(0).writeByte(protocol);
 		return buffer;
 	}
 	
 	private static PacketBuffer writeLanSettings(){
-		PacketBuffer buffer = PacketPipeline.buf();
+		PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(0).writeBoolean(false).writeBoolean(true);
 		return buffer;
 	}
@@ -25,7 +25,7 @@ public final class ClientNetwork implements INetworkHandler{
 	@Override
 	public void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player){
 		if (side == LogicalSide.SERVER){
-			PacketPipeline.sendToPlayer(writeLanSettings(), player);
+			BetterSprintingNetwork.sendToPlayer(writeLanSettings(), player);
 			return;
 		}
 		
