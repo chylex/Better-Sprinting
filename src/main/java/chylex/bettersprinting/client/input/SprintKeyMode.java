@@ -1,15 +1,16 @@
 package chylex.bettersprinting.client.input;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public enum SprintKeyMode{
 	TAP(SprintState.TAPPING_SPRINT_KEY, "bs.sprint.mode.tap"),
 	HOLD(SprintState.HOLDING_SPRINT_KEY, "bs.sprint.mode.hold");
 	
 	public final SprintState sprintState;
-	public final String translationKey;
+	public final TranslationTextComponent translationKey;
 	
 	SprintKeyMode(SprintState sprintState, String translationKey){
 		this.sprintState = sprintState;
-		this.translationKey = translationKey;
+		this.translationKey = new TranslationTextComponent(translationKey);
 	}
 	
 	public SprintKeyMode next(){

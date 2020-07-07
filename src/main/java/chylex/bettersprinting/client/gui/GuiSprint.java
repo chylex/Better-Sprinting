@@ -5,6 +5,7 @@ import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientModManager.Feature;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.input.SprintKeyMode;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ControlsScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,7 +22,7 @@ import net.minecraftforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiSprint extends Screen{
+public class GuiSprint extends GuiScreenMigration{
 	private static final Minecraft mc = Minecraft.getInstance();
 	
 	private final Screen parentScreen;
@@ -100,21 +102,21 @@ public class GuiSprint extends Screen{
 				KeyBinding binding = ((GuiButtonInputBinding)button).binding;
 				
 				if (binding == ClientModManager.keyBindSprintToggle || binding == ClientModManager.keyBindSneakToggle){
-					button.active = !ClientModManager.isModDisabled();
+					button.field_230693_o_ = !ClientModManager.isModDisabled(); // RENAME active
 				}
 			}
 		}
 		
-		btnSprintMode.active = !ClientModManager.isModDisabled();
-		btnDoubleTap.active = !ClientModManager.isModDisabled();
-		btnAllDirs.active = Feature.RUN_IN_ALL_DIRS.isAvailable();
-		btnFlyBoost.active = Feature.FLY_BOOST.isAvailable();
-		btnFlyOnGround.active = Feature.FLY_ON_GROUND.isAvailable();
-		btnDisableMod.active = ClientModManager.canManuallyEnableMod();
+		btnSprintMode.field_230693_o_ = !ClientModManager.isModDisabled();
+		btnDoubleTap.field_230693_o_ = !ClientModManager.isModDisabled();
+		btnAllDirs.field_230693_o_ = Feature.RUN_IN_ALL_DIRS.isAvailable();
+		btnFlyBoost.field_230693_o_ = Feature.FLY_BOOST.isAvailable();
+		btnFlyOnGround.field_230693_o_ = Feature.FLY_ON_GROUND.isAvailable();
+		btnDisableMod.field_230693_o_ = ClientModManager.canManuallyEnableMod();
 	}
 	
 	private void updateButtonText(){
-		btnSprintMode.setMessage(I18n.format((ClientModManager.isModDisabled() ? SprintKeyMode.TAP : ClientSettings.sprintKeyMode.get()).translationKey));
+		btnSprintMode.func_238482_a_((ClientModManager.isModDisabled() ? SprintKeyMode.TAP : ClientSettings.sprintKeyMode.get()).translationKey);
 		btnDoubleTap.setTitleKey(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.setTitleKey(Feature.FLY_BOOST.isAvailable() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
 		btnFlyOnGround.setTitleKey(Feature.FLY_ON_GROUND.isAvailable() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
@@ -153,8 +155,8 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button){
-		if (super.mouseClicked(mouseX, mouseY, button)){
+	public boolean func_231044_a_(double mouseX, double mouseY, int button){ // RENAME mouseClicked
+		if (super.func_231044_a_(mouseX, mouseY, button)){
 			return true;
 		}
 		else if (selectedBinding != null){
@@ -167,7 +169,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers){
+	public boolean func_231046_a_(int keyCode, int scanCode, int modifiers){ // RENAME keyPressed
 		if (selectedBinding != null){
 			if (keyCode == GLFW.GLFW_KEY_ESCAPE){
 				selectedBinding.setBinding(KeyModifier.NONE, InputMappings.INPUT_INVALID);
@@ -180,7 +182,7 @@ public class GuiSprint extends Screen{
 			return true;
 		}
 		else{
-			return super.keyPressed(keyCode, scanCode, modifiers);
+			return super.func_231046_a_(keyCode, scanCode, modifiers);
 		}
 	}
 	
@@ -218,35 +220,37 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public void render(int mouseX, int mouseY, float partialTickTime){
+	public void func_230430_a_(MatrixStack matrix, int mouseX, int mouseY, float partialTickTime){
 		final int top = height / 6;
 		final int middle = width / 2;
 		
-		renderBackground();
-		drawCenteredString(font, "Better Sprinting", middle, 20, 16777215);
+		func_230446_a_(matrix); // RENAME renderBackground
+		func_238472_a_(matrix, font, field_230704_d_, middle, 20, 16777215); // RENAME drawCenteredString
 		
-		super.render(mouseX, mouseY, partialTickTime);
+		super.func_230430_a_(matrix, mouseX, mouseY, partialTickTime);
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
 		
 		for(Widget button:buttons){
 			if (button instanceof GuiButtonCustomInput){
-				drawButtonTitle(((GuiButtonCustomInput)button).getTitle(), button, button.x < middle ? maxWidthLeft : maxWidthRight);
+				GuiButtonCustomInput input = (GuiButtonCustomInput)button;
+				drawButtonTitle(input, input.x < middle ? maxWidthLeft : maxWidthRight);
 				
-				if (button.isMouseOver(mouseX, mouseY)){
-					String[] spl = ((GuiButtonCustomInput)button).getInfo();
+				if (input.isMouseOver(mouseX, mouseY)){
+					ITextComponent[] spl = input.getInfo();
 					
 					for(int line = 0; line < spl.length; line++){
-						drawCenteredString(font, spl[line], middle, top + 148 + (10 * line - (font.FONT_HEIGHT * spl.length / 2)), -1);
+						func_238472_a_(matrix, font, spl[line], middle, top + 148 + (10 * line - (font.FONT_HEIGHT * spl.length / 2)), -1);
 					}
 				}
 			}
 		}
 	}
 	
-	private void drawButtonTitle(String title, Widget btn, int maxWidth){
-		int lines = font.listFormattedStringToWidth(title, maxWidth).size();
-		font.drawSplitString(title, btn.x + 76, btn.y + 7 - 5 * (lines - 1), maxWidth, -1);
+	private void drawButtonTitle(GuiButtonCustomInput btn, int maxWidth){
+		ITextComponent title = btn.getTitle();
+		int lines = font.func_238425_b_(title, maxWidth).size(); // RENAME listFormattedStringToWidth
+		font.func_238418_a_(title, btn.x + 76, btn.y + 7 - 5 * (lines - 1), maxWidth, -1); // RENAME drawSplitString
 	}
 }

@@ -2,6 +2,7 @@ package chylex.bettersprinting.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -11,19 +12,21 @@ public final class ClientModManager{
 	private static final Minecraft mc = Minecraft.getInstance();
 	
 	public static final String chatPrefix = TextFormatting.GREEN + "[Better Sprinting]" + TextFormatting.RESET + " ";
-	public static final String categoryName = "key.categories.bettersprinting.hidden";
+	
+	private static final String keyCategoryName = "key.categories.bettersprinting.hidden";
+	public static final TranslationTextComponent keyCategory = new TranslationTextComponent(keyCategoryName);
 	
 	public static final KeyBinding keyBindSprintHold = mc.gameSettings.keyBindSprint;
-	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", -1, categoryName);
-	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", -1, categoryName);
-	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", -1, categoryName);
+	public static final KeyBinding keyBindSprintToggle = new KeyBinding("bs.sprint.toggle", -1, keyCategoryName);
+	public static final KeyBinding keyBindSneakToggle = new KeyBinding("bs.sneak.toggle", -1, keyCategoryName);
+	public static final KeyBinding keyBindOptionsMenu = new KeyBinding("bs.menu", -1, keyCategoryName);
 	
 	public static final KeyBinding[] keyBindings = new KeyBinding[]{
 		keyBindSprintHold, keyBindSprintToggle, keyBindSneakToggle, keyBindOptionsMenu
 	};
 	
 	static{
-		keyBindSprintHold.keyCategory = categoryName;
+		keyBindSprintHold.keyCategory = keyCategoryName;
 		
 		for(KeyBinding binding:keyBindings){
 			binding.setKeyConflictContext(KeyConflictContext.IN_GAME);

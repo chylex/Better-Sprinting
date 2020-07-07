@@ -3,6 +3,7 @@ import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,14 +19,14 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 	private boolean isSelected;
 	
 	public GuiButtonInputBinding(int x, int y, KeyBinding binding, Consumer<GuiButtonInputBinding> onClick){
-		super(x, y, "", binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
+		super(x, y, binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
 		this.binding = binding;
 		this.onClick = onClick;
 		updateKeyBindingText();
 	}
 	
 	@Override
-	public void onPress(){
+	public void func_230930_b_(){ // RENAME onPress
 		onClick.accept(this);
 	}
 	
@@ -61,14 +62,15 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 			}
 		}
 		
+		// RENAME KeyBindingList
 		if (isSelected){
-			setMessage(TextFormatting.WHITE + "> " + TextFormatting.YELLOW + binding.getLocalizedName() + TextFormatting.WHITE + " <");
+			func_238482_a_((new StringTextComponent("> ")).func_230529_a_(binding.func_238171_j_().func_230532_e_().func_240699_a_(TextFormatting.YELLOW)).func_240702_b_(" <").func_240699_a_(TextFormatting.YELLOW));
 		}
 		else if (hasConflict){
-			setMessage((hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED) + binding.getLocalizedName());
+			func_238482_a_(binding.func_238171_j_().func_230532_e_().func_240699_a_(hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED));
 		}
 		else{
-			setMessage(binding.getLocalizedName());
+			func_238482_a_(binding.func_238171_j_());
 		}
 	}
 }

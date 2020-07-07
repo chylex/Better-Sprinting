@@ -19,12 +19,12 @@ final class MovementController{
 		this.sneakToggle = new ToggleTracker(ClientModManager.keyBindSneakToggle, mc.gameSettings.keyBindSneak);
 	}
 	
-	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.15.2
+	// UPDATE | Ensure first parameter of MovementInputFromOptions.func_217607_a still behaves like forced sneak | 1.16.1
 	public void update(boolean slowMovement){
 		sprintToggle.update();
 		sneakToggle.update();
 		
-		if (movementInput.field_228350_h_ && sneakToggle.isToggled && mc.currentScreen != null && !(mc.currentScreen instanceof DeathScreen)){
+		if (movementInput.sneaking && sneakToggle.isToggled && mc.currentScreen != null && !(mc.currentScreen instanceof DeathScreen)){
 			restoreSneakToggle = true;
 			sneakToggle.isToggled = false;
 		}
@@ -35,7 +35,7 @@ final class MovementController{
 		}
 		
 		movementInput.func_225607_a_(slowMovement || sneakToggle.isToggled);
-		movementInput.field_228350_h_ |= sneakToggle.isToggled;
+		movementInput.sneaking |= sneakToggle.isToggled;
 	}
 	
 	public boolean isSprintToggled(){

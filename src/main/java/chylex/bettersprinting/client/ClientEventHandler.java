@@ -5,6 +5,7 @@ import chylex.bettersprinting.client.gui.GuiSprint;
 import chylex.bettersprinting.client.player.IntegrityCheck;
 import chylex.bettersprinting.client.player.LivingUpdate;
 import chylex.bettersprinting.system.PacketPipeline;
+import net.minecraft.client.AbstractOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ControlsScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,7 +14,7 @@ import net.minecraft.client.gui.widget.list.KeyBindingList;
 import net.minecraft.client.gui.widget.list.KeyBindingList.CategoryEntry;
 import net.minecraft.client.gui.widget.list.KeyBindingList.KeyEntry;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.AbstractOption;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -73,7 +74,7 @@ public final class ClientEventHandler{
 		}
 		
 		if (showDisableWarningWhenPossible){
-			mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.svDisableMod ? "bs.game.disabled" : "bs.game.reenabled")));
+			mc.player.sendMessage(new StringTextComponent(ClientModManager.chatPrefix + I18n.format(ClientModManager.svDisableMod ? "bs.game.disabled" : "bs.game.reenabled")), Util.field_240973_b_);
 			showDisableWarningWhenPossible = false;
 		}
 		
@@ -95,18 +96,18 @@ public final class ClientEventHandler{
 			 .findFirst()
 			 .ifPresent(e::removeWidget);
 			
-			controls.children()
+			controls.func_231039_at__() // RENAME children
 			        .stream()
 			        .filter(widget -> widget instanceof KeyBindingList)
-			        .map(widget -> ((KeyBindingList)widget).children())
+			        .map(widget -> ((KeyBindingList)widget).func_231039_at__()) // RENAME children
 			        .findFirst()
 			        .ifPresent(children -> children.removeIf(entry ->
 			        	(entry instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entry).keybinding)) ||
-			        	(entry instanceof CategoryEntry && ((CategoryEntry)entry).labelText.equals(I18n.format(ClientModManager.categoryName)))
+			        	(entry instanceof CategoryEntry && ((CategoryEntry)entry).labelText.equals(ClientModManager.keyCategory))
 			        ));
 			
 			if (!openedControlsFromSprintMenu){
-				e.addWidget(new GuiButton((controls.width / 2) + 5, 18, 150, "Better Sprinting", () -> mc.displayGuiScreen(new GuiSprint(mc.currentScreen))));
+				e.addWidget(new GuiButton((controls.field_230708_k_ /* RENAME width */ / 2) + 5, 18, 150, "Better Sprinting", () -> mc.displayGuiScreen(new GuiSprint(mc.currentScreen))));
 			}
 		}
 	}

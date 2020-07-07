@@ -7,12 +7,12 @@ public final class GuiButtonInputOption extends GuiButtonCustomInput{
 	private final Runnable onClick;
 	
 	public GuiButtonInputOption(int x, int y, String titleKey, Runnable onClick){
-		super(x, y, "", titleKey);
+		super(x, y, titleKey);
 		this.onClick = onClick;
 	}
 	
 	@Override
-	public void onPress(){
+	public void func_230930_b_(){ // RENAME onPress
 		onClick.run();
 	}
 }

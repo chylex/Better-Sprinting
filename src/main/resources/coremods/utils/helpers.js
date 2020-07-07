@@ -36,10 +36,13 @@ var getSkipInst = function(label){
 };
 
 var transformAll = function(method, transformers){
+    var api = Java.type("net.minecraftforge.coremod.api.ASMAPI");
+    var opcodes = Java.type("org.objectweb.asm.Opcodes");
+
     var checked = [];
 
     for(var index = 0; index < transformers.length; index++){
-        var func = transformers[index](method);
+        var func = transformers[index](api, opcodes, method);
 
         if (func === false){
             return false;

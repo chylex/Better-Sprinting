@@ -1,5 +1,6 @@
 package chylex.bettersprinting.client.gui;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -8,12 +9,12 @@ public class GuiButton extends Button{
 	private final Runnable onClick;
 	
 	public GuiButton(int x, int y, int width, String buttonText, Runnable onClick){
-		super(x, y, width, 20, buttonText, null);
+		super(x, y, width, 20, new StringTextComponent(buttonText), null);
 		this.onClick = onClick;
 	}
 	
 	@Override
-	public void onPress(){
+	public void func_230930_b_(){ // RENAME onPress
 		onClick.run();
 	}
 }

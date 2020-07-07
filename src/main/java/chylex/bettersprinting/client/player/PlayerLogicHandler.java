@@ -47,28 +47,32 @@ final class PlayerLogicHandler{
 		abilities.setFlySpeed(flySpeedBase);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.15.2
+	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
 	public void updateMovementInput(boolean slowMovement){
 		if (Feature.FLY_ON_GROUND.isEnabled()){
-			player.onGround = false;
+			player.func_230245_c_(false); // RENAME onGround
 		}
 		
-		wasSneaking = movementInput.field_228350_h_;
+		wasSneaking = movementInput.sneaking;
 		wasMovingForward = player.func_223110_ee();
 		movementController.update(slowMovement);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.15.2
+	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
 	public void updateSprinting(){
 		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
 		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
 		
 		boolean isSprintHeld = ClientModManager.keyBindSprintHold.isKeyDown();
-		boolean isNotSneaking = !(movementInput.field_228350_h_ && !abilities.isFlying && !player.isSwimming());
+		boolean isNotSneaking = !(movementInput.sneaking && !abilities.isFlying && !player.isSwimming());
 		
 		// Double tapping
 		
-		if (ClientSettings.enableDoubleTap.get() && (player.onGround || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !sprinting.active() && enoughHunger && !isSprintBlocked){
+		if (movementInput.sneaking){
+			player.sprintToggleTimer = 0;
+		}
+		
+		if (ClientSettings.enableDoubleTap.get() && (player.func_233570_aj_() /* RENAME onGround */ || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !sprinting.active() && enoughHunger && !isSprintBlocked){
 			if (player.sprintToggleTimer <= 0 && !isSprintHeld){
 				player.sprintToggleTimer = 7;
 			}
@@ -113,7 +117,7 @@ final class PlayerLogicHandler{
 			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
 			
 			if (player.isSwimming()){
-				if (!player.onGround && !movementInput.field_228350_h_ && isSlowOrHungry || !player.isInWater()){
+				if (!player.func_233570_aj_() /* RENAME onGround */ && !movementInput.sneaking && isSlowOrHungry || !player.isInWater()){
 					sprinting = INACTIVE;
 				}
 			}
@@ -151,9 +155,9 @@ final class PlayerLogicHandler{
 		}
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.15.2
+	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
 	public void updateFlight(){
-		if (player.onGround && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isEnabled()){
+		if (player.func_233570_aj_() /* RENAME onGround */ && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isEnabled()){
 			abilities.isFlying = false;
 			player.sendPlayerAbilities();
 		}

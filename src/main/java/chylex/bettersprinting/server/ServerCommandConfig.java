@@ -109,7 +109,7 @@ final class ServerCommandConfig{
 			source.sendFeedback(new TranslationTextComponent(translationName), log);
 		}
 		else{
-			source.sendFeedback(new StringTextComponent(LanguageMap.getInstance().translateKey(translationName)), log);
+			source.sendFeedback(new StringTextComponent(LanguageMap.getInstance().func_230503_a_(translationName)), log);
 		}
 	}
 }

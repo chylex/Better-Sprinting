@@ -18,7 +18,7 @@ public final class BetterSprintingMod{
 	public static final String id = "bettersprinting";
 	public static final Logger log = LogManager.getLogger("BetterSprinting");
 	
-	public static final BetterSprintingProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+	public static final BetterSprintingProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 	public static BetterSprintingConfig config;
 	
 	public BetterSprintingMod(){
