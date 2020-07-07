@@ -1,15 +1,19 @@
 package chylex.bettersprinting.client;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingNetwork;
+import chylex.bettersprinting.client.gui.GuiSprint;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 public final class ClientSetup{
 	public static void setup(){
@@ -18,6 +22,17 @@ public final class ClientSetup{
 		
 		MinecraftForge.EVENT_BUS.register(ClientEventHandler.class);
 		FMLJavaModLoadingContext.get().getModEventBus().register(ClientSetup.class);
+		
+		final String modVersion = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
+		
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(
+			() -> modVersion,
+			(incomingVersion, isNetwork) -> true
+		));
+		
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () ->
+			(mc, currentScreen) -> new GuiSprint(currentScreen)
+		);
 	}
 	
 	@SubscribeEvent
