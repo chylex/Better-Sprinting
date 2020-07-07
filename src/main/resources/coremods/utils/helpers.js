@@ -1,5 +1,5 @@
 var checkInstruction = function(instruction, opcode, name1, name2){
-    return instruction.getOpcode() === opcode && (instruction.name.equals(name1) || (name2 && instruction.name.equals(name2)));
+    return instruction.getOpcode() === opcode && ((!name1 || instruction.name.equals(name1)) || (name2 && instruction.name.equals(name2)));
 };
 
 var checkOpcodeChain = function(instructions, start, chain){

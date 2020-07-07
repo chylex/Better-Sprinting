@@ -155,11 +155,7 @@ final class PlayerLogicHandler{
 		}
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
-	public void updateFlight(){
-		if (player.func_233570_aj_() /* RENAME onGround */ && abilities.isFlying && !mc.playerController.isSpectatorMode() && !Feature.FLY_ON_GROUND.isEnabled()){
-			abilities.isFlying = false;
-			player.sendPlayerAbilities();
-		}
+	public boolean shouldPreventCancelingFlight(){
+		return Feature.FLY_ON_GROUND.isEnabled();
 	}
 }

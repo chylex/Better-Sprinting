@@ -65,19 +65,16 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
-	public static boolean injectAfterSuperCall(){
+	public static boolean injectFlightCancelTest(){
 		if (isModDisabled){
 			return false;
 		}
 		
 		/*
-		super.livingTick();
-		<<< INSERTED HERE
-		if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode()) {
+		if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode() >>> INSERTED HERE <<< ) {
 		*/
 		
-		currentHandler.updateFlight();
-		return true;
+		return currentHandler.shouldPreventCancelingFlight();
 		
 		/*
 			this.sendPlayerAbilities();
