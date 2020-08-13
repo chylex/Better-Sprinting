@@ -1,9 +1,9 @@
 var transformAfterSuperCall = function(api, opcodes, method){
     print("Transforming livingTick (super call)...");
-
+    
     var instructions = method.instructions;
     var bounds = null;
-
+    
     /*
      *   | L119
      *   |  LINENUMBER
@@ -36,7 +36,7 @@ var transformAfterSuperCall = function(api, opcodes, method){
      * 1 |  INVOKEVIRTUAL net/minecraft/client/entity/player/ClientPlayerEntity.sendPlayerAbilities ()V
      * C | L121
      */
-
+    
     for(var index = instructions.size() - 25; index >= 0; index--){
         if (checkInstruction(instructions.get(index), opcodes.INVOKESPECIAL, "livingTick", "func_70636_d") &&
             checkInstruction(instructions.get(index + 14), opcodes.IFNE) &&
@@ -46,19 +46,19 @@ var transformAfterSuperCall = function(api, opcodes, method){
             break;
         }
     }
-
+    
     if (bounds === null){
         return false;
     }
-
+    
     print("Found insertion point at " + bounds[0] + ", skip point at " + bounds[1] + ".");
-
+    
     var labels = [ instructions.get(bounds[0]), instructions.get(bounds[1]) ];
-
+    
     if (!validateLabels(labels)){
         return false;
     }
-
+    
     /*
      *   | L120
      *   |  LINENUMBER
@@ -88,12 +88,12 @@ var transformAfterSuperCall = function(api, opcodes, method){
      *   |  INVOKEVIRTUAL net/minecraft/client/entity/player/ClientPlayerEntity.sendPlayerAbilities ()V
      * B | L121
      */
-
+    
     return function(){
         var helper = api.getMethodNode();
         helper.visitMethodInsn(opcodes.INVOKESTATIC, "chylex/bettersprinting/client/player/LivingUpdate", "injectFlightCancelTest", "()Z", false);
         helper.visitJumpInsn(opcodes.IFNE, getSkipInst(labels[1]));
-
+        
         instructions.insertBefore(labels[0], helper.instructions);
     };
 };

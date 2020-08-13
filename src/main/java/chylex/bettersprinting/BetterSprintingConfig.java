@@ -11,10 +11,10 @@ import java.util.function.UnaryOperator;
 public final class BetterSprintingConfig{
 	private static BetterSprintingConfig instance;
 	
-	public static void initialize(ModConfig.Type type, ForgeConfigSpec spec, String suffix){
+	public static void initialize(final ModConfig.Type type, final ForgeConfigSpec spec, final String suffix){
 		instance = new BetterSprintingConfig();
 		
-		String fileName = "bettersprinting-" + suffix + ".toml";
+		final String fileName = "bettersprinting-" + suffix + ".toml";
 		ModLoadingContext.get().registerConfig(type, spec, fileName);
 		
 		if (Files.notExists(Paths.get("config", fileName))){
@@ -29,7 +29,7 @@ public final class BetterSprintingConfig{
 	
 	private BetterSprintingConfig(){}
 	
-	private void onConfigLoaded(ModConfig.Loading e){
+	private void onConfigLoaded(final ModConfig.Loading e){
 		config = e.getConfig();
 	}
 	
@@ -41,11 +41,11 @@ public final class BetterSprintingConfig{
 		instance.config.save();
 	}
 	
-	public static <T> void set(ConfigValue<T> property, T value){
+	public static <T> void set(final ConfigValue<T> property, final T value){
 		instance.config.getConfigData().set(property.getPath(), value);
 	}
 	
-	public static <T> void update(ConfigValue<T> property, UnaryOperator<T> func){
+	public static <T> void update(final ConfigValue<T> property, final UnaryOperator<T> func){
 		set(property, func.apply(property.get()));
 	}
 }

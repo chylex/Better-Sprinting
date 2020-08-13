@@ -21,15 +21,15 @@ Find me on Twitter: https://twitter.com/chylexmc
 '''
 
 [[dependencies.bettersprinting]]
-    modId = "minecraft"
-    mandatory = true
-    versionRange = "[1.16.2]"
-    ordering = "NONE"
-    side = "BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.16.2]"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.bettersprinting]]
-    modId = "forge"
-    mandatory = true
-    versionRange = "[31,)"
-    ordering = "NONE"
-    side = "BOTH"
+modId = "forge"
+mandatory = true
+versionRange = "[31,)"
+ordering = "NONE"
+side = "BOTH"

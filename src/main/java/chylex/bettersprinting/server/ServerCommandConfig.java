@@ -31,8 +31,8 @@ final class ServerCommandConfig{
 	
 	private static final SuggestionProvider<CommandSource> SUGGEST_SETTING = (context, builder) -> ISuggestionProvider.suggest(SETTINGS_ALL, builder);
 	
-	public static void register(CommandDispatcher<CommandSource> dispatcher){
-		LiteralArgumentBuilder<CommandSource> builder = literal("bettersprinting").requires(source -> source.hasPermissionLevel(3));
+	public static void register(final CommandDispatcher<CommandSource> dispatcher){
+		final LiteralArgumentBuilder<CommandSource> builder = literal("bettersprinting").requires(source -> source.hasPermissionLevel(3));
 		
 		builder.executes(ServerCommandConfig::execHelp);
 		builder.then(literal("info").executes(ServerCommandConfig::execInfo));
@@ -44,8 +44,8 @@ final class ServerCommandConfig{
 	
 	// Executors
 	
-	private static int execHelp(CommandContext<CommandSource> ctx){
-		CommandSource source = ctx.getSource();
+	private static int execHelp(final CommandContext<CommandSource> ctx){
+		final CommandSource source = ctx.getSource();
 		sendMessage(source, TextFormatting.GREEN + "[Better Sprinting]");
 		sendMessage(source, "/bettersprinting info");
 		sendMessage(source, "/bettersprinting disablemod <" + ARG_BOOLEAN + '>');
@@ -53,27 +53,27 @@ final class ServerCommandConfig{
 		return 0;
 	}
 	
-	private static int execInfo(CommandContext<CommandSource> ctx){
-		CommandSource source = ctx.getSource();
+	private static int execInfo(final CommandContext<CommandSource> ctx){
+		final CommandSource source = ctx.getSource();
 		sendMessageTranslated(source, "bs.command.info", false);
 		return 0;
 	}
 	
-	private static int execDisableMod(CommandContext<CommandSource> ctx){
+	private static int execDisableMod(final CommandContext<CommandSource> ctx){
 		BetterSprintingConfig.set(ServerSettings.disableClientMod, ctx.getArgument(ARG_BOOLEAN, Boolean.class));
 		BetterSprintingConfig.save();
 		
-		CommandSource source = ctx.getSource();
+		final CommandSource source = ctx.getSource();
 		sendMessageTranslated(source, ServerSettings.disableClientMod.get() ? "bs.command.disableMod" : "bs.command.enableMod", true);
 		ServerNetwork.sendToAll(source.getServer().getPlayerList().getPlayers(), ServerNetwork.writeDisableMod(ServerSettings.disableClientMod.get()));
 		return 0;
 	}
 	
-	private static int execSetting(CommandContext<CommandSource> ctx){
-		String setting = ctx.getArgument(ARG_SETTINGS, String.class);
-		boolean value = ctx.getArgument(ARG_BOOLEAN, Boolean.class);
+	private static int execSetting(final CommandContext<CommandSource> ctx){
+		final String setting = ctx.getArgument(ARG_SETTINGS, String.class);
+		final boolean value = ctx.getArgument(ARG_BOOLEAN, Boolean.class);
 		
-		CommandSource source = ctx.getSource();
+		final CommandSource source = ctx.getSource();
 		
 		if (setting.equalsIgnoreCase(SETTING_SURVIVAL_FLY_BOOST)){
 			BetterSprintingConfig.set(ServerSettings.enableSurvivalFlyBoost, value);
@@ -98,12 +98,12 @@ final class ServerCommandConfig{
 	
 	// Helpers
 	
-	private static void sendMessage(CommandSource source, String text){
+	private static void sendMessage(final CommandSource source, final String text){
 		source.sendFeedback(new StringTextComponent(text), false);
 	}
 	
-	private static void sendMessageTranslated(CommandSource source, String translationName, boolean log){
-		Entity entity = source.getEntity();
+	private static void sendMessageTranslated(final CommandSource source, final String translationName, final boolean log){
+		final Entity entity = source.getEntity();
 		
 		if (entity instanceof PlayerEntity && ServerNetwork.hasBetterSprinting((PlayerEntity)entity)){
 			source.sendFeedback(new TranslationTextComponent(translationName), log);
@@ -112,4 +112,6 @@ final class ServerCommandConfig{
 			source.sendFeedback(new StringTextComponent(LanguageMap.getInstance().func_230503_a_(translationName)), log);
 		}
 	}
+	
+	private ServerCommandConfig(){}
 }

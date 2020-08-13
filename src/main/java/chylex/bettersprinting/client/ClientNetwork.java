@@ -10,26 +10,26 @@ import net.minecraftforge.fml.LogicalSide;
 
 @OnlyIn(Dist.CLIENT)
 public final class ClientNetwork implements INetworkHandler{
-	public static PacketBuffer writeModNotification(int protocol){
-		PacketBuffer buffer = INetworkHandler.buf();
+	public static PacketBuffer writeModNotification(final int protocol){
+		final PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(0).writeByte(protocol);
 		return buffer;
 	}
 	
 	private static PacketBuffer writeLanSettings(){
-		PacketBuffer buffer = INetworkHandler.buf();
+		final PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(0).writeBoolean(false).writeBoolean(true);
 		return buffer;
 	}
 	
 	@Override
-	public void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player){
+	public void onPacket(final LogicalSide side, final ByteBuf data, final PlayerEntity player){
 		if (side == LogicalSide.SERVER){
 			BetterSprintingNetwork.sendToPlayer(writeLanSettings(), player);
 			return;
 		}
 		
-		byte type = data.readByte();
+		final byte type = data.readByte();
 		
 		if (type == 0){
 			ClientModManager.svSurvivalFlyBoost = data.readBoolean();

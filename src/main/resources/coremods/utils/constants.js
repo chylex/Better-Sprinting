@@ -1,6 +1,6 @@
 var getInstructionTypeName = function(instruction){
     var type = instruction.getType();
-
+    
     switch(type){
         case 0: return "Insn";
         case 1: return "IntInsn";
@@ -24,7 +24,7 @@ var getInstructionTypeName = function(instruction){
 
 var getInstructionOpcodeName = function(instruction){
     var opcode = instruction.getOpcode();
-
+    
     switch(opcode){
         case -1: return "";
         case 0: return "NOP";

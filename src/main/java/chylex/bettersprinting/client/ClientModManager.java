@@ -29,7 +29,7 @@ public final class ClientModManager{
 	static{
 		keyBindSprintHold.keyCategory = keyCategoryName;
 		
-		for(KeyBinding binding:keyBindings){
+		for(final KeyBinding binding : keyBindings){
 			binding.setKeyConflictContext(KeyConflictContext.IN_GAME);
 		}
 	}
@@ -52,29 +52,33 @@ public final class ClientModManager{
 		return ClientSettings.disableMod.get() || svDisableMod;
 	}
 	
-	public static void showChatMessage(String text){
+	public static void showChatMessage(final String text){
 		mc.player.sendMessage(new StringTextComponent(chatPrefix + text), Util.DUMMY_UUID);
 	}
 	
 	public enum Feature{
 		FLY_BOOST{
-			@Override protected boolean checkEnableCondition(){
+			@Override
+			protected boolean checkEnableCondition(){
 				return mc.player.abilities.isFlying && (mc.player.isCreative() || mc.player.isSpectator() || svSurvivalFlyBoost);
 			}
 		},
 		
 		FLY_ON_GROUND{
-			@Override protected boolean checkEnableCondition(){
+			@Override
+			protected boolean checkEnableCondition(){
 				return mc.player.abilities.isFlying && ClientSettings.flyOnGround.get() && mc.player.isCreative();
 			}
 		},
 		
 		RUN_IN_ALL_DIRS{
-			@Override protected boolean checkEnableCondition(){
+			@Override
+			protected boolean checkEnableCondition(){
 				return ClientSettings.enableAllDirs.get();
 			}
 			
-			@Override public boolean isAvailable(){
+			@Override
+			public boolean isAvailable(){
 				return super.isAvailable() && (notInGame() || mc.isSingleplayer() || svRunInAllDirs);
 			}
 		};
@@ -89,4 +93,6 @@ public final class ClientModManager{
 			return !isModDisabled();
 		}
 	}
+	
+	private ClientModManager(){}
 }

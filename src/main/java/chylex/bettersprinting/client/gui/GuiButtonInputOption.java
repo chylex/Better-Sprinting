@@ -6,7 +6,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public final class GuiButtonInputOption extends GuiButtonCustomInput{
 	private final Runnable onClick;
 	
-	public GuiButtonInputOption(int x, int y, String titleKey, Runnable onClick){
+	public GuiButtonInputOption(final int x, final int y, final String titleKey, final Runnable onClick){
 		super(x, y, titleKey);
 		this.onClick = onClick;
 	}

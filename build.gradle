@@ -1,11 +1,11 @@
-buildscript{
-    repositories{
-        maven{ url = 'https://files.minecraftforge.net/maven' }
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
     }
     
-    dependencies{
+    dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
@@ -29,27 +29,27 @@ archivesBaseName = metaName.replaceAll('\\s', '')
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-minecraft{
+minecraft {
     mappings channel: 'snapshot', version: '20200723-1.16.1'
-
+    
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
-    runs{
-        client{
+    runs {
+        client {
             workingDirectory file('run')
             
-            mods{
-                bettersprinting{
+            mods {
+                bettersprinting {
                     source sourceSets.main
                 }
             }
         }
         
-        server{
+        server {
             workingDirectory file('run')
             
-            mods{
-                bettersprinting{
+            mods {
+                bettersprinting {
                     source sourceSets.main
                 }
             }
@@ -57,31 +57,31 @@ minecraft{
     }
 }
 
-dependencies{
+dependencies {
     minecraft 'net.minecraftforge:forge:' + mcversion + '-' + forgeversion
 }
 
-jar{
+jar {
     archiveName = archivesBaseName + '-' + mcversion + '-v' + version + '.jar'
-
-    from('./'){
+    
+    from('./') {
         include 'LICENSE'
         include 'logo.png'
     }
-
-    manifest{
+    
+    manifest {
         attributes([
-            'Specification-Title'  : 'bettersprinting',
-            'Specification-Version': '1',
-            'Specification-Vendor' : 'chylex',
-
-            'Implementation-Title'  : metaName,
-            'Implementation-Version': metaVersion,
-            'Implementation-Vendor' : 'chylex',
-
+            'Specification-Title'     : 'bettersprinting',
+            'Specification-Version'   : '1',
+            'Specification-Vendor'    : 'chylex',
+            
+            'Implementation-Title'    : metaName,
+            'Implementation-Version'  : metaVersion,
+            'Implementation-Vendor'   : 'chylex',
+            
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-
-	finalizedBy('reobfJar')
+    
+    finalizedBy('reobfJar')
 }

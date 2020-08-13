@@ -51,7 +51,7 @@ public final class ClientSettings{
 	}
 	
 	static{
-		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 		
 		builder.push("client");
 		
@@ -88,11 +88,11 @@ public final class ClientSettings{
 		keyInfoOptionsMenu = new KeyBindingInfo(keyCodeOptionsMenu, keyModOptionsMenu, keyTypeOptionsMenu);
 	}
 	
-	public static void firstTimeSetup(GameSettings settings){
+	public static void firstTimeSetup(final GameSettings settings){
 		keyInfoSprintHold.readFrom(settings.keyBindSprint);
 		
-		KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
-		KeyModifier sneakModifier = getVanillaKeyModifier(settings.keyBindSneak);
+		final KeyModifier sprintModifier = getVanillaKeyModifier(settings.keyBindSprint);
+		final KeyModifier sneakModifier = getVanillaKeyModifier(settings.keyBindSneak);
 		
 		if (sprintModifier != KeyModifier.NONE){
 			keyInfoSprintToggle.set(sprintModifier, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_G));
@@ -105,7 +105,7 @@ public final class ClientSettings{
 		BetterSprintingConfig.save();
 	}
 	
-	private static KeyModifier getVanillaKeyModifier(KeyBinding binding){
+	private static KeyModifier getVanillaKeyModifier(final KeyBinding binding){
 		if (binding.getKeyModifier() != KeyModifier.NONE || binding.getKey().getType() != InputMappings.Type.KEYSYM){
 			return KeyModifier.NONE;
 		}
@@ -117,4 +117,6 @@ public final class ClientSettings{
 			default: return KeyModifier.NONE;
 		}
 	}
+	
+	private ClientSettings(){}
 }

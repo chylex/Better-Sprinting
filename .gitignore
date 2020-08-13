@@ -5,7 +5,9 @@ out/
 .gradle/
 .settings/
 .updateclasses/
-.idea/
+.idea/dictionaries/
+.idea/runConfigurations/
+.idea/workspace.xml
 .classpath
 .project
 .DS_Store

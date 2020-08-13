@@ -15,7 +15,7 @@ public final class LivingUpdate{
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
-	public static void injectMovementInputUpdate(ClientPlayerEntity player, boolean slowMovement){
+	public static void injectMovementInputUpdate(final ClientPlayerEntity player, final boolean slowMovement){
 		IntegrityCheck.isValidated = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
@@ -82,4 +82,6 @@ public final class LivingUpdate{
 		<<< SKIPPED TO HERE
 		*/
 	}
+	
+	private LivingUpdate(){}
 }

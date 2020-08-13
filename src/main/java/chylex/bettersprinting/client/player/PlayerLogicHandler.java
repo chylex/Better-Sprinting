@@ -3,7 +3,6 @@ import chylex.bettersprinting.client.ClientModManager;
 import chylex.bettersprinting.client.ClientModManager.Feature;
 import chylex.bettersprinting.client.ClientSettings;
 import chylex.bettersprinting.client.input.SprintState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.potion.Effects;
@@ -16,10 +15,8 @@ import static chylex.bettersprinting.client.input.SprintState.TAPPING_SPRINT_KEY
 import static chylex.bettersprinting.client.input.SprintState.TOGGLED;
 
 final class PlayerLogicHandler{
-	private static final Minecraft mc = Minecraft.getInstance();
-	
 	private static final float flySpeedBase = 0.05F;
-
+	
 	private final ClientPlayerEntity player;
 	private final PlayerAbilities abilities;
 	private final MovementInput movementInput;
@@ -30,7 +27,7 @@ final class PlayerLogicHandler{
 	
 	private SprintState sprinting;
 	
-	public PlayerLogicHandler(ClientPlayerEntity player){
+	public PlayerLogicHandler(final ClientPlayerEntity player){
 		this.player = player;
 		this.abilities = player.abilities;
 		this.movementInput = player.movementInput;
@@ -48,7 +45,7 @@ final class PlayerLogicHandler{
 	}
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
-	public void updateMovementInput(boolean slowMovement){
+	public void updateMovementInput(final boolean slowMovement){
 		if (Feature.FLY_ON_GROUND.isEnabled()){
 			player.setOnGround(false);
 		}
@@ -60,11 +57,11 @@ final class PlayerLogicHandler{
 	
 	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
 	public void updateSprinting(){
-		boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
-		boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
+		final boolean enoughHunger = player.getFoodStats().getFoodLevel() > 6F || abilities.allowFlying;
+		final boolean isSprintBlocked = player.isHandActive() || player.isPotionActive(Effects.BLINDNESS);
 		
-		boolean isSprintHeld = ClientModManager.keyBindSprintHold.isKeyDown();
-		boolean isNotSneaking = !(movementInput.sneaking && !abilities.isFlying && !player.isSwimming());
+		final boolean isSprintHeld = ClientModManager.keyBindSprintHold.isKeyDown();
+		final boolean isNotSneaking = !(movementInput.sneaking && !abilities.isFlying && !player.isSwimming());
 		
 		// Double tapping
 		
@@ -111,10 +108,10 @@ final class PlayerLogicHandler{
 		// Stop conditions
 		
 		if (sprinting.active()){
-			boolean isSlow = Feature.RUN_IN_ALL_DIRS.isEnabled() ? !movementController.isMovingAnywhere() : !movementInput.isMovingForward();
+			final boolean isSlow = Feature.RUN_IN_ALL_DIRS.isEnabled() ? !movementController.isMovingAnywhere() : !movementInput.isMovingForward();
 			
-			boolean isSlowOrHungry = isSlow || !enoughHunger;
-			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
+			final boolean isSlowOrHungry = isSlow || !enoughHunger;
+			final boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
 			
 			if (player.isSwimming()){
 				if (!player.isOnGround() && !movementInput.sneaking && isSlowOrHungry || !player.isInWater()){
@@ -128,7 +125,7 @@ final class PlayerLogicHandler{
 		
 		// Update state
 		
-		boolean shouldSprint = sprinting.active() && isNotSneaking && !isSprintBlocked && !abilities.isFlying; // TODO fixes https://bugs.mojang.com/browse/MC-99848 (adding blindness while sprinting does not stop the sprint)
+		final boolean shouldSprint = sprinting.active() && isNotSneaking && !isSprintBlocked && !abilities.isFlying; // TODO fixes https://bugs.mojang.com/browse/MC-99848 (adding blindness while sprinting does not stop the sprint)
 		
 		if (player.isSprinting() != shouldSprint){
 			player.setSprinting(shouldSprint);
@@ -140,7 +137,7 @@ final class PlayerLogicHandler{
 		
 		// Fly boost
 		
-		int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
+		final int flySpeedBoostMultiplier = ClientSettings.flySpeedBoost.get();
 		
 		if (flySpeedBoostMultiplier > 0){
 			if (Feature.FLY_BOOST.isEnabled() && (isSprintHeld || movementController.isSprintToggled())){

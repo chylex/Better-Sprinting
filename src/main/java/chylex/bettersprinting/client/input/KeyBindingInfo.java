@@ -11,23 +11,23 @@ public final class KeyBindingInfo{
 	private final EnumValue<KeyModifier> keyModifier;
 	private final EnumValue<InputMappings.Type> keyType;
 	
-	public KeyBindingInfo(IntValue keyCode, EnumValue<KeyModifier> keyModifier, EnumValue<InputMappings.Type> keyType){
+	public KeyBindingInfo(final IntValue keyCode, final EnumValue<KeyModifier> keyModifier, final EnumValue<InputMappings.Type> keyType){
 		this.keyCode = keyCode;
 		this.keyModifier = keyModifier;
 		this.keyType = keyType;
 	}
 	
-	public void set(KeyModifier modifier, InputMappings.Input input){
+	public void set(final KeyModifier modifier, final InputMappings.Input input){
 		BetterSprintingConfig.set(keyCode, input.getKeyCode());
 		BetterSprintingConfig.set(keyModifier, modifier);
 		BetterSprintingConfig.set(keyType, input.getType());
 	}
 	
-	public void readFrom(KeyBinding binding){
+	public void readFrom(final KeyBinding binding){
 		set(binding.getKeyModifier(), binding.getKey());
 	}
 	
-	public void writeInto(KeyBinding binding){
+	public void writeInto(final KeyBinding binding){
 		binding.setKeyModifierAndCode(keyModifier.get(), keyType.get().getOrMakeInput(keyCode.get()));
 	}
 }

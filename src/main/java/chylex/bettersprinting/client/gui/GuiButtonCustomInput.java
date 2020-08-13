@@ -10,20 +10,17 @@ import java.util.Arrays;
 
 @OnlyIn(Dist.CLIENT)
 abstract class GuiButtonCustomInput extends Button{
-	public final int x, y;
 	private final String titleKey;
 	
-	public GuiButtonCustomInput(int x, int y, String titleKey){
+	public GuiButtonCustomInput(final int x, final int y, final String titleKey){
 		super(x, y, 70, 20, new StringTextComponent(""), null);
-		this.x = x;
-		this.y = y;
 		this.titleKey = titleKey;
 	}
 	
 	@Override
 	public abstract void onPress();
 	
-	public void setTitleKey(String translationKey){
+	public void setTitleKey(final String translationKey){
 		setMessage(new TranslationTextComponent(translationKey));
 	}
 	

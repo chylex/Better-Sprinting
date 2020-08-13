@@ -16,7 +16,9 @@ public final class ServerSetup{
 	}
 	
 	@SubscribeEvent
-	public static void onRegisterCommands(RegisterCommandsEvent e){
+	public static void onRegisterCommands(final RegisterCommandsEvent e){
 		ServerCommandConfig.register(e.getDispatcher());
 	}
+	
+	private ServerSetup(){}
 }

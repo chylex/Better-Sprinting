@@ -37,10 +37,10 @@ public final class ClientSetup{
 	
 	@SubscribeEvent
 	public static void onLoadComplete(final FMLLoadCompleteEvent e){
-		Minecraft mc = Minecraft.getInstance();
+		final Minecraft mc = Minecraft.getInstance();
 		
 		mc.execute(() -> {
-			GameSettings settings = mc.gameSettings;
+			final GameSettings settings = mc.gameSettings;
 			
 			settings.keyBindings = ArrayUtils.addAll(settings.keyBindings,
 				ClientModManager.keyBindSprintToggle,
@@ -60,4 +60,6 @@ public final class ClientSetup{
 			KeyBinding.resetKeyBindingArrayAndHash();
 		});
 	}
+	
+	private ClientSetup(){}
 }

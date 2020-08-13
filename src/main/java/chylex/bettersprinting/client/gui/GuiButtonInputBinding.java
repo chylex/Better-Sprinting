@@ -18,7 +18,7 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 	private final Consumer<GuiButtonInputBinding> onClick;
 	private boolean isSelected;
 	
-	public GuiButtonInputBinding(int x, int y, KeyBinding binding, Consumer<GuiButtonInputBinding> onClick){
+	public GuiButtonInputBinding(final int x, final int y, final KeyBinding binding, final Consumer<GuiButtonInputBinding> onClick){
 		super(x, y, binding == settings.keyBindSprint ? "bs.sprint.hold" : binding.getKeyDescription());
 		this.binding = binding;
 		this.onClick = onClick;
@@ -30,7 +30,7 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 		onClick.accept(this);
 	}
 	
-	public void setSelected(boolean isSelected){
+	public void setSelected(final boolean isSelected){
 		this.isSelected = isSelected;
 		updateKeyBindingText();
 	}
@@ -39,12 +39,12 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 		return isSelected;
 	}
 	
-	public void setBinding(InputMappings.Input input){
+	public void setBinding(final InputMappings.Input input){
 		binding.bind(input);
 		isSelected = false;
 	}
 	
-	public void setBinding(KeyModifier modifier, InputMappings.Input input){
+	public void setBinding(final KeyModifier modifier, final InputMappings.Input input){
 		binding.setKeyModifierAndCode(modifier, input);
 		isSelected &= KeyModifier.isKeyCodeModifier(input) && modifier != KeyModifier.NONE;
 	}
@@ -54,7 +54,7 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 		boolean hasOnlyModifierConflict = true;
 		
 		if (!binding.isInvalid()){
-			for(KeyBinding other:settings.keyBindings){
+			for(final KeyBinding other : settings.keyBindings){
 				if (binding != other && binding.conflicts(other)){
 					hasConflict = true;
 					hasOnlyModifierConflict &= binding.hasKeyCodeModifierConflict(other);

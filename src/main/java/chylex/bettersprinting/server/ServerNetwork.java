@@ -75,41 +75,41 @@ public final class ServerNetwork implements INetworkHandler{
 	
 	private static final Set<UUID> playersWithMod = Collections.synchronizedSet(new HashSet<>());
 	
-	public static boolean hasBetterSprinting(PlayerEntity player){
+	public static boolean hasBetterSprinting(final PlayerEntity player){
 		return playersWithMod.contains(player.getUniqueID());
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerLogout(PlayerLoggedOutEvent e){
+	public static void onPlayerLogout(final PlayerLoggedOutEvent e){
 		playersWithMod.remove(e.getPlayer().getUniqueID());
 	}
 	
-	public static PacketBuffer writeSettings(boolean enableSurvivalFlyBoost, boolean enableAllDirs){
-		PacketBuffer buffer = INetworkHandler.buf();
+	public static PacketBuffer writeSettings(final boolean enableSurvivalFlyBoost, final boolean enableAllDirs){
+		final PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(0).writeBoolean(enableSurvivalFlyBoost).writeBoolean(enableAllDirs);
 		return buffer;
 	}
 	
-	public static PacketBuffer writeDisableMod(boolean disable){
-		PacketBuffer buffer = INetworkHandler.buf();
+	public static PacketBuffer writeDisableMod(final boolean disable){
+		final PacketBuffer buffer = INetworkHandler.buf();
 		buffer.writeByte(disable ? 1 : 2);
 		return buffer;
 	}
 	
-	private static void sendToPlayer(PlayerEntity player, PacketBuffer packet){
+	private static void sendToPlayer(final PlayerEntity player, final PacketBuffer packet){
 		if (hasBetterSprinting(player)){
 			BetterSprintingNetwork.sendToPlayer(packet, player);
 		}
 	}
 	
-	public static void sendToAll(List<? extends PlayerEntity> players, PacketBuffer packet){
-		for(PlayerEntity player:players){
+	public static void sendToAll(final List<? extends PlayerEntity> players, final PacketBuffer packet){
+		for(final PlayerEntity player : players){
 			sendToPlayer(player, packet);
 		}
 	}
 	
 	@Override
-	public void onPacket(LogicalSide side, ByteBuf data, PlayerEntity player){
+	public void onPacket(final LogicalSide side, final ByteBuf data, final PlayerEntity player){
 		playersWithMod.add(player.getUniqueID());
 		
 		if (ServerSettings.disableClientMod.get()){

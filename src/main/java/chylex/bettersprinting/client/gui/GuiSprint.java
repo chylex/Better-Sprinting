@@ -31,7 +31,7 @@ public class GuiSprint extends Screen{
 	private GuiButtonInputOption btnDoubleTap, btnAutoJump, btnFlyBoost, btnFlyOnGround, btnAllDirs, btnDisableMod;
 	private GuiButtonInputBinding selectedBinding;
 	
-	public GuiSprint(Screen parentScreen){
+	public GuiSprint(final Screen parentScreen){
 		super(new StringTextComponent("Better Sprinting"));
 		this.parentScreen = parentScreen;
 	}
@@ -40,8 +40,8 @@ public class GuiSprint extends Screen{
 	protected void init(){
 		buttons.clear();
 		
-		int left = (width / 2) - 155;
-		int top = height / 6;
+		final int left = (width / 2) - 155;
+		final int top = height / 6;
 		
 		for(int index = 0; index < ClientModManager.keyBindings.length; index++){
 			addButton(new GuiButtonInputBinding(left + 160 * (index % 2), top + 24 * (index / 2), ClientModManager.keyBindings[index], this::onBindingClicked));
@@ -98,9 +98,9 @@ public class GuiSprint extends Screen{
 	}
 	
 	private void updateButtonState(){
-		for(Widget button:buttons){
+		for(final Widget button : buttons){
 			if (button instanceof GuiButtonInputBinding){
-				KeyBinding binding = ((GuiButtonInputBinding)button).binding;
+				final KeyBinding binding = ((GuiButtonInputBinding)button).binding;
 				
 				if (binding == ClientModManager.keyBindSprintToggle || binding == ClientModManager.keyBindSneakToggle){
 					button.active = !ClientModManager.isModDisabled();
@@ -138,7 +138,7 @@ public class GuiSprint extends Screen{
 		BetterSprintingConfig.save();
 	}
 	
-	private Runnable onSettingClicked(Runnable callback){
+	private Runnable onSettingClicked(final Runnable callback){
 		return () -> {
 			callback.run();
 			BetterSprintingConfig.save();
@@ -146,7 +146,7 @@ public class GuiSprint extends Screen{
 		};
 	}
 	
-	private void onBindingClicked(GuiButtonInputBinding binding){
+	private void onBindingClicked(final GuiButtonInputBinding binding){
 		if (selectedBinding != null){
 			selectedBinding.setSelected(false);
 		}
@@ -156,7 +156,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button){
+	public boolean mouseClicked(final double mouseX, final double mouseY, final int button){
 		if (super.mouseClicked(mouseX, mouseY, button)){
 			return true;
 		}
@@ -170,7 +170,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers){
+	public boolean keyPressed(final int keyCode, final int scanCode, final int modifiers){
 		if (selectedBinding != null){
 			if (keyCode == GLFW.GLFW_KEY_ESCAPE){
 				selectedBinding.setBinding(KeyModifier.NONE, InputMappings.INPUT_INVALID);
@@ -188,7 +188,7 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public boolean keyReleased(int keyCode, int scanCode, int modifiers){
+	public boolean keyReleased(final int keyCode, final int scanCode, final int modifiers){
 		if (selectedBinding != null){
 			selectedBinding.setBinding(KeyModifier.NONE, InputMappings.getInputByCode(keyCode, scanCode));
 			onSelectedBindingUpdated();
@@ -204,7 +204,7 @@ public class GuiSprint extends Screen{
 			selectedBinding = null;
 		}
 		
-		for(Widget button:buttons){
+		for(final Widget button : buttons){
 			if (button instanceof GuiButtonInputBinding){
 				((GuiButtonInputBinding)button).updateKeyBindingText();
 			}
@@ -221,25 +221,25 @@ public class GuiSprint extends Screen{
 	}
 	
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTickTime){
+	public void render(final MatrixStack matrix, final int mouseX, final int mouseY, final float partialTickTime){
 		final int top = height / 6;
 		final int middle = width / 2;
 		
 		renderBackground(matrix);
-		drawCenteredString(matrix, font, title, middle, 20, 16777215);
+		drawCenteredString(matrix, font, title, middle, 20, 0xFF_FF_FF);
 		
 		super.render(matrix, mouseX, mouseY, partialTickTime);
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
 		
-		for(Widget button:buttons){
+		for(final Widget button : buttons){
 			if (button instanceof GuiButtonCustomInput){
-				GuiButtonCustomInput input = (GuiButtonCustomInput)button;
+				final GuiButtonCustomInput input = (GuiButtonCustomInput)button;
 				drawButtonTitle(input, input.x < middle ? maxWidthLeft : maxWidthRight);
 				
 				if (input.isMouseOver(mouseX, mouseY)){
-					ITextComponent[] spl = input.getInfo();
+					final ITextComponent[] spl = input.getInfo();
 					
 					for(int line = 0; line < spl.length; line++){
 						drawCenteredString(matrix, font, spl[line], middle, top + 148 + (10 * line - (font.FONT_HEIGHT * spl.length / 2)), -1);
@@ -249,9 +249,9 @@ public class GuiSprint extends Screen{
 		}
 	}
 	
-	private void drawButtonTitle(GuiButtonCustomInput btn, int maxWidth){
-		ITextComponent title = btn.getTitle();
-		int lines = font.func_238425_b_(title, maxWidth).size(); // RENAME listFormattedStringToWidth
+	private void drawButtonTitle(final GuiButtonCustomInput btn, final int maxWidth){
+		final ITextComponent title = btn.getTitle();
+		final int lines = font.func_238425_b_(title, maxWidth).size(); // RENAME listFormattedStringToWidth
 		font.func_238418_a_(title, btn.x + 76, btn.y + 7 - 5 * (lines - 1), maxWidth, -1); // RENAME drawSplitString
 	}
 }

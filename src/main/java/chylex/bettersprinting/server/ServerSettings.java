@@ -17,7 +17,7 @@ public final class ServerSettings{
 	}
 	
 	static{
-		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 		
 		builder.push("server");
 		
@@ -29,4 +29,6 @@ public final class ServerSettings{
 		
 		configSpec = builder.build();
 	}
+	
+	private ServerSettings(){}
 }

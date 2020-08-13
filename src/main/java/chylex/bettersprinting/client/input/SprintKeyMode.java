@@ -8,13 +8,13 @@ public enum SprintKeyMode{
 	public final SprintState sprintState;
 	public final TranslationTextComponent translationKey;
 	
-	SprintKeyMode(SprintState sprintState, String translationKey){
+	SprintKeyMode(final SprintState sprintState, final String translationKey){
 		this.sprintState = sprintState;
 		this.translationKey = new TranslationTextComponent(translationKey);
 	}
 	
 	public SprintKeyMode next(){
-		SprintKeyMode[] values = values();
+		final SprintKeyMode[] values = values();
 		return values[(ordinal() + 1) % values.length];
 	}
 }

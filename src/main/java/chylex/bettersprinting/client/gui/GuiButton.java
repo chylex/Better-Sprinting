@@ -8,7 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class GuiButton extends Button{
 	private final Runnable onClick;
 	
-	public GuiButton(int x, int y, int width, String buttonText, Runnable onClick){
+	public GuiButton(final int x, final int y, final int width, final String buttonText, final Runnable onClick){
 		super(x, y, width, 20, new StringTextComponent(buttonText), null);
 		this.onClick = onClick;
 	}

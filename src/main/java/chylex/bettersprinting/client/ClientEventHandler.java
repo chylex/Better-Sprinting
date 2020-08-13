@@ -33,12 +33,12 @@ public final class ClientEventHandler{
 	public static boolean showDisableWarningWhenPossible;
 	
 	@SubscribeEvent
-	public static void onPlayerLoginClient(PlayerLoggedInEvent e){
+	public static void onPlayerLoginClient(final PlayerLoggedInEvent e){
 		IntegrityCheck.register();
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerJoinWorld(EntityJoinWorldEvent e){
+	public static void onPlayerJoinWorld(final EntityJoinWorldEvent e){
 		if (stopCheckingNewServer || e.getEntity() != mc.player){
 			return;
 		}
@@ -51,7 +51,7 @@ public final class ClientEventHandler{
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-	public static void onGuiOpen(GuiOpenEvent e){
+	public static void onGuiOpen(final GuiOpenEvent e){
 		if (stopCheckingNewServer && mc.getRenderViewEntity() == null){
 			ClientModManager.onDisconnectedFromServer();
 			LivingUpdate.cleanup();
@@ -62,7 +62,7 @@ public final class ClientEventHandler{
 	}
 	
 	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent e){
+	public static void onClientTick(final ClientTickEvent e){
 		if (e.phase != Phase.END || mc.player == null){
 			return;
 		}
@@ -78,11 +78,11 @@ public final class ClientEventHandler{
 	}
 	
 	@SubscribeEvent
-	public static void onGuiInitPost(GuiScreenEvent.InitGuiEvent.Post e){
-		Screen gui = e.getGui();
+	public static void onGuiInitPost(final GuiScreenEvent.InitGuiEvent.Post e){
+		final Screen gui = e.getGui();
 		
 		if (gui instanceof ControlsScreen){
-			ControlsScreen controls = (ControlsScreen)gui;
+			final ControlsScreen controls = (ControlsScreen)gui;
 			
 			e.getWidgetList()
 			 .stream()
@@ -105,4 +105,6 @@ public final class ClientEventHandler{
 			}
 		}
 	}
+	
+	private ClientEventHandler(){}
 }

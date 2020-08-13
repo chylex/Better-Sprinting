@@ -11,7 +11,7 @@ public final class ToggleTracker{
 	private boolean hasToggledWhileHoldingReset;
 	private boolean skipNextToggle;
 	
-	public ToggleTracker(KeyBinding bindingToggle, KeyBinding bindingReset){
+	public ToggleTracker(final KeyBinding bindingToggle, final KeyBinding bindingReset){
 		this.bindingToggle = bindingToggle;
 		this.bindingReset = bindingReset;
 	}
@@ -41,7 +41,7 @@ public final class ToggleTracker{
 	 */
 	
 	public void update(){
-		boolean isHoldingReset = bindingReset.isKeyDown();
+		final boolean isHoldingReset = bindingReset.isKeyDown();
 		
 		if (bindingToggle.isKeyDown()){
 			if (!waitForRelease){

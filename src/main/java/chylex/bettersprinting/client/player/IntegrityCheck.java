@@ -21,12 +21,12 @@ public final class IntegrityCheck{
 		MinecraftForge.EVENT_BUS.unregister(instance);
 		isValidated = false;
 	}
-
+	
 	private static final IntegrityCheck instance = new IntegrityCheck();
 	private static final Minecraft mc = Minecraft.getInstance();
 	
 	@SubscribeEvent
-	public void onPlayerTick(ClientTickEvent e){
+	public void onPlayerTick(final ClientTickEvent e){
 		if (e.phase == Phase.END && mc.player != null && mc.player.ticksExisted > 1){
 			if (!isValidated){
 				ClientModManager.showChatMessage(I18n.format("bs.game.integrity"));
