@@ -38,10 +38,10 @@ var transformSprinting = function(api, opcodes, method){
      */
     
     for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
-        if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
-            checkInstruction(instructions.get(index - 22), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
-            checkInstruction(instructions.get(index - 44), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
-            checkInstruction(instructions.get(index - 66), opcodes.INVOKEVIRTUAL, "pushOutOfBlocks", "func_213282_i") &&
+        if (checkInstruction(instructions.get(index), opcodes.INVOKESPECIAL, "pushOutOfBlocks", "func_244389_i") &&
+            checkInstruction(instructions.get(index - 20), opcodes.INVOKESPECIAL, "pushOutOfBlocks", "func_244389_i") &&
+            checkInstruction(instructions.get(index - 40), opcodes.INVOKESPECIAL, "pushOutOfBlocks", "func_244389_i") &&
+            checkInstruction(instructions.get(index - 60), opcodes.INVOKESPECIAL, "pushOutOfBlocks", "func_244389_i") &&
             checkInstruction(instructions.get(index + 208), opcodes.INVOKEVIRTUAL, "setSprinting", "func_70031_b")
         ){
             bounds = [ index + 1, index + 209 ];

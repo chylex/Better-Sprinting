@@ -64,16 +64,16 @@ var transformAfterSuperCall = function(api, opcodes, method){
      *   |  LINENUMBER
      *   |  ALOAD 0
      *   |  GETFIELD net/minecraft/client/entity/player/ClientPlayerEntity.onGround : Z
-     *   |  IFEQ L121
+     *   |  IFEQ <B>
      *   |  ALOAD 0
      *   |  GETFIELD net/minecraft/client/entity/player/ClientPlayerEntity.abilities : Lnet/minecraft/entity/player/PlayerAbilities;
      *   |  GETFIELD net/minecraft/entity/player/PlayerAbilities.isFlying : Z
-     *   |  IFEQ L121
+     *   |  IFEQ <B>
      *   |  ALOAD 0
      *   |  GETFIELD net/minecraft/client/entity/player/ClientPlayerEntity.mc : Lnet/minecraft/client/Minecraft;
      *   |  GETFIELD net/minecraft/client/Minecraft.playerController : Lnet/minecraft/client/multiplayer/PlayerController;
      *   |  INVOKEVIRTUAL net/minecraft/client/multiplayer/PlayerController.isSpectatorMode ()Z
-     *   |  IFNE L121
+     *   |  IFNE <B>
      * + |  INVOKESTATIC chylex/bettersprinting/client/player/LivingUpdate.injectFlightCancelTest ()Z
      * + |  IFNE <B>
      *   | L122

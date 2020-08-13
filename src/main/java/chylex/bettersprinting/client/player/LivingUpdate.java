@@ -14,12 +14,12 @@ public final class LivingUpdate{
 		currentHandler = null;
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
+	// UPDATE | ClientPlayerEntity.livingTick | 1.16.2
 	public static void injectMovementInputUpdate(final ClientPlayerEntity player, final boolean slowMovement){
 		IntegrityCheck.isValidated = true;
 		isModDisabled = ClientModManager.isModDisabled();
 		
-		// this.movementInput.func_225607_a_(this.func_228354_I_()); <<< REPLACE
+		// this.movementInput.tickMovement(this.func_228354_I_()); <<< REPLACE
 		
 		if (isModDisabled){
 			if (currentHandler != null){
@@ -38,7 +38,7 @@ public final class LivingUpdate{
 		currentHandler.updateMovementInput(slowMovement);
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
+	// UPDATE | ClientPlayerEntity.livingTick | 1.16.2
 	public static boolean injectSprinting(){
 		if (isModDisabled){
 			return false;
@@ -64,7 +64,7 @@ public final class LivingUpdate{
 		*/
 	}
 	
-	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
+	// UPDATE | ClientPlayerEntity.livingTick | 1.16.2
 	public static boolean injectFlightCancelTest(){
 		if (isModDisabled){
 			return false;

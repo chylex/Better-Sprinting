@@ -13,7 +13,7 @@ var transformMovementInputUpdate = function(api, opcodes, method){
      */
     
     for(var index = 0, instrcount = instructions.size(); index < instrcount; index++){
-        if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "func_225607_a_") &&
+        if (checkInstruction(instructions.get(index), opcodes.INVOKEVIRTUAL, "tickMovement", "func_225607_a_") &&
             checkOpcodeChain(instructions, index - 4, [ opcodes.ALOAD, opcodes.GETFIELD, opcodes.ALOAD, opcodes.INVOKEVIRTUAL ])
         ){
             entry = index;
