@@ -90,10 +90,10 @@ public final class ClientEventHandler{
 			 .findFirst()
 			 .ifPresent(e::removeWidget);
 			
-			controls.func_231039_at__() // RENAME children
+			controls.getEventListeners()
 			        .stream()
 			        .filter(widget -> widget instanceof KeyBindingList)
-			        .map(widget -> ((KeyBindingList)widget).func_231039_at__()) // RENAME children
+			        .map(widget -> ((KeyBindingList)widget).getEventListeners())
 			        .findFirst()
 			        .ifPresent(children -> children.removeIf(entry ->
 			        	(entry instanceof KeyEntry && ArrayUtils.contains(ClientModManager.keyBindings, ((KeyEntry)entry).keybinding)) ||
@@ -101,7 +101,7 @@ public final class ClientEventHandler{
 			        ));
 			
 			if (!GuiSprint.openedControlsFromSprintMenu){
-				e.addWidget(new GuiButton((controls.field_230708_k_ /* RENAME width */ / 2) + 5, 18, 150, "Better Sprinting", () -> mc.displayGuiScreen(new GuiSprint(mc.currentScreen))));
+				e.addWidget(new GuiButton((controls.width / 2) + 5, 18, 150, "Better Sprinting", () -> mc.displayGuiScreen(new GuiSprint(mc.currentScreen))));
 			}
 		}
 	}

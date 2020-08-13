@@ -21,14 +21,10 @@ abstract class GuiButtonCustomInput extends Button{
 	}
 	
 	@Override
-	public abstract void func_230930_b_(); // RENAME onPress
-	
-	public boolean isMouseOver(int mouseX, int mouseY){
-		return func_230992_c_(mouseX, mouseY);
-	}
+	public abstract void onPress();
 	
 	public void setTitleKey(String translationKey){
-		func_238482_a_(new TranslationTextComponent(translationKey)); // RENAME setMessage
+		setMessage(new TranslationTextComponent(translationKey));
 	}
 	
 	public ITextComponent getTitle(){

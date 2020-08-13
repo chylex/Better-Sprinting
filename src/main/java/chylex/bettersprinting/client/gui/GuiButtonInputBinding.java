@@ -26,7 +26,7 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 	}
 	
 	@Override
-	public void func_230930_b_(){ // RENAME onPress
+	public void onPress(){
 		onClick.accept(this);
 	}
 	
@@ -62,15 +62,14 @@ public final class GuiButtonInputBinding extends GuiButtonCustomInput{
 			}
 		}
 		
-		// RENAME KeyBindingList
 		if (isSelected){
-			func_238482_a_((new StringTextComponent("> ")).func_230529_a_(binding.func_238171_j_().func_230532_e_().func_240699_a_(TextFormatting.YELLOW)).func_240702_b_(" <").func_240699_a_(TextFormatting.YELLOW));
+			setMessage((new StringTextComponent("> ")).append(binding.func_238171_j_().deepCopy().mergeStyle(TextFormatting.YELLOW)).appendString(" <").mergeStyle(TextFormatting.YELLOW));
 		}
 		else if (hasConflict){
-			func_238482_a_(binding.func_238171_j_().func_230532_e_().func_240699_a_(hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED));
+			setMessage(binding.func_238171_j_().deepCopy().mergeStyle(hasOnlyModifierConflict ? TextFormatting.GOLD : TextFormatting.RED));
 		}
 		else{
-			func_238482_a_(binding.func_238171_j_());
+			setMessage(binding.func_238171_j_());
 		}
 	}
 }

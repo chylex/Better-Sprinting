@@ -50,7 +50,7 @@ final class PlayerLogicHandler{
 	// UPDATE | ClientPlayerEntity.livingTick | 1.16.1
 	public void updateMovementInput(boolean slowMovement){
 		if (Feature.FLY_ON_GROUND.isEnabled()){
-			player.func_230245_c_(false); // RENAME onGround
+			player.setOnGround(false);
 		}
 		
 		wasSneaking = movementInput.sneaking;
@@ -72,7 +72,7 @@ final class PlayerLogicHandler{
 			player.sprintToggleTimer = 0;
 		}
 		
-		if (ClientSettings.enableDoubleTap.get() && (player.func_233570_aj_() /* RENAME onGround */ || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !sprinting.active() && enoughHunger && !isSprintBlocked){
+		if (ClientSettings.enableDoubleTap.get() && (player.isOnGround() || player.canSwim()) && !wasSneaking && !wasMovingForward && player.func_223110_ee() && !sprinting.active() && enoughHunger && !isSprintBlocked){
 			if (player.sprintToggleTimer <= 0 && !isSprintHeld){
 				player.sprintToggleTimer = 7;
 			}
@@ -111,13 +111,13 @@ final class PlayerLogicHandler{
 		// Stop conditions
 		
 		if (sprinting.active()){
-			boolean isSlow = Feature.RUN_IN_ALL_DIRS.isEnabled() ? !movementController.isMovingAnywhere() : !movementInput.func_223135_b();
+			boolean isSlow = Feature.RUN_IN_ALL_DIRS.isEnabled() ? !movementController.isMovingAnywhere() : !movementInput.isMovingForward();
 			
 			boolean isSlowOrHungry = isSlow || !enoughHunger;
 			boolean stopRunning = isSlowOrHungry || player.collidedHorizontally || player.isInWater() && !player.canSwim();
 			
 			if (player.isSwimming()){
-				if (!player.func_233570_aj_() /* RENAME onGround */ && !movementInput.sneaking && isSlowOrHungry || !player.isInWater()){
+				if (!player.isOnGround() && !movementInput.sneaking && isSlowOrHungry || !player.isInWater()){
 					sprinting = INACTIVE;
 				}
 			}

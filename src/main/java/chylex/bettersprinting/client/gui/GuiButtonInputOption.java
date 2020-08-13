@@ -12,7 +12,7 @@ public final class GuiButtonInputOption extends GuiButtonCustomInput{
 	}
 	
 	@Override
-	public void func_230930_b_(){ // RENAME onPress
+	public void onPress(){
 		onClick.run();
 	}
 }

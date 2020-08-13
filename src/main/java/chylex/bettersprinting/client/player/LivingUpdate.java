@@ -27,7 +27,7 @@ public final class LivingUpdate{
 				currentHandler = null;
 			}
 			
-			player.movementInput.func_225607_a_(slowMovement);
+			player.movementInput.tickMovement(slowMovement);
 			return;
 		}
 		

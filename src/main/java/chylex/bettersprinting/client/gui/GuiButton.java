@@ -14,7 +14,7 @@ public class GuiButton extends Button{
 	}
 	
 	@Override
-	public void func_230930_b_(){ // RENAME onPress
+	public void onPress(){
 		onClick.run();
 	}
 }

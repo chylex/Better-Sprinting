@@ -2,9 +2,9 @@ package chylex.bettersprinting.server;
 import chylex.bettersprinting.BetterSprintingConfig;
 import chylex.bettersprinting.BetterSprintingNetwork;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 public final class ServerSetup{
 	public static void setup(){
@@ -16,7 +16,7 @@ public final class ServerSetup{
 	}
 	
 	@SubscribeEvent
-	public static void onServerStarting(FMLServerStartingEvent e){
-		ServerCommandConfig.register(e.getCommandDispatcher());
+	public static void onRegisterCommands(RegisterCommandsEvent e){
+		ServerCommandConfig.register(e.getDispatcher());
 	}
 }

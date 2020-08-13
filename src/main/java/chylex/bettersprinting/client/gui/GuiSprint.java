@@ -21,7 +21,7 @@ import net.minecraftforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiSprint extends GuiScreenMigration{
+public class GuiSprint extends Screen{
 	private static final Minecraft mc = Minecraft.getInstance();
 	
 	public static boolean openedControlsFromSprintMenu;
@@ -103,21 +103,21 @@ public class GuiSprint extends GuiScreenMigration{
 				KeyBinding binding = ((GuiButtonInputBinding)button).binding;
 				
 				if (binding == ClientModManager.keyBindSprintToggle || binding == ClientModManager.keyBindSneakToggle){
-					button.field_230693_o_ = !ClientModManager.isModDisabled(); // RENAME active
+					button.active = !ClientModManager.isModDisabled();
 				}
 			}
 		}
 		
-		btnSprintMode.field_230693_o_ = !ClientModManager.isModDisabled();
-		btnDoubleTap.field_230693_o_ = !ClientModManager.isModDisabled();
-		btnAllDirs.field_230693_o_ = Feature.RUN_IN_ALL_DIRS.isAvailable();
-		btnFlyBoost.field_230693_o_ = Feature.FLY_BOOST.isAvailable();
-		btnFlyOnGround.field_230693_o_ = Feature.FLY_ON_GROUND.isAvailable();
-		btnDisableMod.field_230693_o_ = ClientModManager.canManuallyEnableMod();
+		btnSprintMode.active = !ClientModManager.isModDisabled();
+		btnDoubleTap.active = !ClientModManager.isModDisabled();
+		btnAllDirs.active = Feature.RUN_IN_ALL_DIRS.isAvailable();
+		btnFlyBoost.active = Feature.FLY_BOOST.isAvailable();
+		btnFlyOnGround.active = Feature.FLY_ON_GROUND.isAvailable();
+		btnDisableMod.active = ClientModManager.canManuallyEnableMod();
 	}
 	
 	private void updateButtonText(){
-		btnSprintMode.func_238482_a_((ClientModManager.isModDisabled() ? SprintKeyMode.TAP : ClientSettings.sprintKeyMode.get()).translationKey);
+		btnSprintMode.setMessage((ClientModManager.isModDisabled() ? SprintKeyMode.TAP : ClientSettings.sprintKeyMode.get()).translationKey);
 		btnDoubleTap.setTitleKey(ClientModManager.isModDisabled() ? "gui.unavailable" : (ClientSettings.enableDoubleTap.get() ? "gui.enabled" : "gui.disabled"));
 		btnFlyBoost.setTitleKey(Feature.FLY_BOOST.isAvailable() ? (ClientSettings.flySpeedBoost.get() == 0 ? "gui.disabled" : (ClientSettings.flySpeedBoost.get() + 1) + "x") : "gui.unavailable");
 		btnFlyOnGround.setTitleKey(Feature.FLY_ON_GROUND.isAvailable() ? (ClientSettings.flyOnGround.get() ? "gui.enabled" : "gui.disabled") : "gui.unavailable");
@@ -156,8 +156,8 @@ public class GuiSprint extends GuiScreenMigration{
 	}
 	
 	@Override
-	public boolean func_231044_a_(double mouseX, double mouseY, int button){ // RENAME mouseClicked
-		if (super.func_231044_a_(mouseX, mouseY, button)){
+	public boolean mouseClicked(double mouseX, double mouseY, int button){
+		if (super.mouseClicked(mouseX, mouseY, button)){
 			return true;
 		}
 		else if (selectedBinding != null){
@@ -170,7 +170,7 @@ public class GuiSprint extends GuiScreenMigration{
 	}
 	
 	@Override
-	public boolean func_231046_a_(int keyCode, int scanCode, int modifiers){ // RENAME keyPressed
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers){
 		if (selectedBinding != null){
 			if (keyCode == GLFW.GLFW_KEY_ESCAPE){
 				selectedBinding.setBinding(KeyModifier.NONE, InputMappings.INPUT_INVALID);
@@ -183,7 +183,7 @@ public class GuiSprint extends GuiScreenMigration{
 			return true;
 		}
 		else{
-			return super.func_231046_a_(keyCode, scanCode, modifiers);
+			return super.keyPressed(keyCode, scanCode, modifiers);
 		}
 	}
 	
@@ -221,14 +221,14 @@ public class GuiSprint extends GuiScreenMigration{
 	}
 	
 	@Override
-	public void func_230430_a_(MatrixStack matrix, int mouseX, int mouseY, float partialTickTime){
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTickTime){
 		final int top = height / 6;
 		final int middle = width / 2;
 		
-		func_230446_a_(matrix); // RENAME renderBackground
-		func_238472_a_(matrix, font, field_230704_d_, middle, 20, 16777215); // RENAME drawCenteredString
+		renderBackground(matrix);
+		drawCenteredString(matrix, font, title, middle, 20, 16777215);
 		
-		super.func_230430_a_(matrix, mouseX, mouseY, partialTickTime);
+		super.render(matrix, mouseX, mouseY, partialTickTime);
 		
 		final int maxWidthLeft = 82;
 		final int maxWidthRight = 124;
@@ -242,7 +242,7 @@ public class GuiSprint extends GuiScreenMigration{
 					ITextComponent[] spl = input.getInfo();
 					
 					for(int line = 0; line < spl.length; line++){
-						func_238472_a_(matrix, font, spl[line], middle, top + 148 + (10 * line - (font.FONT_HEIGHT * spl.length / 2)), -1);
+						drawCenteredString(matrix, font, spl[line], middle, top + 148 + (10 * line - (font.FONT_HEIGHT * spl.length / 2)), -1);
 					}
 				}
 			}

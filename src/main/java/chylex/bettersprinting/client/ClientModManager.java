@@ -53,7 +53,7 @@ public final class ClientModManager{
 	}
 	
 	public static void showChatMessage(String text){
-		mc.player.sendMessage(new StringTextComponent(chatPrefix + text), Util.field_240973_b_);
+		mc.player.sendMessage(new StringTextComponent(chatPrefix + text), Util.DUMMY_UUID);
 	}
 	
 	public enum Feature{
